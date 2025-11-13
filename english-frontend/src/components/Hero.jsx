@@ -15,7 +15,7 @@ export default function Hero(){
               Start from basics or level up with advanced lessons and real-world conversations.
             </p>
             <div className="mt-8 flex gap-3">
-              <Link to="/lessons" className="inline-block bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold shadow hover:bg-slate-100 transition">
+              <Link to="/modules/learn-english" className="inline-block bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold shadow hover:bg-slate-100 transition">
                 Start Learning
               </Link>
               <Link to="/register" className="inline-block px-6 py-3 border border-white/40 rounded-lg hover:bg-white/10 transition">

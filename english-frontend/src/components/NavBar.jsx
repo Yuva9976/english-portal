@@ -58,16 +58,18 @@ export default function NavBar(){
 
       {/* Navigation Menu */}
       <nav className='hidden md:block border-t border-slate-200'>
-        <div className='container mx-auto px-4 flex items-center justify-center gap-8 py-3'>
-          <Link to='/' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Learn</Link>
-          <Link to='/teacher-tools' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Teach</Link>
-          <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Grammar</Link>
-          <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Vocabulary</Link>
-          <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Pronunciation</Link>
-          <Link to='/lessons?category=listening' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Listening</Link>
-          <Link to='/lessons?category=speaking' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Speaking</Link>
-          <Link to='/lessons?category=reading' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Reading</Link>
-          <Link to='/lessons?category=writing' className='text-slate-700 hover:text-blue-600 font-medium text-sm'>Writing</Link>
+         <div className='container mx-auto px-4 flex items-center justify-center gap-8 py-3'>
+           <Link to='/' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Home</Link>
+           <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
+          <Link to='/modules/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar Hub</Link>
+           <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teach</Link>
+          <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
+          <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
+          <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>
+          <Link to='/lessons?category=listening' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Listening</Link>
+          <Link to='/lessons?category=speaking' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Speaking</Link>
+          <Link to='/lessons?category=reading' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Reading</Link>
+          <Link to='/lessons?category=writing' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Writing</Link>
         </div>
       </nav>
     </header>
