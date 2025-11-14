@@ -550,97 +550,96 @@ const PronounsDetail = () => {
             </div>
           </div>
 
-          <div className="max-w-3xl mx-auto">
-            {quizQuestions.length > 0 && currentQuestionIndex < quizQuestions.length && (
-              <div className="bg-white rounded-xl p-4 md:p-5 shadow-md border border-gray-200">
-                {/* Question Header */}
-                <div className="flex items-start gap-3 mb-3">
-                  <span className="text-2xl flex-shrink-0">{quizQuestions[currentQuestionIndex].emoji}</span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2.5 py-0.5 rounded-full">
-                        Q{currentQuestionIndex + 1}
-                      </span>
-                      <span className="text-xs text-gray-500 font-medium">{currentQuestionIndex + 1}/{quizQuestions.length}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {quizQuestions.map((question, qIndex) => {
+              const answered = quizAnswers[question.id];
+              return (
+                <div key={question.id} className="bg-white rounded-xl p-3 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col">
+                  {/* Question Header - Compact */}
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="text-xl flex-shrink-0">{question.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1 mb-1 flex-wrap">
+                        <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full flex-shrink-0">Q{question.id}</span>
+                      </div>
+                      <h3 className="text-sm font-semibold text-gray-800 leading-tight line-clamp-3">
+                        {question.question}
+                      </h3>
                     </div>
-                    <h3 className="text-base md:text-lg font-semibold text-gray-800 leading-snug">
-                      {quizQuestions[currentQuestionIndex].question}
-                    </h3>
                   </div>
-                </div>
 
-                {/* Hint Section */}
-                {quizQuestions[currentQuestionIndex].hint && !quizAnswers[quizQuestions[currentQuestionIndex].id] && (
-                  <details className="mb-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <summary className="cursor-pointer p-2.5 font-semibold text-blue-700 hover:bg-blue-100 transition text-sm">
-                      💡 Need a hint?
-                    </summary>
-                    <div className="p-2.5 pt-0 text-blue-700 text-sm">{quizQuestions[currentQuestionIndex].hint}</div>
-                  </details>
-                )}
+                  {/* Hint Section - Hidden by default, show on hover */}
+                  {!answered && (
+                    <details className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-2 border-blue-400 p-2 mb-2 rounded-r text-xs cursor-pointer group">
+                      <summary className="font-semibold text-blue-700 flex items-center">
+                        💡 Hint
+                        <svg className="w-3 h-3 ml-1 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                      </summary>
+                      <p className="text-blue-800 mt-1">{question.hint}</p>
+                    </details>
+                  )}
 
-                {/* Options */}
-                <div className="space-y-2 mb-3">
-                  {quizQuestions[currentQuestionIndex].options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleQuiz(quizQuestions[currentQuestionIndex].id, index)}
-                      disabled={quizAnswers[quizQuestions[currentQuestionIndex].id]}
-                      className={`w-full p-2.5 md:p-3 rounded-lg border text-left text-sm font-medium transition-all duration-200 ${
-                        quizAnswers[quizQuestions[currentQuestionIndex].id]
-                          ? index === quizQuestions[currentQuestionIndex].correct
-                            ? 'bg-green-50 border-green-400 text-green-900 shadow-sm'
-                            : quizAnswers[quizQuestions[currentQuestionIndex].id].selected === index
-                            ? 'bg-red-50 border-red-400 text-red-900 shadow-sm'
-                            : 'bg-gray-50 border-gray-200 text-gray-400'
-                          : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 hover:shadow-sm'
-                      }`}
-                    >
-                      <span className="flex items-center justify-between">
-                        <span className="flex items-center">
-                          <span className="inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold mr-2 flex-shrink-0">
-                            {String.fromCharCode(65 + index)}
+                  {/* Options - Compact Grid */}
+                  <div className="space-y-1 mb-2 flex-1">
+                    {question.options.map((option, index) => (
+                      <button
+                        key={index}
+                        onClick={() => !answered && handleQuiz(question.id, index)}
+                        disabled={answered}
+                        className={`w-full p-1.5 rounded-lg border text-left text-xs font-medium transition-all duration-200 ${
+                          answered
+                            ? index === question.correct
+                              ? 'bg-green-50 border-green-400 text-green-900 shadow-sm'
+                              : answered.selected === index
+                              ? 'bg-red-50 border-red-400 text-red-900 shadow-sm'
+                              : 'bg-gray-50 border-gray-200 text-gray-400'
+                            : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 hover:shadow-sm'
+                        }`}
+                      >
+                        <span className="flex items-center justify-between">
+                          <span className="flex items-center min-w-0">
+                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold mr-1 flex-shrink-0">
+                              {String.fromCharCode(65 + index)}
+                            </span>
+                            <span className="truncate">{option}</span>
                           </span>
-                          {option}
+                          {answered && index === question.correct && <span className="text-sm ml-1 flex-shrink-0">✅</span>}
+                          {answered && answered.selected === index && index !== question.correct && <span className="text-sm ml-1 flex-shrink-0">❌</span>}
                         </span>
-                        {quizAnswers[quizQuestions[currentQuestionIndex].id] && index === quizQuestions[currentQuestionIndex].correct && <span className="text-base md:text-lg">✅</span>}
-                        {quizAnswers[quizQuestions[currentQuestionIndex].id] && quizAnswers[quizQuestions[currentQuestionIndex].id].selected === index && index !== quizQuestions[currentQuestionIndex].correct && <span className="text-base md:text-lg">❌</span>}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                      </button>
+                    ))}
+                  </div>
 
-                {/* Feedback */}
-                {quizAnswers[quizQuestions[currentQuestionIndex].id] && (
-                  <div className="space-y-2 animate-fade-in">
-                    <div className={`p-2.5 rounded-lg border-l-4 ${
-                      quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500'
-                    }`}>
-                      <p className="text-sm text-gray-800 leading-relaxed mb-2">
-                        <span className="font-semibold">{quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? '🎉 Correct!' : '📝 Not quite!'}</span>
-                      </p>
-                      <p className="text-sm text-gray-800 leading-relaxed">{quizQuestions[currentQuestionIndex].explanation}</p>
-                      {quizQuestions[currentQuestionIndex].funFact && (
-                        <p className="text-sm italic text-gray-700 mt-2">{quizQuestions[currentQuestionIndex].funFact}</p>
+                  {/* Feedback - Compact */}
+                  {answered && (
+                    <div className="space-y-1 text-xs animate-fade-in">
+                      <div className={`p-2 rounded border-l-2 ${
+                        answered.correct ? 'bg-green-50 border-green-500 text-green-800' : 'bg-orange-50 border-orange-500 text-orange-800'
+                      }`}>
+                        <p className="font-semibold">{answered.correct ? '✅ Correct!' : '❌ Not quite!'}</p>
+                        <p className="text-xs mt-1 line-clamp-2">{question.explanation}</p>
+                      </div>
+                      
+                      {answered.correct && (
+                        <details className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-2 border-purple-500 p-1.5 rounded-r text-xs text-purple-900 cursor-pointer group">
+                          <summary className="font-semibold flex items-center">
+                            🎓 Fun Fact
+                            <svg className="w-3 h-3 ml-1 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                          </summary>
+                          <p className="mt-1 line-clamp-3">{question.funFact}</p>
+                        </details>
                       )}
                     </div>
-
-                    {/* Next Button */}
-                    <button
-                      onClick={nextQuestion}
-                      disabled={currentQuestionIndex >= quizQuestions.length - 1}
-                      className={`w-full px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                        currentQuestionIndex >= quizQuestions.length - 1
-                          ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
-                    >
-                      {currentQuestionIndex >= quizQuestions.length - 1 ? 'Quiz Complete! 🎊' : 'Next Question →'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
             {Object.keys(quizAnswers).length === quizQuestions.length && (
               <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
