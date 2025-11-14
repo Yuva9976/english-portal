@@ -164,7 +164,7 @@ const GrammarHub = () => {
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Names a person, place, thing, or idea</p>
               <div className="flex gap-2">
                 <button onClick={() => navigate('/modules/grammar-hub/nouns')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-blue-500 text-blue-700 rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => setShowQuiz(true)} className="flex-1 px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/nouns-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -177,7 +177,7 @@ const GrammarHub = () => {
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Replaces a noun to avoid repetition</p>
               <div className="flex gap-2">
                 <button onClick={() => navigate('/modules/grammar-hub/pronouns')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-green-500 text-green-700 rounded-lg hover:bg-green-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => setShowQuiz(true)} className="flex-1 px-3 py-2 text-xs font-semibold bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/pronouns-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
