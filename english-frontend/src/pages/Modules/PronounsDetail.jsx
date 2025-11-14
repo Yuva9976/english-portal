@@ -121,47 +121,132 @@ const PronounsDetail = () => {
     }
   ];
 
-  // Interactive quiz questions
+  // Comprehensive interactive quiz questions - 10 Questions covering all pronoun types
   const quizQuestions = [
     {
       id: 1,
+      type: 'multiple-choice',
       emoji: '👤',
-      question: 'Which pronoun is a personal pronoun in the objective form?',
-      options: ['She', 'Him', 'Their', 'Mine'],
-      correct: 1,
-      explanation: '"Him" is the objective form of the personal pronoun "he".'
+      question: 'Which pronoun is in the OBJECTIVE (object) form?',
+      hint: 'Object pronouns receive the action: me, him, her, us, them.',
+      options: ['She', 'I', 'him', 'they'],
+      correct: 2,
+      explanation: '🎯 Correct! "Him" is the objective form of the personal pronoun "he". Use object pronouns after verbs or prepositions.',
+      funFact: '📌 Personal pronouns have two forms: Subject (I, you, he) vs. Object (me, you, him)'
     },
     {
       id: 2,
+      type: 'multiple-choice',
       emoji: '🎁',
-      question: 'Choose the correct possessive pronoun: "This bag is ___"',
-      options: ['Mine', 'Me', 'My', 'I'],
-      correct: 0,
-      explanation: '"Mine" is the correct possessive pronoun that stands alone.'
+      question: 'Which sentence correctly uses a POSSESSIVE pronoun?',
+      hint: 'Possessive pronouns show ownership and stand alone: mine, yours, his, hers, ours, theirs.',
+      options: [
+        'This pen is her.',
+        'The book is mine.',
+        'That car is my.',
+        'This house is our.'
+      ],
+      correct: 1,
+      explanation: '✨ Perfect! "The book is mine" is correct. Possessive pronouns stand alone - no noun follows them.',
+      funFact: '🎯 Don\'t confuse: possessive pronouns (mine) vs. possessive adjectives (my). "This is my book" vs. "This book is mine"'
     },
     {
       id: 3,
+      type: 'fill-in-the-blank',
       emoji: '👉',
-      question: 'Which is a demonstrative pronoun?',
-      options: ['Everyone', 'That', 'Myself', 'Whose'],
+      question: 'Fill in the blank: "_____ books on the shelf are more interesting than those on the table."',
+      hint: 'Use a demonstrative pronoun to point out which books you\'re referring to.',
+      options: ['This', 'These', 'That', 'Those'],
       correct: 1,
-      explanation: '"That" is a demonstrative pronoun used to point out things.'
+      explanation: '🎊 Excellent! "These" is correct because "books" is plural and refers to items that are nearby (opposite of "those").',
+      funFact: '👉 Demonstrative pronouns: this/these (near), that/those (far). They point out specific items.'
     },
     {
       id: 4,
+      type: 'multiple-choice',
       emoji: '🪞',
-      question: 'What is a reflexive pronoun?',
-      options: ['Shows ownership', 'Action reflects back to the subject', 'Asks questions', 'Connects clauses'],
-      correct: 1,
-      explanation: 'Reflexive pronouns show that the action reflects back to the subject (e.g., "myself", "yourself").'
+      question: 'Identify the REFLEXIVE pronoun: "She taught herself to play the guitar."',
+      hint: 'Reflexive pronouns show the action reflects back to the subject: -self/-selves words.',
+      options: ['She', 'taught', 'herself', 'to play'],
+      correct: 2,
+      explanation: '🎸 Fantastic! "Herself" is a reflexive pronoun. The subject (she) performs the action on herself.',
+      funFact: '🔄 All reflexive pronouns end in -self (singular) or -selves (plural): myself, yourself, himself, ourselves, themselves'
     },
     {
       id: 5,
+      type: 'fill-in-the-blank',
       emoji: '🔗',
-      question: 'Which relative pronoun introduces a dependent clause?',
-      options: ['What', 'Who', 'Whom', 'All of the above'],
-      correct: 3,
-      explanation: 'All of these can be relative pronouns used to introduce dependent clauses.'
+      question: 'Fill in the blank: "The athlete _____ won the race trained every day."',
+      hint: 'This relative pronoun connects the clause to the noun "athlete".',
+      options: ['who', 'which', 'that', 'where'],
+      correct: 0,
+      explanation: '🏃 Perfect! "Who" is correct because it refers to a person (the athlete). Use "that" or "which" for things.',
+      funFact: '📝 Relative pronouns: who/whom (people), which (things), that (people or things), where (places), whose (possession)'
+    },
+    {
+      id: 6,
+      type: 'multiple-choice',
+      emoji: '❓',
+      question: 'Which interrogative pronoun correctly completes the question: "_____ of the two options do you prefer?"',
+      hint: 'Interrogative pronouns ask questions and often appear at the start.',
+      options: ['Who', 'Which', 'What', 'Whose'],
+      correct: 1,
+      explanation: '✅ Correct! "Which" is used when choosing between specific options. "Who" is for people, "what" is for things.',
+      funFact: '❓ Common interrogative pronouns: who, whom, whose, what, which. Always start a question!'
+    },
+    {
+      id: 7,
+      type: 'multiple-choice',
+      emoji: '❔',
+      question: 'Identify the INDEFINITE pronoun: "Someone left their umbrella at the office."',
+      hint: 'Indefinite pronouns refer to non-specific or unknown people/things.',
+      options: ['left', 'Someone', 'their', 'office'],
+      correct: 1,
+      explanation: '🎯 Great! "Someone" is indefinite because it refers to an unknown or unspecified person.',
+      funFact: '🔍 Indefinite pronouns: someone, something, anyone, anything, no one, nothing, everyone, everything, anybody, somebody'
+    },
+    {
+      id: 8,
+      type: 'fill-in-the-blank',
+      emoji: '⭐',
+      question: 'Fill in the blank: "The president _____ opened the new building."',
+      hint: 'This pronoun emphasizes or intensifies the noun/pronoun before it. It has -self/-selves.',
+      options: ['herself', 'self', 'oneself', 'herself'],
+      correct: 0,
+      explanation: '👑 Perfect! "Herself" is an intensive pronoun here, emphasizing that the president personally opened the building.',
+      funFact: '⭐ Intensive and reflexive pronouns have the same form (-self/-selves), but different purposes: He hurt himself (reflexive) vs. He saw it himself (intensive)'
+    },
+    {
+      id: 9,
+      type: 'multiple-choice',
+      emoji: '🤝',
+      question: 'Which sentence correctly uses a RECIPROCAL pronoun?',
+      hint: 'Reciprocal pronouns show mutual action: "each other" or "one another".',
+      options: [
+        'They helped each other with homework.',
+        'They helped themselves with homework.',
+        'They helped other with homework.',
+        'They helped themselves to food.'
+      ],
+      correct: 0,
+      explanation: '💪 Excellent! "Each other" is a reciprocal pronoun showing mutual action between both people.',
+      funFact: '🤝 Two reciprocal pronouns: "each other" (usually 2 people) and "one another" (groups). Both can be used interchangeably.'
+    },
+    {
+      id: 10,
+      type: 'fill-in-the-blank',
+      emoji: '🌟',
+      question: 'Which set of pronouns best completes: "_____ told _____ that the secret was out"?',
+      hint: 'First blank needs a subject pronoun, second needs an object pronoun.',
+      options: [
+        'I, him',
+        'Me, he',
+        'I, me',
+        'He, I'
+      ],
+      correct: 0,
+      explanation: '✅ Perfect! "I" (subject) is the one doing the telling. "Him" (object) is receiving the information. Subject comes first!',
+      funFact: '📌 Subject pronouns: I, you, he, she, it, we, they. Object pronouns: me, you, him, her, it, us, them.'
     }
   ];
 
@@ -484,6 +569,16 @@ const PronounsDetail = () => {
                   </div>
                 </div>
 
+                {/* Hint Section */}
+                {quizQuestions[currentQuestionIndex].hint && !quizAnswers[quizQuestions[currentQuestionIndex].id] && (
+                  <details className="mb-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <summary className="cursor-pointer p-2.5 font-semibold text-blue-700 hover:bg-blue-100 transition text-sm">
+                      💡 Need a hint?
+                    </summary>
+                    <div className="p-2.5 pt-0 text-blue-700 text-sm">{quizQuestions[currentQuestionIndex].hint}</div>
+                  </details>
+                )}
+
                 {/* Options */}
                 <div className="space-y-2 mb-3">
                   {quizQuestions[currentQuestionIndex].options.map((option, index) => (
@@ -521,10 +616,13 @@ const PronounsDetail = () => {
                     <div className={`p-2.5 rounded-lg border-l-4 ${
                       quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500'
                     }`}>
-                      <p className="text-sm text-gray-800 leading-relaxed">
+                      <p className="text-sm text-gray-800 leading-relaxed mb-2">
                         <span className="font-semibold">{quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? '🎉 Correct!' : '📝 Not quite!'}</span>
-                        {' '}{quizQuestions[currentQuestionIndex].explanation}
                       </p>
+                      <p className="text-sm text-gray-800 leading-relaxed">{quizQuestions[currentQuestionIndex].explanation}</p>
+                      {quizQuestions[currentQuestionIndex].funFact && (
+                        <p className="text-sm italic text-gray-700 mt-2">{quizQuestions[currentQuestionIndex].funFact}</p>
+                      )}
                     </div>
 
                     {/* Next Button */}
@@ -547,13 +645,13 @@ const PronounsDetail = () => {
             {Object.keys(quizAnswers).length === quizQuestions.length && (
               <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
                 <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-                  {quizScore >= 40 ? '🏆 Outstanding!' : quizScore >= 25 ? '👏 Great Job!' : '📚 Keep Learning!'}
+                  {quizScore >= 80 ? '🏆 Outstanding!' : quizScore >= 60 ? '👏 Great Job!' : '📚 Keep Learning!'}
                 </h3>
                 <p className="text-base md:text-lg text-gray-700 mb-3">
-                  You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">50 points</span>
+                  You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">100 points</span>
                 </p>
                 
-                {quizScore === 50 && (
+                {quizScore === 100 && (
                   <div className="inline-block bg-yellow-200 border-2 border-yellow-500 rounded-full px-5 py-2 mb-2">
                     <span className="text-xl md:text-2xl mr-2">🥇</span>
                     <span className="font-bold text-yellow-800 text-lg">Perfect Score!</span>
@@ -561,9 +659,9 @@ const PronounsDetail = () => {
                 )}
                 
                 <p className="text-xs md:text-sm text-gray-600 mt-2">
-                  {quizScore >= 40 
+                  {quizScore >= 80 
                     ? "Amazing work! You're a pronoun master! 🌟" 
-                    : quizScore >= 25 
+                    : quizScore >= 60 
                     ? "Good effort! Keep practicing to improve! 💪"
                     : "Review the material and try again! You've got this! 🚀"}
                 </p>

@@ -120,87 +120,122 @@ const NounsDetail = () => {
     }
   ];
 
-  // Interactive Quiz - Fun and Engaging
+  // Comprehensive Interactive Quiz - 10 Questions covering all noun types
   const interactiveQuiz = [
     {
       id: 1,
+      type: 'multiple-choice',
       emoji: '⭐',
-      question: 'Which word is a PROPER noun?',
-      hint: 'Remember: Proper nouns are always capitalized!',
-      options: ['city', 'London', 'country', 'river'],
+      question: 'Which of the following is a PROPER noun?',
+      hint: 'Proper nouns name specific people, places, or things and are capitalized.',
+      options: ['school', 'Oxford University', 'building', 'teacher'],
       correct: 1,
-      explanation: '🎯 Correct! "London" is a proper noun because it names a specific place and is always capitalized.',
-      funFact: '💡 Did you know? London has over 170 museums!'
+      explanation: '🎯 Correct! "Oxford University" is a proper noun because it\'s the specific name of an institution and is capitalized.',
+      funFact: '💡 All proper nouns must start with a capital letter, whether at the beginning or middle of a sentence.'
     },
     {
       id: 2,
+      type: 'multiple-choice',
       emoji: '💭',
-      question: 'Find the ABSTRACT noun in: "Her kindness touched everyone."',
-      hint: 'Can you touch, see, or smell it? If not, it\'s abstract!',
-      options: ['Her', 'kindness', 'touched', 'everyone'],
+      question: 'Identify the ABSTRACT noun: "The strength of her character impressed everyone."',
+      hint: 'Abstract nouns represent ideas, qualities, or concepts - things you cannot touch.',
+      options: ['character', 'strength', 'everyone', 'impressed'],
       correct: 1,
-      explanation: '🎉 Excellent! "Kindness" is an abstract noun - it\'s a quality you can feel but not touch.',
-      funFact: '🌟 Abstract nouns often end in: -ness, -ment, -ion, -ity'
+      explanation: '✨ Perfect! "Strength" is an abstract noun - it\'s a quality or characteristic you cannot physically touch or see.',
+      funFact: '📚 Common abstract nouns often end in: -ness, -ment, -tion, -ity (kindness, movement, creation, ability)'
     },
     {
       id: 3,
+      type: 'multiple-choice',
       emoji: '💧',
-      question: 'Which noun is UNCOUNTABLE?',
-      hint: 'Can you say "one, two, three..." with it?',
-      options: ['books', 'information', 'tables', 'apples'],
+      question: 'Which noun is UNCOUNTABLE (cannot be counted)?',
+      hint: 'Can you say "one, two, three" of this item? If not, it\'s uncountable.',
+      options: ['chair', 'furniture', 'student', 'pencil'],
       correct: 1,
-      explanation: '✨ Perfect! "Information" cannot be counted. We say "some information", not "three informations".',
-      funFact: '📚 Common uncountable nouns: water, money, advice, luggage'
+      explanation: '🏆 Excellent! "Furniture" is uncountable. We say "pieces of furniture" or "some furniture", not "three furnitures".',
+      funFact: '🔢 Uncountable nouns use: much, some, a lot of - not "many". Examples: water, advice, luggage, baggage'
     },
     {
       id: 4,
+      type: 'fill-in-the-blank',
       emoji: '👥',
-      question: 'Identify the COLLECTIVE noun: "The team celebrated their victory."',
-      hint: 'Which word represents a group of people?',
-      options: ['celebrated', 'team', 'their', 'victory'],
-      correct: 1,
-      explanation: '🏆 Amazing! "Team" is a collective noun because it refers to a group of people as one unit.',
-      funFact: '🦁 Fun collective nouns: a pride of lions, a murder of crows!'
+      question: 'Fill in the blank: "A _____ of musicians performed at the concert."',
+      hint: 'This word refers to a group of people working together.',
+      options: ['group', 'team', 'band', 'orchestra'],
+      correct: 3,
+      explanation: '🎵 Great! "Orchestra" is the most specific collective noun here for musicians. "Band" (option 2) is also acceptable.',
+      funFact: '🎭 Other collective nouns: cast (actors), crew (sailors), troupe (dancers), ensemble (musicians)'
     },
     {
       id: 5,
+      type: 'multiple-choice',
       emoji: '🔗',
-      question: 'Which is a COMPOUND noun?',
-      hint: 'Look for two words joined together!',
-      options: ['beautiful', 'swimming pool', 'quickly', 'happy'],
+      question: 'Which word is a COMPOUND noun (made of two or more words)?',
+      hint: 'Look for two smaller words combined together to make one noun.',
+      options: ['beautiful', 'breakfast', 'running', 'slowly'],
       correct: 1,
-      explanation: '🎊 Brilliant! "Swimming pool" is a compound noun made from two words: swimming + pool.',
-      funFact: '🔤 Compound nouns can be: one word (bedroom), two words (ice cream), or hyphenated (mother-in-law)'
+      explanation: '🥐 Fantastic! "Breakfast" is a compound noun made from "break" + "fast". It names one specific thing.',
+      funFact: '🔤 Compound nouns can be: one word (bedroom), two words (ice cream), or hyphenated (sister-in-law)'
     },
     {
       id: 6,
+      type: 'fill-in-the-blank',
       emoji: '👁️',
-      question: 'Which is a CONCRETE noun you can touch or see?',
-      hint: 'Use your five senses!',
-      options: ['happiness', 'apple', 'freedom', 'love'],
-      correct: 1,
-      explanation: '🍎 Fantastic! "Apple" is concrete because you can see it, touch it, taste it, and smell it!',
-      funFact: '🌈 Your five senses help identify concrete nouns!'
+      question: 'Fill in the blank: "She could smell the _____ of fresh flowers in the garden."',
+      hint: 'This noun refers to something you can perceive with one of your five senses.',
+      options: ['scent', 'aroma', 'fragrance', 'all of the above'],
+      correct: 3,
+      explanation: '🌸 Perfect! All three options (scent, aroma, fragrance) are concrete nouns - things you can physically perceive.',
+      funFact: '👃 Concrete nouns appeal to the five senses: smell, taste, touch, sight, and hearing.'
     },
     {
       id: 7,
-      emoji: '1️⃣',
-      question: 'Which is a SINGULAR noun (only one)?',
-      hint: 'Singular means ONE!',
-      options: ['cats', 'dog', 'children', 'books'],
+      type: 'multiple-choice',
+      emoji: '📊',
+      question: 'Identify the noun type: "The committee decided to postpone the meeting."',
+      hint: 'This noun represents multiple people acting as one unit. What type is it?',
+      options: ['Concrete', 'Collective', 'Possessive', 'Abstract'],
       correct: 1,
-      explanation: '🐕 Well done! "Dog" is singular because it refers to just ONE dog.',
-      funFact: '✏️ Singular nouns use: a, an, the, this, that'
+      explanation: '👥 Excellent! "Committee" is a collective noun because it refers to a group of people (committee members) as one single unit.',
+      funFact: '🏛️ More collective nouns: jury, audience, crowd, government, parliament, congress'
     },
     {
       id: 8,
-      emoji: '👫',
-      question: 'Find the PLURAL noun (more than one):',
-      hint: 'Plural means MANY!',
-      options: ['child', 'boys', 'woman', 'person'],
+      type: 'fill-in-the-blank',
+      emoji: '✏️',
+      question: 'Identify which is SINGULAR: "The _____ lay on the table."',
+      hint: 'Singular means ONE. Look for a noun that\'s one item.',
+      options: ['book', 'books', 'book\'s', 'books\''],
+      correct: 0,
+      explanation: '📖 Correct! "Book" is singular - it refers to one book. To make it plural, we add -s: books.',
+      funFact: '1️⃣ Singular nouns: a book, this person, that dog. Plural nouns: books, people, dogs'
+    },
+    {
+      id: 9,
+      type: 'multiple-choice',
+      emoji: '🎓',
+      question: 'Which sentence uses NOUNS correctly?',
+      hint: 'Look for proper capitalization and correct singular/plural usage.',
+      options: [
+        'She bought three furnitures for her room.',
+        'The Team played in london last week.',
+        'He has much experience in teaching.',
+        'I need some advices from you.'
+      ],
+      correct: 2,
+      explanation: '✅ Perfect! Option 3 is correct. "Experience" is uncountable (not "experiences"), and we use "much" not "many" with uncountable nouns.',
+      funFact: '🔍 Common mistake: "advices" (wrong). Advice is uncountable! "Could you give me some advice?"'
+    },
+    {
+      id: 10,
+      type: 'fill-in-the-blank',
+      emoji: '🌟',
+      question: 'Which classification fits "Water is essential for human survival"?',
+      hint: 'Consider whether water can be counted. Can you say "one water, two waters"?',
+      options: ['Countable and Concrete', 'Uncountable and Concrete', 'Countable and Abstract', 'Uncountable and Abstract'],
       correct: 1,
-      explanation: '👦👦 Awesome! "Boys" is plural because it means more than one boy.',
-      funFact: '📖 Most plurals add -s or -es, but some are irregular: child→children'
+      explanation: '💧 Excellent! "Water" is uncountable (we don\'t say "waters" in general) AND concrete (you can see it, touch it, taste it).',
+      funFact: '🌊 Other uncountable concrete nouns: air, sand, rice, oil, sugar, salt, coffee'
     }
   ];
 
