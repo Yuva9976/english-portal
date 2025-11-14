@@ -9,6 +9,9 @@ const NounsDetail = () => {
   const [quizScore, setQuizScore] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [writingSubmitted, setWritingSubmitted] = useState(false);
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [modalQuizAnswers, setModalQuizAnswers] = useState({});
 
   // All 10 noun types
   const nounTypes = [
@@ -612,110 +615,74 @@ const NounsDetail = () => {
         </section>
 
         {/* INTERACTIVE QUIZ */}
-        <section id="quiz" className="mb-16 scroll-mt-32 w-full">
+        <section id="quiz" className="mb-16 scroll-mt-32">
           {/* Quiz Header */}
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-2">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-3">
               <span className="text-3xl mr-3">🎯</span>
-              Fun Quiz Time!
+              Quiz Practice
             </h2>
-            <p className="text-sm text-gray-600">Test what you've learned! 🌟</p>
+            <p className="text-sm text-gray-600 mb-4">Review questions or take the full quiz</p>
+            
+            {/* Start Quiz Button */}
+            <button
+              onClick={() => {
+                setShowQuizModal(true);
+                setCurrentQuestionIndex(0);
+                setModalQuizAnswers({});
+              }}
+              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
+              ▶️ Start Full Quiz
+            </button>
           </div>
 
-          {/* Score Badge - Centered */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl px-6 py-3 shadow-lg">
-              <div className="text-center text-white">
-                <div className="text-3xl font-bold">{quizScore}</div>
-                <div className="text-xs font-semibold uppercase tracking-wide">Points</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Quiz Container - Grid Layout */}
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 px-4">
+          {/* Quiz Questions Grid - Review Mode */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {interactiveQuiz.map((question, qIndex) => {
               const answered = quizAnswers[question.id];
               return (
-                <div key={question.id} className="bg-white rounded-xl p-3 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col">
-                  {/* Question Header - Compact */}
+                <div
+                  key={question.id}
+                  onClick={() => {
+                    setShowQuizModal(true);
+                    setCurrentQuestionIndex(qIndex);
+                    setModalQuizAnswers({});
+                  }}
+                  className="bg-white rounded-lg p-3 shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105"
+                >
+                  {/* Status Badge */}
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full">
+                      Q{question.id}
+                    </span>
+                    {answered && (
+                      <span className={`text-lg ${answered.correct ? '✅' : '❌'}`}></span>
+                    )}
+                  </div>
+
+                  {/* Question Text */}
                   <div className="flex items-start gap-2 mb-2">
-                    <span className="text-xl flex-shrink-0">{question.emoji}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1 mb-1 flex-wrap">
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full flex-shrink-0">Q{question.id}</span>
-                      </div>
-                      <h3 className="text-sm font-semibold text-gray-800 leading-tight line-clamp-3">
-                        {question.question}
-                      </h3>
-                    </div>
+                    <span className="text-lg">{question.emoji}</span>
+                    <p className="text-xs font-semibold text-gray-700 line-clamp-2">
+                      {question.question}
+                    </p>
                   </div>
 
-                  {/* Hint Section - Hidden by default, show on hover */}
-                  {!answered && (
-                    <details className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-2 border-blue-400 p-2 mb-2 rounded-r text-xs cursor-pointer group">
-                      <summary className="font-semibold text-blue-700 flex items-center">
-                        💡 Hint
-                        <svg className="w-3 h-3 ml-1 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                        </svg>
-                      </summary>
-                      <p className="text-blue-800 mt-1">{question.hint}</p>
-                    </details>
-                  )}
-
-                  {/* Options - Compact Grid */}
-                  <div className="space-y-1 mb-2 flex-1">
-                    {question.options.map((option, index) => (
-                      <button
-                        key={index}
-                        onClick={() => !answered && handleInteractiveQuiz(question.id, index)}
-                        disabled={answered}
-                        className={`w-full p-1.5 rounded-lg border text-left text-xs font-medium transition-all duration-200 ${
-                          answered
-                            ? index === question.correct
-                              ? 'bg-green-50 border-green-400 text-green-900 shadow-sm'
-                              : answered.selected === index
-                              ? 'bg-red-50 border-red-400 text-red-900 shadow-sm'
-                              : 'bg-gray-50 border-gray-200 text-gray-400'
-                            : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 hover:shadow-sm'
-                        }`}
-                      >
-                        <span className="flex items-center justify-between">
-                          <span className="flex items-center min-w-0">
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold mr-1 flex-shrink-0">
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                            <span className="truncate">{option}</span>
-                          </span>
-                          {answered && index === question.correct && <span className="text-sm ml-1 flex-shrink-0">✅</span>}
-                          {answered && answered.selected === index && index !== question.correct && <span className="text-sm ml-1 flex-shrink-0">❌</span>}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Feedback - Compact */}
+                  {/* Answer Status */}
                   {answered && (
-                    <div className="space-y-1 text-xs animate-fade-in">
-                      <div className={`p-2 rounded border-l-2 ${
-                        answered.correct ? 'bg-green-50 border-green-500 text-green-800' : 'bg-orange-50 border-orange-500 text-orange-800'
-                      }`}>
-                        <p className="font-semibold">{answered.correct ? '✅ Correct!' : '❌ Not quite!'}</p>
-                        <p className="text-xs mt-1 line-clamp-2">{question.explanation}</p>
-                      </div>
-                      
-                      {answered.correct && (
-                        <details className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-2 border-purple-500 p-1.5 rounded-r text-xs text-purple-900 cursor-pointer group">
-                          <summary className="font-semibold flex items-center">
-                            🎓 Fun Fact
-                            <svg className="w-3 h-3 ml-1 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
-                          </summary>
-                          <p className="mt-1 line-clamp-3">{question.funFact}</p>
-                        </details>
-                      )}
+                    <div className={`text-xs font-medium p-1.5 rounded ${
+                      answered.correct 
+                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                        : 'bg-orange-50 text-orange-700 border border-orange-200'
+                    }`}>
+                      {answered.correct ? 'Correct!' : 'Try again'}
+                    </div>
+                  )}
+                  
+                  {!answered && (
+                    <div className="text-xs text-blue-600 font-medium">
+                      Click to attempt
                     </div>
                   )}
                 </div>
@@ -723,29 +690,205 @@ const NounsDetail = () => {
             })}
           </div>
 
-          {/* Quiz Completion - Centered */}
-          {Object.keys(quizAnswers).length === interactiveQuiz.length && (
-            <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
-              <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-                {quizScore >= 60 ? '🏆 Outstanding!' : quizScore >= 40 ? '👏 Great Job!' : '📚 Keep Learning!'}
-              </h3>
-              <p className="text-base md:text-lg text-gray-700 mb-3">
-                You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">100 points</span>
-              </p>
-              
-              {quizScore === 100 && (
-                <div className="inline-block bg-yellow-200 border-2 border-yellow-500 rounded-full px-5 py-2 mb-2">
-                  <span className="text-xl md:text-2xl mr-2">🥇</span>
-                  <span className="font-bold text-yellow-800 text-base md:text-lg">Perfect Score!</span>
+          {/* Quiz Modal - Full Screen One Question at a Time */}
+          {showQuizModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-96 overflow-y-auto">
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center sticky top-0 z-10">
+                  <div>
+                    <h3 className="text-2xl font-bold">Nouns Quiz</h3>
+                    <p className="text-sm text-blue-100">Question {currentQuestionIndex + 1} of {interactiveQuiz.length}</p>
+                  </div>
+                  <button
+                    onClick={() => setShowQuizModal(false)}
+                    className="text-2xl hover:text-blue-200 transition-colors"
+                  >
+                    ✕
+                  </button>
                 </div>
-              )}
-              
-              <p className="text-xs md:text-sm text-gray-600 mt-2">
-                {quizScore >= 60 
-                  ? "Amazing work! You're a noun expert! 🌟" 
-                  : quizScore >= 40 
-                  ? "Good effort! Keep practicing to master nouns! 💪"
-                  : "Review the material and try again! You've got this! 🚀"}
+
+                {/* Modal Content - One Question */}
+                {currentQuestionIndex < interactiveQuiz.length ? (
+                  <div className="p-8">
+                    {(() => {
+                      const question = interactiveQuiz[currentQuestionIndex];
+                      const answered = modalQuizAnswers[question.id];
+
+                      return (
+                        <div className="space-y-6">
+                          {/* Question */}
+                          <div>
+                            <div className="flex items-center gap-4 mb-4">
+                              <span className="text-4xl">{question.emoji}</span>
+                              <div>
+                                <span className="bg-yellow-400 text-white font-bold text-xs px-3 py-1 rounded-full">
+                                  Q{question.id}
+                                </span>
+                              </div>
+                            </div>
+                            <h4 className="text-xl font-bold text-gray-800">
+                              {question.question}
+                            </h4>
+                          </div>
+
+                          {/* Hint */}
+                          {!answered && (
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                              <p className="text-sm text-blue-800">
+                                <span className="font-semibold">💡 Hint:</span> {question.hint}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Options */}
+                          <div className="space-y-3">
+                            {question.options.map((option, index) => (
+                              <button
+                                key={index}
+                                onClick={() => {
+                                  if (!answered) {
+                                    const isCorrect = index === question.correct;
+                                    setModalQuizAnswers(prev => ({
+                                      ...prev,
+                                      [question.id]: { selected: index, correct: isCorrect }
+                                    }));
+                                  }
+                                }}
+                                disabled={answered}
+                                className={`w-full p-4 rounded-lg border-2 text-left font-medium transition-all text-base ${
+                                  answered
+                                    ? index === question.correct
+                                      ? 'bg-green-50 border-green-500 text-green-900'
+                                      : answered.selected === index
+                                      ? 'bg-red-50 border-red-500 text-red-900'
+                                      : 'bg-gray-50 border-gray-300 text-gray-500'
+                                    : 'bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                                }`}
+                              >
+                                <div className="flex items-center">
+                                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 font-bold mr-3 flex-shrink-0">
+                                    {String.fromCharCode(65 + index)}
+                                  </span>
+                                  {option}
+                                  {answered && index === question.correct && <span className="ml-auto text-2xl">✅</span>}
+                                  {answered && answered.selected === index && index !== question.correct && <span className="ml-auto text-2xl">❌</span>}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Feedback */}
+                          {answered && (
+                            <div className="space-y-4 animate-fade-in">
+                              <div className={`p-4 rounded-lg border-l-4 ${
+                                answered.correct
+                                  ? 'bg-green-50 border-green-500'
+                                  : 'bg-orange-50 border-orange-500'
+                              }`}>
+                                <p className="font-semibold text-lg mb-2">
+                                  {answered.correct ? '🎉 Correct!' : '❌ Not quite!'}
+                                </p>
+                                <p className="text-sm text-gray-800">
+                                  {question.explanation}
+                                </p>
+                              </div>
+
+                              {answered.correct && (
+                                <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+                                  <p className="text-sm text-purple-900">
+                                    <span className="font-semibold">🎓 Fun Fact:</span> {question.funFact}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Navigation */}
+                          <div className="flex gap-3 pt-4 border-t">
+                            <button
+                              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+                              disabled={currentQuestionIndex === 0}
+                              className="flex-1 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors"
+                            >
+                              ← Previous
+                            </button>
+                            <button
+                              onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                              disabled={!answered || currentQuestionIndex === interactiveQuiz.length - 1}
+                              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+                            >
+                              Next →
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                ) : (
+                  /* Results Screen */
+                  <div className="p-8 text-center space-y-6">
+                    <h3 className="text-3xl font-bold text-gray-800">
+                      {Object.keys(modalQuizAnswers).length === interactiveQuiz.length 
+                        ? '🎊 Quiz Complete!' 
+                        : '⏸️ Quiz Paused'}
+                    </h3>
+
+                    {Object.keys(modalQuizAnswers).length === interactiveQuiz.length && (
+                      <>
+                        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6">
+                          <p className="text-sm text-gray-600 mb-2">Your Score</p>
+                          <div className="text-5xl font-bold text-orange-600">
+                            {Object.values(modalQuizAnswers).filter(a => a.correct).length * 10}
+                            <span className="text-2xl text-gray-600">/100</span>
+                          </div>
+                        </div>
+
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <p className="text-lg font-semibold text-gray-800">
+                            {Object.values(modalQuizAnswers).filter(a => a.correct).length === interactiveQuiz.length
+                              ? '🏆 Perfect Score! You\'re a noun master!'
+                              : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 8
+                              ? '🥇 Excellent work!'
+                              : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
+                              ? '👏 Good effort!'
+                              : '📚 Keep practicing!'}
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setShowQuizModal(false)}
+                        className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors"
+                      >
+                        Close
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCurrentQuestionIndex(0);
+                          setModalQuizAnswers({});
+                        }}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                      >
+                        Restart Quiz
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Quiz Completion - For Grid View */}
+          {Object.keys(quizAnswers).length === interactiveQuiz.length && (
+            <div className="mt-8 max-w-2xl mx-auto bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                📊 Grid Review Complete!
+              </h3>
+              <p className="text-gray-700">
+                You've answered all questions. Click "Start Full Quiz" for a guided quiz experience.
               </p>
             </div>
           )}
