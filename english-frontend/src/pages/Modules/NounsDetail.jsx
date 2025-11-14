@@ -612,7 +612,7 @@ const NounsDetail = () => {
         </section>
 
         {/* INTERACTIVE QUIZ */}
-        <section id="quiz" className="mb-16 scroll-mt-32">
+        <section id="quiz" className="mb-16 scroll-mt-32 w-full">
           {/* Quiz Header */}
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-2">
@@ -633,7 +633,7 @@ const NounsDetail = () => {
           </div>
 
           {/* Quiz Container - Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 px-4">
             {interactiveQuiz.map((question, qIndex) => {
               const answered = quizAnswers[question.id];
               return (

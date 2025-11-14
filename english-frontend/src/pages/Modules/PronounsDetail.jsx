@@ -525,7 +525,7 @@ const PronounsDetail = () => {
         </section>
 
         {/* INTERACTIVE QUIZ */}
-        <section id="quiz" className="mb-12 scroll-mt-32">
+        <section id="quiz" className="mb-12 scroll-mt-32 w-full">
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-2">
               <span className="text-3xl mr-3">🎯</span>
@@ -543,8 +543,7 @@ const PronounsDetail = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 px-4">
             {quizQuestions.map((question, qIndex) => {
               const answered = quizAnswers[question.id];
               return (
@@ -634,8 +633,8 @@ const PronounsDetail = () => {
             })}
           </div>
 
-            {Object.keys(quizAnswers).length === quizQuestions.length && (
-              <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
+          {Object.keys(quizAnswers).length === quizQuestions.length && (
+            <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
                 <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
                   {quizScore >= 80 ? '🏆 Outstanding!' : quizScore >= 60 ? '👏 Great Job!' : '📚 Keep Learning!'}
                 </h3>
@@ -659,7 +658,6 @@ const PronounsDetail = () => {
                 </p>
               </div>
             )}
-          </div>
         </section>
 
         {/* RESOURCES */}
