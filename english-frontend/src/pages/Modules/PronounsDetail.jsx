@@ -1,0 +1,627 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const PronounsDetail = () => {
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('overview');
+  const [writingRevealed, setWritingRevealed] = useState(false);
+  const [readingRevealed, setReadingRevealed] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // 9 Types of Pronouns
+  const pronounTypes = [
+    {
+      id: 1,
+      type: 'Personal Pronouns',
+      icon: '👤',
+      color: 'blue',
+      definition: 'Refer to specific people or things. Include subject and object forms.',
+      examples: ['<strong>I</strong> enjoy reading. She <strong>helped</strong> <strong>him</strong>.', '<strong>We</strong> are learning English together.'],
+      sampleWords: ['I, you, he, she, it, we, they', 'me, him, her, us, them']
+    },
+    {
+      id: 2,
+      type: 'Possessive Pronouns',
+      icon: '🎁',
+      color: 'green',
+      definition: 'Show ownership or belonging without needing a noun after them.',
+      examples: ['This book is <strong>mine</strong>. That pen is <strong>his</strong>.', '<strong>Yours</strong> is on the table. <strong>Theirs</strong> is in the bag.'],
+      sampleWords: ['mine, yours, his, hers, its, ours, theirs']
+    },
+    {
+      id: 3,
+      type: 'Demonstrative Pronouns',
+      icon: '👉',
+      color: 'purple',
+      definition: 'Point out specific people or things. Show distance or nearness.',
+      examples: ['<strong>This</strong> is my favorite song. <strong>That</strong> belongs to him.', '<strong>These</strong> are perfect. <strong>Those</strong> are old.'],
+      sampleWords: ['this, that, these, those']
+    },
+    {
+      id: 4,
+      type: 'Reflexive Pronouns',
+      icon: '🪞',
+      color: 'pink',
+      definition: 'Used when subject and object are the same person. Show actions reflected back.',
+      examples: ['She <strong>taught herself</strong> to code. I <strong>hurt myself</strong> yesterday.', 'They <strong>enjoyed themselves</strong> at the party.'],
+      sampleWords: ['myself, yourself, himself, herself, itself, ourselves, themselves']
+    },
+    {
+      id: 5,
+      type: 'Relative Pronouns',
+      icon: '🔗',
+      color: 'orange',
+      definition: 'Connect clauses to nouns. Introduce relative/dependent clauses.',
+      examples: ['The book <strong>that</strong> I read was great. The person <strong>who</strong> called is here.', 'The house <strong>where</strong> we live is beautiful.'],
+      sampleWords: ['who, whom, whose, which, that, where, why']
+    },
+    {
+      id: 6,
+      type: 'Interrogative Pronouns',
+      icon: '❓',
+      color: 'red',
+      definition: 'Used to ask questions. Always appear at the beginning of questions.',
+      examples: ['<strong>Who</strong> is that? <strong>What</strong> do you want?', '<strong>Which</strong> one is yours? <strong>Whose</strong> is this?'],
+      sampleWords: ['who, whom, whose, what, which']
+    },
+    {
+      id: 7,
+      type: 'Indefinite Pronouns',
+      icon: '❔',
+      color: 'indigo',
+      definition: 'Refer to people or things that are not specific or known.',
+      examples: ['<strong>Someone</strong> left the door open. <strong>Everything</strong> is ready.', '<strong>No one</strong> knows the answer. <strong>Anybody</strong> can help.'],
+      sampleWords: ['someone, something, anyone, anything, no one, nothing, everyone, everything']
+    },
+    {
+      id: 8,
+      type: 'Intensive Pronouns',
+      icon: '⭐',
+      color: 'yellow',
+      definition: 'Emphasize or intensify a noun or pronoun. Same forms as reflexive.',
+      examples: ['<strong>I myself</strong> saw it. The president <strong>herself</strong> attended.', '<strong>You yourself</strong> admitted the truth.'],
+      sampleWords: ['myself, yourself, himself, herself, itself, ourselves, themselves']
+    },
+    {
+      id: 9,
+      type: 'Reciprocal Pronouns',
+      icon: '🤝',
+      color: 'teal',
+      definition: 'Show mutual action between two or more people. Action goes both ways.',
+      examples: ['They <strong>love each other</strong>. We help <strong>one another</strong>.', 'The teammates respect <strong>one another</strong>.'],
+      sampleWords: ['each other, one another']
+    }
+  ];
+
+  // Navigation sections
+  const sections = [
+    { id: 'overview', name: 'Overview', icon: '📖' },
+    { id: 'videos', name: 'Videos', icon: '🎥' },
+    { id: 'writing', name: 'Writing', icon: '✍️' },
+    { id: 'reading', name: 'Reading', icon: '📚' },
+    { id: 'quiz', name: 'Quiz', icon: '🎯' },
+    { id: 'resources', name: 'Resources', icon: '🔗' }
+  ];
+
+  // Video resources
+  const videos = [
+    {
+      id: 1,
+      title: 'What are Pronouns?',
+      embedId: 'VdAPL36k8xE',
+      description: 'Learn the basics of pronouns and their importance in English.'
+    },
+    {
+      id: 2,
+      title: 'Personal vs. Possessive Pronouns',
+      embedId: 'VxKRfX_Io7w',
+      description: 'Clear explanation of the most common pronouns.'
+    }
+  ];
+
+  // Interactive quiz questions
+  const quizQuestions = [
+    {
+      id: 1,
+      emoji: '👤',
+      question: 'Which pronoun is a personal pronoun in the objective form?',
+      options: ['She', 'Him', 'Their', 'Mine'],
+      correct: 1,
+      explanation: '"Him" is the objective form of the personal pronoun "he".'
+    },
+    {
+      id: 2,
+      emoji: '🎁',
+      question: 'Choose the correct possessive pronoun: "This bag is ___"',
+      options: ['Mine', 'Me', 'My', 'I'],
+      correct: 0,
+      explanation: '"Mine" is the correct possessive pronoun that stands alone.'
+    },
+    {
+      id: 3,
+      emoji: '👉',
+      question: 'Which is a demonstrative pronoun?',
+      options: ['Everyone', 'That', 'Myself', 'Whose'],
+      correct: 1,
+      explanation: '"That" is a demonstrative pronoun used to point out things.'
+    },
+    {
+      id: 4,
+      emoji: '🪞',
+      question: 'What is a reflexive pronoun?',
+      options: ['Shows ownership', 'Action reflects back to the subject', 'Asks questions', 'Connects clauses'],
+      correct: 1,
+      explanation: 'Reflexive pronouns show that the action reflects back to the subject (e.g., "myself", "yourself").'
+    },
+    {
+      id: 5,
+      emoji: '🔗',
+      question: 'Which relative pronoun introduces a dependent clause?',
+      options: ['What', 'Who', 'Whom', 'All of the above'],
+      correct: 3,
+      explanation: 'All of these can be relative pronouns used to introduce dependent clauses.'
+    }
+  ];
+
+  const handleQuiz = (questionId, answerIndex) => {
+    const question = quizQuestions[currentQuestionIndex];
+    const isCorrect = answerIndex === question.correct;
+    
+    setQuizAnswers(prev => ({
+      ...prev,
+      [questionId]: { selected: answerIndex, correct: isCorrect }
+    }));
+
+    if (isCorrect) {
+      setQuizScore(prev => prev + 10);
+    }
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    }
+  };
+
+  const scrollToSection = (sectionId) => {
+    setActiveSection(sectionId);
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Compact Sticky Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white sticky top-0 z-50 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-3 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm"
+          >
+            <span className="text-lg">←</span>
+            <span className="font-medium">Back</span>
+          </button>
+          
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-3">
+              <span className="text-3xl md:text-4xl">💬</span>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold">Pronouns</h1>
+                <p className="text-sm md:text-base text-blue-100">Master pronouns in English</p>
+              </div>
+            </div>
+
+            {/* Navigation Pills */}
+            <div className="flex flex-wrap gap-2">
+              {sections.map(section => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${
+                    activeSection === section.id
+                      ? 'bg-white text-blue-600 shadow-md'
+                      : 'bg-blue-500 bg-opacity-40 text-white hover:bg-opacity-60'
+                  }`}
+                >
+                  <span className="mr-1">{section.icon}</span>
+                  {section.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+        {/* OVERVIEW SECTION */}
+        <section id="overview" className="mb-12 scroll-mt-32">
+          {/* What are Pronouns */}
+          <div className="bg-white rounded-xl shadow-md p-6 mb-8 border-l-4 border-blue-500">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 flex items-center">
+              <span className="text-2xl mr-2">📖</span>
+              What are Pronouns?
+            </h2>
+            <p className="text-base text-gray-700 leading-relaxed mb-4">
+              A <strong>pronoun</strong> is a word that takes the place of a noun. Instead of repeating "John" or "Sarah," we use pronouns like "he" or "she" to make our speech and writing clearer and less repetitive.
+            </p>
+            
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+                <h3 className="font-semibold text-gray-800 mb-1 flex items-center text-sm">
+                  <span className="text-lg mr-1.5">💡</span>
+                  Why Learn Pronouns?
+                </h3>
+                <p className="text-gray-700 text-sm">
+                  Pronouns are essential for smooth, natural communication. They help avoid repetition and make sentences flow better.
+                </p>
+              </div>
+
+              <div className="bg-purple-50 border-l-4 border-purple-400 p-3 rounded-r-lg">
+                <h3 className="font-semibold text-gray-800 mb-1 flex items-center text-sm">
+                  <span className="text-lg mr-1.5">🎯</span>
+                  Quick Fact
+                </h3>
+                <p className="text-gray-700 text-sm">
+                  Pronouns are used thousands of times daily in English! Understanding them is key to fluent communication.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 9 Types of Pronouns */}
+          <div className="mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center">
+              <span className="text-3xl mr-2">🎨</span>
+              9 Types of Pronouns
+            </h2>
+            
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+              {pronounTypes.map((pronoun) => (
+                <div
+                  key={pronoun.id}
+                  className={`bg-gradient-to-br from-${pronoun.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${pronoun.color}-200 overflow-hidden flex flex-col h-full`}
+                >
+                  <div className={`bg-gradient-to-r from-${pronoun.color}-100 to-${pronoun.color}-50 px-4 py-3 border-b-2 border-${pronoun.color}-200`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-2xl">{pronoun.icon}</span>
+                      <h3 className={`text-base font-bold text-${pronoun.color}-800`}>{pronoun.type}</h3>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 flex-1 flex flex-col">
+                    <p className="text-sm text-gray-700 leading-relaxed mb-3">{pronoun.definition}</p>
+                    
+                    <div className="space-y-1.5 mb-3">
+                      {pronoun.examples.slice(0, 2).map((example, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300"
+                        >
+                          <p
+                            className="text-sm text-gray-700"
+                            dangerouslySetInnerHTML={{ __html: example }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-1 mt-auto">
+                      {pronoun.sampleWords.slice(0, 4).map((word, index) => (
+                        <span
+                          key={index}
+                          className={`bg-${pronoun.color}-100 text-${pronoun.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* VIDEO LESSONS */}
+        <section id="videos" className="mb-12 scroll-mt-32">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+              <span className="text-2xl mr-2">🎥</span>
+              Video Lessons
+            </h2>
+            <p className="text-gray-600 text-sm mb-5">Watch these helpful videos</p>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {videos.map(video => (
+                <div key={video.id} className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
+                  <div className="aspect-video bg-gray-900">
+                    <iframe
+                      className="w-full h-full"
+                      src={`https://www.youtube.com/embed/${video.embedId}`}
+                      title={video.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-semibold text-base text-gray-800 mb-1">{video.title}</h3>
+                    <p className="text-sm text-gray-600">{video.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* WRITING EXERCISE */}
+        <section id="writing" className="mb-12 scroll-mt-32">
+          <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl shadow-md p-5 md:p-6 border border-green-300">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+              <span className="text-2xl mr-2">✍️</span>
+              Writing Exercise
+            </h2>
+            <p className="text-gray-600 text-sm mb-4">Practice using pronouns correctly</p>
+
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <div className="bg-green-100 border-l-4 border-green-500 p-3 rounded-r-lg mb-4">
+                <h3 className="font-semibold text-gray-800 mb-1 text-sm">📝 Your Task:</h3>
+                <p className="text-gray-700 text-sm">
+                  Rewrite the paragraph replacing the nouns with appropriate pronouns to avoid repetition.
+                </p>
+              </div>
+
+              <textarea
+                className="w-full border-2 border-gray-300 rounded-lg p-4 mb-4 focus:border-green-500 focus:outline-none min-h-[150px] text-base"
+                placeholder="Write your answer here..."
+                defaultValue="Sarah went to the store. Sarah bought a book. The book was interesting. Sarah read the book at home."
+              />
+
+              <button
+                onClick={() => setWritingRevealed(!writingRevealed)}
+                className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg font-medium hover:bg-green-700 transition-colors mb-3"
+              >
+                {writingRevealed ? 'Hide' : 'Show'} Sample Answer
+              </button>
+
+              {writingRevealed && (
+                <div className="bg-green-50 border border-green-300 rounded-lg p-4 animate-fade-in">
+                  <h4 className="font-semibold text-gray-800 mb-2 text-sm">✓ Sample Answer:</h4>
+                  <p className="text-sm text-gray-700">
+                    <strong>She</strong> went to the store. <strong>She</strong> bought a book. <strong>It</strong> was interesting. <strong>She</strong> read <strong>it</strong> at home.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* READING EXERCISE */}
+        <section id="reading" className="mb-12 scroll-mt-32">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md p-5 md:p-6 border border-blue-300">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+              <span className="text-2xl mr-2">📚</span>
+              Reading Exercise
+            </h2>
+            <p className="text-gray-600 text-sm mb-4">Read and identify all pronouns</p>
+
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <div className="bg-blue-100 border-l-4 border-blue-500 p-3 rounded-r-lg mb-4">
+                <h3 className="font-semibold text-gray-800 mb-2 text-sm">📖 Read this paragraph:</h3>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  <strong className="text-blue-600">I</strong> love reading books because <strong className="text-blue-600">they</strong> transport <strong className="text-blue-600">me</strong> to different worlds. 
+                  <strong className="text-blue-600">My</strong> favorite author is Jane Austen, and <strong className="text-blue-600">her</strong> novels inspire <strong className="text-blue-600">me</strong> every day. 
+                  Last week, <strong className="text-blue-600">I</strong> finished <strong className="text-blue-600">her</strong> masterpiece, and <strong className="text-blue-600">it</strong> was wonderful!
+                </p>
+              </div>
+
+              <button
+                onClick={() => setReadingRevealed(!readingRevealed)}
+                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3"
+              >
+                {readingRevealed ? 'Hide' : 'Show'} All Pronouns
+              </button>
+
+              {readingRevealed && (
+                <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 animate-fade-in">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-sm">✓ Pronouns Identified:</h4>
+                  <div className="grid sm:grid-cols-2 gap-2 text-sm">
+                    <div className="bg-blue-100 p-2 rounded">
+                      <span className="font-semibold text-blue-700">Personal:</span>
+                      <p className="text-gray-700">I, me, her, it</p>
+                    </div>
+                    <div className="bg-purple-100 p-2 rounded">
+                      <span className="font-semibold text-purple-700">Possessive:</span>
+                      <p className="text-gray-700">My</p>
+                    </div>
+                    <div className="bg-indigo-100 p-2 rounded">
+                      <span className="font-semibold text-indigo-700">Other:</span>
+                      <p className="text-gray-700">they</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* INTERACTIVE QUIZ */}
+        <section id="quiz" className="mb-12 scroll-mt-32">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-2">
+              <span className="text-3xl mr-3">🎯</span>
+              Fun Quiz Time!
+            </h2>
+            <p className="text-sm text-gray-600">Test what you've learned! 🌟</p>
+          </div>
+
+          <div className="flex justify-center mb-6">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl px-6 py-3 shadow-lg">
+              <div className="text-center text-white">
+                <div className="text-3xl font-bold">{quizScore}</div>
+                <div className="text-xs font-semibold uppercase tracking-wide">Points</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto">
+            {quizQuestions.length > 0 && currentQuestionIndex < quizQuestions.length && (
+              <div className="bg-white rounded-xl p-4 md:p-5 shadow-md border border-gray-200">
+                {/* Question Header */}
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-2xl flex-shrink-0">{quizQuestions[currentQuestionIndex].emoji}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2.5 py-0.5 rounded-full">
+                        Q{currentQuestionIndex + 1}
+                      </span>
+                      <span className="text-xs text-gray-500 font-medium">{currentQuestionIndex + 1}/{quizQuestions.length}</span>
+                    </div>
+                    <h3 className="text-base md:text-lg font-semibold text-gray-800 leading-snug">
+                      {quizQuestions[currentQuestionIndex].question}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Options */}
+                <div className="space-y-2 mb-3">
+                  {quizQuestions[currentQuestionIndex].options.map((option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuiz(quizQuestions[currentQuestionIndex].id, index)}
+                      disabled={quizAnswers[quizQuestions[currentQuestionIndex].id]}
+                      className={`w-full p-2.5 md:p-3 rounded-lg border text-left text-sm font-medium transition-all duration-200 ${
+                        quizAnswers[quizQuestions[currentQuestionIndex].id]
+                          ? index === quizQuestions[currentQuestionIndex].correct
+                            ? 'bg-green-50 border-green-400 text-green-900 shadow-sm'
+                            : quizAnswers[quizQuestions[currentQuestionIndex].id].selected === index
+                            ? 'bg-red-50 border-red-400 text-red-900 shadow-sm'
+                            : 'bg-gray-50 border-gray-200 text-gray-400'
+                          : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 hover:shadow-sm'
+                      }`}
+                    >
+                      <span className="flex items-center justify-between">
+                        <span className="flex items-center">
+                          <span className="inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold mr-2 flex-shrink-0">
+                            {String.fromCharCode(65 + index)}
+                          </span>
+                          {option}
+                        </span>
+                        {quizAnswers[quizQuestions[currentQuestionIndex].id] && index === quizQuestions[currentQuestionIndex].correct && <span className="text-base md:text-lg">✅</span>}
+                        {quizAnswers[quizQuestions[currentQuestionIndex].id] && quizAnswers[quizQuestions[currentQuestionIndex].id].selected === index && index !== quizQuestions[currentQuestionIndex].correct && <span className="text-base md:text-lg">❌</span>}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Feedback */}
+                {quizAnswers[quizQuestions[currentQuestionIndex].id] && (
+                  <div className="space-y-2 animate-fade-in">
+                    <div className={`p-2.5 rounded-lg border-l-4 ${
+                      quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500'
+                    }`}>
+                      <p className="text-sm text-gray-800 leading-relaxed">
+                        <span className="font-semibold">{quizAnswers[quizQuestions[currentQuestionIndex].id].correct ? '🎉 Correct!' : '📝 Not quite!'}</span>
+                        {' '}{quizQuestions[currentQuestionIndex].explanation}
+                      </p>
+                    </div>
+
+                    {/* Next Button */}
+                    <button
+                      onClick={nextQuestion}
+                      disabled={currentQuestionIndex >= quizQuestions.length - 1}
+                      className={`w-full px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                        currentQuestionIndex >= quizQuestions.length - 1
+                          ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
+                    >
+                      {currentQuestionIndex >= quizQuestions.length - 1 ? 'Quiz Complete! 🎊' : 'Next Question →'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {Object.keys(quizAnswers).length === quizQuestions.length && (
+              <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-5 md:p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+                  {quizScore >= 40 ? '🏆 Outstanding!' : quizScore >= 25 ? '👏 Great Job!' : '📚 Keep Learning!'}
+                </h3>
+                <p className="text-base md:text-lg text-gray-700 mb-3">
+                  You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">50 points</span>
+                </p>
+                
+                {quizScore === 50 && (
+                  <div className="inline-block bg-yellow-200 border-2 border-yellow-500 rounded-full px-5 py-2 mb-2">
+                    <span className="text-xl md:text-2xl mr-2">🥇</span>
+                    <span className="font-bold text-yellow-800 text-lg">Perfect Score!</span>
+                  </div>
+                )}
+                
+                <p className="text-xs md:text-sm text-gray-600 mt-2">
+                  {quizScore >= 40 
+                    ? "Amazing work! You're a pronoun master! 🌟" 
+                    : quizScore >= 25 
+                    ? "Good effort! Keep practicing to improve! 💪"
+                    : "Review the material and try again! You've got this! 🚀"}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* RESOURCES */}
+        <section id="resources" className="mb-12 scroll-mt-32">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+              <span className="text-2xl mr-2">🔗</span>
+              Additional Resources
+            </h2>
+            <p className="text-gray-600 text-sm mb-5">Explore more materials to master pronouns</p>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                { title: 'Grammar Guide', icon: '📖', url: 'https://www.englishclub.com/grammar/pronouns.htm', color: 'blue' },
+                { title: 'Pronoun Games', icon: '🎮', url: 'https://www.eslgamesplus.com/pronouns/', color: 'green' },
+                { title: 'Worksheets', icon: '📄', url: 'https://www.english-grammar-lessons.com/pronoun-exercises', color: 'purple' },
+                { title: 'Video Playlist', icon: '📺', url: 'https://www.youtube.com/results?search_query=english+pronouns', color: 'red' },
+                { title: 'Practice Quizzes', icon: '✅', url: 'https://www.perfect-english-grammar.com/pronoun-exercises.html', color: 'yellow' },
+                { title: 'Interactive Tools', icon: '🛠️', url: 'https://www.grammarly.com/', color: 'indigo' }
+              ].map((resource, index) => (
+                <a
+                  key={index}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`bg-gradient-to-br from-${resource.color}-50 to-${resource.color}-100 rounded-lg p-4 border border-${resource.color}-300 hover:shadow-md transition-all`}
+                >
+                  <span className="text-2xl block mb-2">{resource.icon}</span>
+                  <h3 className={`font-semibold text-${resource.color}-700 text-base mb-1`}>{resource.title}</h3>
+                  <p className="text-sm text-gray-600">Explore →</p>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Call to Action */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-md p-6 text-white text-center">
+          <h3 className="text-xl font-bold mb-2">🎓 Ready for More?</h3>
+          <p className="text-sm mb-4 text-blue-100">
+            Continue your grammar journey!
+          </p>
+          <button
+            onClick={() => navigate('/modules/grammar-hub')}
+            className="px-6 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-sm"
+          >
+            Back to Grammar Hub
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PronounsDetail;
