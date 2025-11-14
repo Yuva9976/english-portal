@@ -605,8 +605,8 @@ const PronounsDetail = () => {
 
           {/* Quiz Modal - Full Screen One Question at a Time */}
           {showQuizModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+              <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl my-auto">
                 {/* Modal Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center sticky top-0 z-10">
                   <div>
@@ -623,7 +623,7 @@ const PronounsDetail = () => {
 
                 {/* Modal Content - One Question */}
                 {currentQuestionIndex < quizQuestions.length ? (
-                  <div className="p-8">
+                  <div className="p-8 max-h-[calc(100vh-200px)] overflow-y-auto">
                     {(() => {
                       const question = quizQuestions[currentQuestionIndex];
                       const answered = modalQuizAnswers[question.id];
