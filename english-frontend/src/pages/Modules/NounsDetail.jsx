@@ -730,10 +730,10 @@ const NounsDetail = () => {
                 {quizScore >= 60 ? '🏆 Outstanding!' : quizScore >= 40 ? '👏 Great Job!' : '📚 Keep Learning!'}
               </h3>
               <p className="text-base md:text-lg text-gray-700 mb-3">
-                You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">80 points</span>
+                You scored <span className="font-bold text-yellow-600 text-lg md:text-xl">{quizScore}</span> out of <span className="font-bold">100 points</span>
               </p>
               
-              {quizScore === 80 && (
+              {quizScore === 100 && (
                 <div className="inline-block bg-yellow-200 border-2 border-yellow-500 rounded-full px-5 py-2 mb-2">
                   <span className="text-xl md:text-2xl mr-2">🥇</span>
                   <span className="font-bold text-yellow-800 text-base md:text-lg">Perfect Score!</span>

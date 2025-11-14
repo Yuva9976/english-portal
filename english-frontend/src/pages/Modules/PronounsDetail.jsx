@@ -8,7 +8,6 @@ const PronounsDetail = () => {
   const [readingRevealed, setReadingRevealed] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   // 9 Types of Pronouns
   const pronounTypes = [
@@ -251,7 +250,7 @@ const PronounsDetail = () => {
   ];
 
   const handleQuiz = (questionId, answerIndex) => {
-    const question = quizQuestions[currentQuestionIndex];
+    const question = quizQuestions.find(q => q.id === questionId);
     const isCorrect = answerIndex === question.correct;
     
     setQuizAnswers(prev => ({
@@ -261,12 +260,6 @@ const PronounsDetail = () => {
 
     if (isCorrect) {
       setQuizScore(prev => prev + 10);
-    }
-  };
-
-  const nextQuestion = () => {
-    if (currentQuestionIndex < quizQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
