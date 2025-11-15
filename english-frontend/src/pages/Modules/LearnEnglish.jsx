@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../../apiClient';
 import GrammarQuiz from '../../components/GrammarQuiz';
 
 const skillIcons = {
@@ -23,38 +22,19 @@ const skillDescriptions = {
   'Speaking': 'Practice everyday conversations, dialogues, and speaking confidence.'
 };
 
+// Fixed skills list (not loaded from API)
+const defaultSkills = [
+  { name: 'Grammar', slug: 'grammar' },
+  { name: 'Listening', slug: 'listening' },
+  { name: 'Pronunciation', slug: 'pronunciation' },
+  { name: 'Reading', slug: 'reading' },
+  { name: 'Speaking', slug: 'speaking' },
+  { name: 'Vocabulary', slug: 'vocabulary' }
+];
+
 export default function LearnEnglish() {
-  const [lessons, setLessons] = useState([]);
   const [showQuiz, setShowQuiz] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    apiClient.get('/module2/lessons')
-      .then((response) => setLessons(response.data.lessons || []))
-      .catch((err) => console.error('Failed to load lessons', err));
-  }, []);
-
-  const getSkillName = (title) => {
-    // Extract skill name from title
-    const titleLower = title.toLowerCase();
-    if (titleLower.includes('grammar') || titleLower.includes('tense')) return 'Grammar';
-    if (titleLower.includes('vocabulary') || titleLower.includes('phrasal')) return 'Vocabulary';
-    if (titleLower.includes('pronunciation')) return 'Pronunciation';
-    if (titleLower.includes('listening')) return 'Listening';
-    if (titleLower.includes('reading')) return 'Reading';
-    if (titleLower.includes('writing')) return 'Writing';
-    if (titleLower.includes('speaking')) return 'Speaking';
-    return 'English';
-  };
-
-  const handleSkillClick = (lesson, skillName) => {
-    // Navigate to Grammar Hub for grammar, regular lesson view for others
-    if (skillName === 'Grammar') {
-      navigate('/modules/grammar-hub');
-    } else {
-      navigate(`/modules/learn-english/${lesson.slug}`);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50">
@@ -74,57 +54,54 @@ export default function LearnEnglish() {
 
         {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {lessons.map((lesson) => {
-            const skillName = getSkillName(lesson.title);
-            return (
-              <div
-                key={lesson.slug}
-                className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-gray-200 hover:border-teal-400"
-              >
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <span className="text-5xl mr-4">{skillIcons[skillName] || '📘'}</span>
-                    <h2 className="text-2xl font-bold text-gray-800">
-                      {skillName}
-                    </h2>
-                  </div>
-                  <p className="text-gray-600 leading-relaxed mb-4">
-                    {skillDescriptions[skillName] || lesson.excerpt}
-                  </p>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex gap-3 mt-4">
-                    <button
-                      onClick={() => {
-                        if (skillName === 'Grammar') {
-                          navigate('/modules/grammar-hub');
-                        } else {
-                          navigate(`/modules/learn-english/${lesson.slug}`);
-                        }
-                      }}
-                      className="flex-1 px-4 py-3 text-sm font-semibold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition flex items-center justify-center gap-2"
-                    >
-                      <span>📖</span>
-                      <span>Start Learning</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (skillName === 'Grammar') {
-                          setShowQuiz(true);
-                        } else {
-                          navigate(`/modules/learn-english/${lesson.slug}?practice=1`);
-                        }
-                      }}
-                      className="flex-1 px-4 py-3 text-sm font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2"
-                    >
-                      <span>🎯</span>
-                      <span>Take Quiz</span>
-                    </button>
-                  </div>
+          {defaultSkills.map((skill) => (
+            <div
+              key={skill.slug}
+              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-gray-200 hover:border-teal-400"
+            >
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <span className="text-5xl mr-4">{skillIcons[skill.name] || '📘'}</span>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {skill.name}
+                  </h2>
+                </div>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  {skillDescriptions[skill.name]}
+                </p>
+                
+                {/* Action Buttons */}
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => {
+                      if (skill.name === 'Grammar') {
+                        navigate('/modules/grammar-hub');
+                      } else {
+                        navigate(`/modules/learn-english/${skill.slug}`);
+                      }
+                    }}
+                    className="flex-1 px-4 py-3 text-sm font-semibold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition flex items-center justify-center gap-2"
+                  >
+                    <span>📖</span>
+                    <span>Start Learning</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (skill.name === 'Grammar') {
+                        setShowQuiz(true);
+                      } else {
+                        navigate(`/modules/learn-english/${skill.slug}?practice=1`);
+                      }
+                    }}
+                    className="flex-1 px-4 py-3 text-sm font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition flex items-center justify-center gap-2"
+                  >
+                    <span>🎯</span>
+                    <span>Take Quiz</span>
+                  </button>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* Grammar Quiz Modal */}

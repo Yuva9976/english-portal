@@ -12,6 +12,7 @@ const NounsDetail = () => {
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [modalQuizAnswers, setModalQuizAnswers] = useState({});
+  const [singleQuestionMode, setSingleQuestionMode] = useState(false);
 
   // All 10 noun types
   const nounTypes = [
@@ -323,35 +324,27 @@ const NounsDetail = () => {
       <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
         {/* OVERVIEW SECTION */}
         <section id="overview" className="mb-12 scroll-mt-32">
-          {/* What are Nouns - Compact */}
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8 border-l-4 border-blue-500">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 flex items-center">
-              <span className="text-2xl mr-2">📖</span>
-              What are Nouns?
-            </h2>
-            <p className="text-base text-gray-700 leading-relaxed mb-4">
-              A <strong>noun</strong> is a word that names a person, place, thing, or idea. Nouns are the foundation of sentences, serving as subjects and objects.
+          {/* What are Nouns - Super Compact Header Card */}
+          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 mb-6 hover:shadow-md transition-all">
+            <div className="flex items-start gap-2 md:gap-3 mb-2">
+              <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">📖</span>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-base md:text-lg font-bold text-slate-800 leading-tight">What are Nouns?</h2>
+              </div>
+            </div>
+            
+            <p className="text-xs md:text-sm text-slate-700 leading-snug mb-2 pl-7 md:pl-8">
+              A <strong>noun</strong> names a person, place, thing, or idea. Foundation of clear communication.
             </p>
             
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
-                <h3 className="font-semibold text-gray-800 mb-1 flex items-center text-sm">
-                  <span className="text-lg mr-1.5">💡</span>
-                  Why Learn Nouns?
-                </h3>
-                <p className="text-gray-700 text-sm">
-                  Understanding nouns helps you construct clear sentences and communicate effectively in English.
-                </p>
+            <div className="grid grid-cols-2 gap-2 pl-0">
+              <div className="bg-white border border-blue-200 rounded-lg p-2 md:p-2.5">
+                <p className="text-xs md:text-xs font-semibold text-blue-700">💡 Why Learn?</p>
+                <p className="text-xs text-slate-600 leading-tight mt-0.5">Clear, effective communication</p>
               </div>
-
-              <div className="bg-purple-50 border-l-4 border-purple-400 p-3 rounded-r-lg">
-                <h3 className="font-semibold text-gray-800 mb-1 flex items-center text-sm">
-                  <span className="text-lg mr-1.5">🎯</span>
-                  Quick Fact
-                </h3>
-                <p className="text-gray-700 text-sm">
-                  Nouns make up about 25% of all words in typical English text!
-                </p>
+              <div className="bg-white border border-purple-200 rounded-lg p-2 md:p-2.5">
+                <p className="text-xs md:text-xs font-semibold text-purple-700">🎯 Quick Fact</p>
+                <p className="text-xs text-slate-600 leading-tight mt-0.5">25% of English words!</p>
               </div>
             </div>
           </div>
@@ -630,6 +623,7 @@ const NounsDetail = () => {
                 setShowQuizModal(true);
                 setCurrentQuestionIndex(0);
                 setModalQuizAnswers({});
+                setSingleQuestionMode(false);
               }}
               className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
             >
@@ -648,6 +642,7 @@ const NounsDetail = () => {
                     setShowQuizModal(true);
                     setCurrentQuestionIndex(qIndex);
                     setModalQuizAnswers({});
+                    setSingleQuestionMode(true);
                   }}
                   className="bg-white rounded-lg p-3 shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105"
                 >
@@ -690,59 +685,82 @@ const NounsDetail = () => {
             })}
           </div>
 
-          {/* Quiz Modal - Full Screen One Question at a Time */}
+          {/* Quiz Modal - Modern Compact Design */}
           {showQuizModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-              <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl my-auto">
-                {/* Modal Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center sticky top-0 z-10">
-                  <div>
-                    <h3 className="text-2xl font-bold">Nouns Quiz</h3>
-                    <p className="text-sm text-blue-100">Question {currentQuestionIndex + 1} of {interactiveQuiz.length}</p>
+            <div className="fixed inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-50 z-50 overflow-y-auto flex items-center justify-center p-3 md:p-6">
+              <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl">
+                {/* Progress Bar - Hidden in Single Question Mode */}
+                {!singleQuestionMode && (
+                  <div className="h-1.5 bg-slate-100">
+                    <div 
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                      style={{ width: `${((currentQuestionIndex + 1) / interactiveQuiz.length) * 100}%` }}
+                    ></div>
                   </div>
-                  <button
-                    onClick={() => setShowQuizModal(false)}
-                    className="text-2xl hover:text-blue-200 transition-colors"
-                  >
-                    ✕
-                  </button>
+                )}
+
+                {/* Modal Header - Compact with Close Button on Right */}
+                <div className={`px-6 md:px-8 py-4 md:py-5 border-b border-slate-100 flex items-center justify-between ${singleQuestionMode ? 'bg-slate-50' : ''}`}>
+                  <div>
+                    {!singleQuestionMode && (
+                      <p className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wide">Question {currentQuestionIndex + 1} of {interactiveQuiz.length}</p>
+                    )}
+                    {singleQuestionMode && (
+                      <p className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wide">Practice Question</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-4 md:gap-6">
+                    {!singleQuestionMode && (
+                      <div className="text-right">
+                        <div className="text-lg md:text-xl font-bold text-blue-600">{Object.values(modalQuizAnswers).filter(a => a.correct).length * 10}</div>
+                        <div className="text-xs text-slate-500">points</div>
+                      </div>
+                    )}
+                    <button
+                      onClick={() => {
+                        setShowQuizModal(false);
+                        setSingleQuestionMode(false);
+                      }}
+                      className="p-1.5 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-700"
+                      title="Close quiz"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Modal Content - One Question */}
                 {currentQuestionIndex < interactiveQuiz.length ? (
-                  <div className="p-8 max-h-[calc(100vh-200px)] overflow-y-auto">
+                  <div className="p-6 md:p-8">
                     {(() => {
                       const question = interactiveQuiz[currentQuestionIndex];
                       const answered = modalQuizAnswers[question.id];
 
                       return (
-                        <div className="space-y-6">
-                          {/* Question */}
-                          <div>
-                            <div className="flex items-center gap-4 mb-4">
-                              <span className="text-4xl">{question.emoji}</span>
-                              <div>
-                                <span className="bg-yellow-400 text-white font-bold text-xs px-3 py-1 rounded-full">
-                                  Q{question.id}
-                                </span>
-                              </div>
+                        <div className="space-y-5">
+                          {/* Question with Emoji */}
+                          <div className="space-y-2">
+                            <div className="flex items-start gap-3">
+                              <span className="text-4xl md:text-5xl flex-shrink-0">{question.emoji}</span>
+                              <h4 className="text-lg md:text-xl font-bold text-slate-800 leading-snug pt-1">
+                                {question.question}
+                              </h4>
                             </div>
-                            <h4 className="text-xl font-bold text-gray-800">
-                              {question.question}
-                            </h4>
                           </div>
 
                           {/* Hint */}
                           {!answered && (
-                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-                              <p className="text-sm text-blue-800">
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-3 md:p-4 rounded-lg">
+                              <p className="text-xs md:text-sm text-blue-700">
                                 <span className="font-semibold">💡 Hint:</span> {question.hint}
                               </p>
                             </div>
                           )}
 
                           {/* Options */}
-                          <div className="space-y-3">
+                          <div className="space-y-2.5">
                             {question.options.map((option, index) => (
                               <button
                                 key={index}
@@ -756,23 +774,30 @@ const NounsDetail = () => {
                                   }
                                 }}
                                 disabled={answered}
-                                className={`w-full p-4 rounded-lg border-2 text-left font-medium transition-all text-base ${
-                                  answered
-                                    ? index === question.correct
-                                      ? 'bg-green-50 border-green-500 text-green-900'
+                                className={`w-full p-3 md:p-4 rounded-lg border-2 transition-all text-left font-medium group ${answered
+                                  ? index === question.correct
+                                      ? 'bg-green-50 border-green-400 shadow-sm'
                                       : answered.selected === index
-                                      ? 'bg-red-50 border-red-500 text-red-900'
-                                      : 'bg-gray-50 border-gray-300 text-gray-500'
-                                    : 'bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                                      ? 'bg-red-50 border-red-400 shadow-sm'
+                                      : 'bg-slate-50 border-slate-200 text-slate-500'
+                                    : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
                                 }`}
                               >
-                                <div className="flex items-center">
-                                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 font-bold mr-3 flex-shrink-0">
+                                <div className="flex items-center gap-3">
+                                  <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-xs flex-shrink-0 transition-colors ${
+                                    answered
+                                      ? index === question.correct
+                                        ? 'bg-green-200 text-green-700'
+                                        : answered.selected === index
+                                        ? 'bg-red-200 text-red-700'
+                                        : 'bg-slate-200 text-slate-600'
+                                      : 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
+                                  }`}>
                                     {String.fromCharCode(65 + index)}
                                   </span>
-                                  {option}
-                                  {answered && index === question.correct && <span className="ml-auto text-2xl">✅</span>}
-                                  {answered && answered.selected === index && index !== question.correct && <span className="ml-auto text-2xl">❌</span>}
+                                  <span className="flex-1 text-sm md:text-base text-slate-700 group-hover:text-slate-800">{option}</span>
+                                  {answered && index === question.correct && <span className="text-lg">✅</span>}
+                                  {answered && answered.selected === index && index !== question.correct && <span className="text-lg">❌</span>}
                                 </div>
                               </button>
                             ))}
@@ -780,55 +805,70 @@ const NounsDetail = () => {
 
                           {/* Feedback */}
                           {answered && (
-                            <div className="space-y-4 animate-fade-in">
-                              <div className={`p-4 rounded-lg border-l-4 ${
-                                answered.correct
-                                  ? 'bg-green-50 border-green-500'
-                                  : 'bg-orange-50 border-orange-500'
-                              }`}>
-                                <p className="font-semibold text-lg mb-2">
-                                  {answered.correct ? '🎉 Correct!' : '❌ Not quite!'}
-                                </p>
-                                <p className="text-sm text-gray-800">
-                                  {question.explanation}
-                                </p>
-                              </div>
-
-                              {answered.correct && (
-                                <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                                  <p className="text-sm text-purple-900">
-                                    <span className="font-semibold">🎓 Fun Fact:</span> {question.funFact}
-                                  </p>
-                                </div>
-                              )}
+                            <div className={`p-4 rounded-lg border-l-4 space-y-1.5 ${
+                              answered.correct
+                                ? 'bg-green-50 border-green-500'
+                                : 'bg-orange-50 border-orange-500'
+                            }`}>
+                              <p className="font-bold text-base">
+                                {answered.correct ? '🎉 Correct!' : '❌ Not quite right!'}
+                              </p>
+                              <p className="text-slate-700 text-xs md:text-sm leading-relaxed">
+                                {question.explanation}
+                              </p>
                             </div>
                           )}
 
-                          {/* Navigation */}
-                          <div className="flex gap-3 pt-4 border-t">
-                            <button
-                              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-                              disabled={currentQuestionIndex === 0}
-                              className="flex-1 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors"
-                            >
-                              ← Previous
-                            </button>
-                            <button
-                              onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
-                              disabled={!answered || currentQuestionIndex === interactiveQuiz.length - 1}
-                              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-2 px-4 rounded-lg transition-colors"
-                            >
-                              Next →
-                            </button>
-                          </div>
+                          {answered?.correct && (
+                            <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg">
+                              <p className="text-xs md:text-sm text-purple-800">
+                                <span className="font-bold">🎓 Fun Fact:</span> {question.funFact}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Navigation - Hidden in Single Question Mode */}
+                          {!singleQuestionMode && answered && (
+                            <div className="flex gap-2.5 pt-4 border-t border-slate-100">
+                              <button
+                                onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+                                disabled={currentQuestionIndex === 0}
+                                className="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium text-sm md:text-base hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              >
+                                ← Previous
+                              </button>
+                              <button
+                                onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                                disabled={!answered || currentQuestionIndex === interactiveQuiz.length - 1}
+                                className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                              >
+                                Next →
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Close Button - Shown in Single Question Mode */}
+                          {singleQuestionMode && answered && (
+                            <div className="flex gap-2.5 pt-4 border-t border-slate-100">
+                              <button
+                                onClick={() => {
+                                  setShowQuizModal(false);
+                                  setSingleQuestionMode(false);
+                                }}
+                                className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
+                              >
+                                ← Back to Questions
+                              </button>
+                            </div>
+                          )}
                         </div>
                       );
                     })()}
                   </div>
                 ) : (
                   /* Results Screen */
-                  <div className="p-8 text-center space-y-6">
-                    <h3 className="text-3xl font-bold text-gray-800">
+                  <div className="p-6 md:p-8 text-center space-y-5">
+                    <h3 className="text-3xl md:text-4xl font-bold text-slate-800">
                       {Object.keys(modalQuizAnswers).length === interactiveQuiz.length 
                         ? '🎊 Quiz Complete!' 
                         : '⏸️ Quiz Paused'}
@@ -836,18 +876,20 @@ const NounsDetail = () => {
 
                     {Object.keys(modalQuizAnswers).length === interactiveQuiz.length && (
                       <>
-                        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6">
-                          <p className="text-sm text-gray-600 mb-2">Your Score</p>
-                          <div className="text-5xl font-bold text-orange-600">
+                        {/* Score Card */}
+                        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200 space-y-2">
+                          <p className="text-xs md:text-sm font-semibold text-slate-600 uppercase tracking-wide">Final Score</p>
+                          <div className="text-5xl md:text-6xl font-bold text-amber-600">
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length * 10}
-                            <span className="text-2xl text-gray-600">/100</span>
                           </div>
+                          <p className="text-base text-slate-700 font-medium">out of 100 points</p>
                         </div>
 
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <p className="text-lg font-semibold text-gray-800">
+                        {/* Performance Message */}
+                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-xl border border-blue-200">
+                          <p className="text-lg md:text-xl font-bold text-slate-800 leading-relaxed">
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length === interactiveQuiz.length
-                              ? '🏆 Perfect Score! You\'re a noun master!'
+                              ? '🏆 Perfect! You\'re a noun master!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 8
                               ? '🥇 Excellent work!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
@@ -855,13 +897,36 @@ const NounsDetail = () => {
                               : '📚 Keep practicing!'}
                           </p>
                         </div>
+
+                        {/* Statistics Grid */}
+                        <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200 text-center">
+                            <p className="text-2xl md:text-3xl font-bold text-green-600 mb-1">
+                              {Object.values(modalQuizAnswers).filter(a => a.correct).length}
+                            </p>
+                            <p className="text-xs md:text-sm font-semibold text-slate-600">Correct</p>
+                          </div>
+                          <div className="bg-red-50 p-3 md:p-4 rounded-lg border border-red-200 text-center">
+                            <p className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
+                              {interactiveQuiz.length - Object.values(modalQuizAnswers).filter(a => a.correct).length}
+                            </p>
+                            <p className="text-xs md:text-sm font-semibold text-slate-600">Incorrect</p>
+                          </div>
+                          <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 text-center">
+                            <p className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">
+                              {Math.round((Object.values(modalQuizAnswers).filter(a => a.correct).length / interactiveQuiz.length) * 100)}%
+                            </p>
+                            <p className="text-xs md:text-sm font-semibold text-slate-600">Accuracy</p>
+                          </div>
+                        </div>
                       </>
                     )}
 
-                    <div className="flex gap-3">
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2.5 pt-4 border-t border-slate-100">
                       <button
                         onClick={() => setShowQuizModal(false)}
-                        className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors"
+                        className="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium text-sm md:text-base hover:bg-slate-50 transition-colors"
                       >
                         Close
                       </button>
@@ -870,9 +935,9 @@ const NounsDetail = () => {
                           setCurrentQuestionIndex(0);
                           setModalQuizAnswers({});
                         }}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                        className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
                       >
-                        Restart Quiz
+                        🔄 Restart Quiz
                       </button>
                     </div>
                   </div>
