@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { verbQuizzes, adjectiveQuizzes, adverbQuizzes, prepositionQuizzes, conjunctionQuizzes, determinerQuizzes, interjectionQuizzes } from '../../data/quizzes';
 
 const GrammarQuizGame = ({ quizType = 'nouns' }) => {
   const navigate = useNavigate();
@@ -256,8 +257,53 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
     }
   ];
 
-  const questions = quizType === 'nouns' ? nounQuestions : pronounQuestions;
-  const quizTitle = quizType === 'nouns' ? 'Comprehensive Nouns Quiz' : 'Comprehensive Pronouns Quiz';
+  const verbQuestions = (verbQuizzes && verbQuizzes.comprehensive) ? verbQuizzes.comprehensive : [];
+  const adjectiveQuestions = (adjectiveQuizzes && adjectiveQuizzes.comprehensive) ? adjectiveQuizzes.comprehensive : [];
+  const adverbQuestions = (adverbQuizzes && adverbQuizzes.comprehensive) ? adverbQuizzes.comprehensive : [];
+  const prepositionQuestions = (prepositionQuizzes && prepositionQuizzes.comprehensive) ? prepositionQuizzes.comprehensive : [];
+  const conjunctionQuestions = (conjunctionQuizzes && conjunctionQuizzes.comprehensive) ? conjunctionQuizzes.comprehensive : [];
+  const determinerQuestions = (determinerQuizzes && determinerQuizzes.comprehensive) ? determinerQuizzes.comprehensive : [];
+  const interjectionQuestions = (interjectionQuizzes && interjectionQuizzes.comprehensive) ? interjectionQuizzes.comprehensive : [];
+
+  const questions = quizType === 'nouns'
+    ? nounQuestions
+    : quizType === 'pronouns'
+    ? pronounQuestions
+    : quizType === 'verbs'
+    ? verbQuestions
+    : quizType === 'adjectives'
+    ? adjectiveQuestions
+    : quizType === 'adverbs'
+    ? adverbQuestions
+    : quizType === 'prepositions'
+    ? prepositionQuestions
+    : quizType === 'conjunctions'
+    ? conjunctionQuestions
+    : quizType === 'determiners'
+    ? determinerQuestions
+    : quizType === 'interjections'
+    ? interjectionQuestions
+    : nounQuestions;
+
+  const quizTitle = quizType === 'nouns'
+    ? 'Comprehensive Nouns Quiz'
+    : quizType === 'pronouns'
+    ? 'Comprehensive Pronouns Quiz'
+    : quizType === 'verbs'
+    ? 'Comprehensive Verbs Quiz'
+    : quizType === 'adjectives'
+    ? 'Comprehensive Adjectives Quiz'
+    : quizType === 'adverbs'
+    ? 'Comprehensive Adverbs Quiz'
+    : quizType === 'prepositions'
+    ? 'Comprehensive Prepositions Quiz'
+    : quizType === 'conjunctions'
+    ? 'Comprehensive Conjunctions Quiz'
+    : quizType === 'determiners'
+    ? 'Comprehensive Determiners Quiz'
+    : quizType === 'interjections'
+    ? 'Comprehensive Interjections Quiz'
+    : 'Comprehensive Quiz';
 
   const handleAnswer = (answerIndex) => {
     const question = questions[currentQuestionIndex];

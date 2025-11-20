@@ -132,7 +132,7 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
     return (
       <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
         <div className="w-full h-full relative">
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 sticky top-0 z-10">
+          <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
             <button onClick={onClose} className="absolute top-4 right-4 text-white hover:text-gray-200">
               <span className="text-2xl">✕</span>
             </button>
@@ -140,7 +140,7 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
               <span className="text-4xl">✍️</span>
               <div>
                 <h2 className="text-3xl font-bold">Grammar Quizzes</h2>
-                <p className="text-purple-100 text-sm">Test your grammar knowledge</p>
+                <p className="text-teal-100 text-sm">Test your grammar knowledge</p>
               </div>
             </div>
           </div>
@@ -181,7 +181,7 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
               ))}
             </div>
 
-            <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
+            <div className="mt-8 bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-6">
               <h4 className="font-bold text-lg text-gray-800 mb-3">📊 Features</h4>
               <ul className="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
                 <li className="flex items-center space-x-2">
@@ -224,7 +224,7 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
           </div>
 
           <div className="p-8">
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
+            <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-xl p-6 mb-6">
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-gray-800 mb-2">{percentage}%</div>
                 <div className="text-gray-600">Your Score: {score} / {maxScore}</div>
@@ -261,7 +261,7 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
             )}
 
             <div className="space-y-3">
-              <button onClick={resetQuiz} className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+              <button onClick={resetQuiz} className="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
                 Try Another Quiz
               </button>
               <button onClick={onClose} className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold">

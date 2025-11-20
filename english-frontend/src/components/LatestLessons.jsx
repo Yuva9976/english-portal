@@ -1,5 +1,6 @@
-import React, { useRef } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import LoginRequiredModal from './LoginRequiredModal'
 
 const lessons = [
   { slug: 'grammar', title: 'Grammar Essentials', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop', description: 'Master English grammar rules and structures' },
@@ -11,6 +12,9 @@ const lessons = [
 
 export default function LatestLessons(){
   const ref = useRef(null)
+  const token = localStorage.getItem('token')
+  const navigate = useNavigate()
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   function scroll(dir = 'next'){
     if (!ref.current) return
@@ -18,27 +22,45 @@ export default function LatestLessons(){
     ref.current.scrollBy({ left: dir === 'next' ? width : -width, behavior: 'smooth' })
   }
 
-  return (
-    <section className="container mx-auto px-6 md:px-12">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-slate-800">Latest Lessons</h2>
-        <div className="flex items-center gap-2">
-          <button onClick={() => scroll('prev')} className="px-3 py-1 bg-teal-600 text-white rounded shadow hover:bg-teal-700">◀</button>
-          <button onClick={() => scroll('next')} className="px-3 py-1 bg-teal-600 text-white rounded shadow hover:bg-teal-700">▶</button>
-        </div>
-      </div>
+  const handleCardClick = (slug) => {
+    if (!token) {
+      setShowLoginModal(true)
+      return
+    }
+    navigate(`/modules/learn-english/${slug}`)
+  }
 
-      <div ref={ref} className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
-        {lessons.map(l => (
-          <Link key={l.slug} to={`/modules/learn-english/${l.slug}`} className="min-w-[260px] bg-white rounded-lg shadow overflow-hidden shrink-0 hover:shadow-xl transition transform hover:scale-105">
-            <img src={l.img} alt={l.title} className="w-full h-40 object-cover" />
-            <div className="p-4">
-              <div className="font-semibold text-slate-800">{l.title}</div>
-              <div className="text-sm text-slate-600 mt-2">{l.description}</div>
+  return (
+    <>
+      <section className="container mx-auto px-6 md:px-12">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold text-slate-800">Latest Lessons</h2>
+          {token && (
+            <div className="flex items-center gap-2">
+              <button onClick={() => scroll('prev')} className="px-3 py-1 bg-teal-600 text-white rounded shadow hover:bg-teal-700">◀</button>
+              <button onClick={() => scroll('next')} className="px-3 py-1 bg-teal-600 text-white rounded shadow hover:bg-teal-700">▶</button>
             </div>
-          </Link>
-        ))}
-      </div>
-    </section>
+          )}
+        </div>
+
+        <div ref={ref} className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+          {lessons.map(l => (
+            <div 
+              key={l.slug}
+              onClick={() => handleCardClick(l.slug)}
+              className="min-w-[260px] bg-white rounded-lg shadow overflow-hidden shrink-0 transition transform hover:shadow-xl hover:scale-105 cursor-pointer"
+            >
+              <img src={l.img} alt={l.title} className="w-full h-40 object-cover" />
+              <div className="p-4">
+                <div className="font-semibold text-slate-800">{l.title}</div>
+                <div className="text-sm text-slate-600 mt-2">{l.description}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <LoginRequiredModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+    </>
   )
 }

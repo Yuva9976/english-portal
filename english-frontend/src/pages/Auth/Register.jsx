@@ -18,22 +18,10 @@ export default function Register() {
     try {
       const res = await apiClient.post('/auth/register', { name, email, password, role });
 
-      if (res.data?.user) {
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-      }
-
-      // Save token from response or from axios headers
-      if (res.data?.token) {
-        localStorage.setItem('token', res.data.token);
-      } else {
-        // Token might be in Authorization header or cookie
-        const token = res.headers.authorization?.replace('Bearer ', '');
-        if (token) {
-          localStorage.setItem('token', token);
-        }
-      }
-
-      navigate('/dashboard');
+      // Show success message and redirect to login
+      setError('');
+      alert('✅ Registration successful! Please login with your credentials.');
+      navigate('/login');
     } catch (err) {
       console.error('Register error:', err);
       setError(
@@ -95,12 +83,12 @@ export default function Register() {
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
           >
             <option value="learner">Learner (student)</option>
             <option value="teacher">Teacher (instructor)</option>
           </select>
-          <p className="text-xs text-slate-500 mt-1">If you register as a teacher your account may require approval.</p>
+          <p className="text-xs text-slate-500 mt-1">Admin accounts are created by the system administrator only.</p>
         </div>
 
         <button

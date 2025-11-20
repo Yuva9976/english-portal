@@ -199,7 +199,7 @@ const GrammarGuide = ({ onClose }) => {
     <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
       <div className="w-full h-full relative">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
@@ -210,7 +210,7 @@ const GrammarGuide = ({ onClose }) => {
             <span className="text-4xl">📖</span>
             <div>
               <h2 className="text-3xl font-bold">Grammar Guide</h2>
-              <p className="text-blue-100 text-sm">Your comprehensive English grammar reference</p>
+              <p className="text-teal-100 text-sm">Your comprehensive English grammar reference</p>
             </div>
           </div>
         </div>
@@ -226,7 +226,7 @@ const GrammarGuide = ({ onClose }) => {
                   onClick={() => setActiveSection(section.id)}
                   className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center space-x-3 ${
                     activeSection === section.id
-                      ? 'bg-blue-600 text-white shadow-md'
+                      ? 'bg-teal-600 text-white shadow-md'
                       : 'hover:bg-gray-200 text-gray-700'
                   }`}
                 >
@@ -247,7 +247,7 @@ const GrammarGuide = ({ onClose }) => {
                   <p className="text-gray-700 leading-relaxed mb-4">
                     Grammar is the set of rules that governs how words are combined to form meaningful sentences in a language. It includes the structure, syntax, and organization of language elements.
                   </p>
-                  <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                  <div className="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
                     <p className="text-gray-700 italic">
                       "Grammar is the backbone of clear communication. It helps us express our ideas accurately and be understood by others."
                     </p>
@@ -266,7 +266,7 @@ const GrammarGuide = ({ onClose }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                    <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
                       <div className="flex items-start space-x-3">
                         <span className="text-2xl">✓</span>
                         <div>
@@ -317,7 +317,7 @@ const GrammarGuide = ({ onClose }) => {
                             <p className="text-sm font-semibold text-gray-700 mb-2">Examples:</p>
                             <div className="flex flex-wrap gap-2">
                               {part.examples.map((example, i) => (
-                                <span key={i} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                <span key={i} className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm">
                                   {example}
                                 </span>
                               ))}
@@ -347,12 +347,12 @@ const GrammarGuide = ({ onClose }) => {
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">Sentence Structure</h3>
                 
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+                <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-6 border border-teal-200">
                   <h4 className="text-xl font-bold text-gray-800 mb-3">Basic Word Order</h4>
                   <div className="flex items-center justify-center space-x-4 text-lg">
-                    <div className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold">Subject</div>
+                    <div className="bg-teal-500 text-white px-4 py-2 rounded-lg font-semibold">Subject</div>
                     <span className="text-2xl">→</span>
-                    <div className="bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold">Verb</div>
+                    <div className="bg-teal-500 text-white px-4 py-2 rounded-lg font-semibold">Verb</div>
                     <span className="text-2xl">→</span>
                     <div className="bg-pink-500 text-white px-4 py-2 rounded-lg font-semibold">Object</div>
                   </div>
@@ -372,7 +372,7 @@ const GrammarGuide = ({ onClose }) => {
                       <p className="text-sm text-gray-600 mb-2">Two independent clauses joined by a conjunction</p>
                       <p className="text-gray-700 italic">Example: "The cat sleeps, and the dog plays."</p>
                     </div>
-                    <div className="bg-white border-l-4 border-purple-500 p-4 rounded-r-lg shadow-sm">
+                    <div className="bg-white border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
                       <h5 className="font-bold text-gray-800 mb-2">Complex Sentence</h5>
                       <p className="text-sm text-gray-600 mb-2">One independent + one dependent clause</p>
                       <p className="text-gray-700 italic">Example: "The cat sleeps when it's tired."</p>
@@ -452,7 +452,7 @@ const GrammarGuide = ({ onClose }) => {
                         <p className="text-gray-700 font-semibold">{item.correct}</p>
                       </div>
                     </div>
-                    <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+                    <div className="bg-teal-50 border-l-4 border-teal-400 p-3 rounded-r-lg">
                       <p className="text-sm text-gray-700"><span className="font-semibold">💡 Tip:</span> {item.tip}</p>
                     </div>
                   </div>
@@ -471,8 +471,8 @@ const GrammarGuide = ({ onClose }) => {
                   {punctuationRules.map((rule, index) => (
                     <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-purple-400 transition-colors">
                       <div className="flex items-start space-x-3">
-                        <div className="bg-purple-100 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
-                          <span className="text-2xl font-bold text-purple-600">{rule.mark}</span>
+                        <div className="bg-rose-100 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
+                          <span className="text-2xl font-bold text-rose-600">{rule.mark}</span>
                         </div>
                         <div className="flex-1">
                           <h4 className="font-bold text-gray-800 mb-1">{rule.name}</h4>
@@ -501,7 +501,7 @@ const GrammarGuide = ({ onClose }) => {
                       <p className="font-semibold text-gray-800 mb-2">1. Identify the verb in this sentence:</p>
                       <p className="text-gray-700 mb-2">"The cat quickly jumped over the fence."</p>
                       <details className="text-sm">
-                        <summary className="cursor-pointer text-blue-600 hover:text-blue-700 font-semibold">Show Answer</summary>
+                        <summary className="cursor-pointer text-teal-600 hover:text-teal-700 font-semibold">Show Answer</summary>
                         <p className="mt-2 text-green-600 font-semibold">✓ "jumped" is the verb (action word)</p>
                       </details>
                     </div>
@@ -511,7 +511,7 @@ const GrammarGuide = ({ onClose }) => {
                       <p className="text-gray-700">a) She don't like coffee.</p>
                       <p className="text-gray-700">b) She doesn't like coffee.</p>
                       <details className="text-sm mt-2">
-                        <summary className="cursor-pointer text-blue-600 hover:text-blue-700 font-semibold">Show Answer</summary>
+                        <summary className="cursor-pointer text-teal-600 hover:text-teal-700 font-semibold">Show Answer</summary>
                         <p className="mt-2 text-green-600 font-semibold">✓ (b) is correct. Use "doesn't" with she/he/it.</p>
                       </details>
                     </div>
@@ -523,7 +523,7 @@ const GrammarGuide = ({ onClose }) => {
                     href="https://www.englishclub.com/grammar/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-blue-600 text-white rounded-lg p-5 hover:bg-blue-700 transition-colors text-center"
+                    className="bg-teal-600 text-white rounded-lg p-5 hover:bg-teal-700 transition-colors text-center"
                   >
                     <span className="text-3xl mb-2 block">📚</span>
                     <h5 className="font-bold mb-2">EnglishClub Grammar</h5>

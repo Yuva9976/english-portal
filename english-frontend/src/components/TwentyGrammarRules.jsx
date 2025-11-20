@@ -180,7 +180,7 @@ const TwentyGrammarRules = ({ onClose }) => {
     <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
       <div className="w-full h-full relative">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
@@ -192,7 +192,7 @@ const TwentyGrammarRules = ({ onClose }) => {
               <span className="text-4xl">📋</span>
               <div>
                 <h2 className="text-3xl font-bold">20 Essential Grammar Rules</h2>
-                <p className="text-purple-100 text-sm">Master these rules for correct English</p>
+                <p className="text-teal-100 text-sm">Master these rules for correct English</p>
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ const TwentyGrammarRules = ({ onClose }) => {
                   className={`border-2 rounded-lg p-5 transition-all duration-300 ${
                     isCompleted
                       ? 'border-green-400 bg-green-50'
-                      : 'border-gray-200 bg-white hover:border-purple-300'
+                      : 'border-gray-200 bg-white hover:border-teal-300'
                   }`}
                 >
                   <div className="flex items-start space-x-4">
@@ -239,7 +239,7 @@ const TwentyGrammarRules = ({ onClose }) => {
                       className={`flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
                         isCompleted
                           ? 'bg-green-500 border-green-500 text-white'
-                          : 'border-gray-300 hover:border-purple-500'
+                          : 'border-gray-300 hover:border-teal-500'
                       }`}
                     >
                       {isCompleted && <span className="text-xl">✓</span>}
@@ -251,7 +251,7 @@ const TwentyGrammarRules = ({ onClose }) => {
                         <h3 className="text-lg font-bold text-gray-800">
                           Rule {rule.id}: {rule.rule}
                         </h3>
-                        <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        <span className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-semibold">
                           #{rule.id}
                         </span>
                       </div>
@@ -280,7 +280,7 @@ const TwentyGrammarRules = ({ onClose }) => {
           </div>
 
           {/* Practice Section */}
-          <div className="mt-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-6 text-white">
+          <div className="mt-8 bg-gradient-to-r from-teal-600 to-rose-600 rounded-lg p-6 text-white">
             <h3 className="text-xl font-bold mb-4">Ready to Practice?</h3>
             <p className="mb-4">Test your knowledge of these rules with interactive exercises!</p>
             <div className="flex gap-3">
@@ -288,7 +288,7 @@ const TwentyGrammarRules = ({ onClose }) => {
                 href="https://www.grammarly.com/blog/grammar-rules/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 More Grammar Rules →
               </a>

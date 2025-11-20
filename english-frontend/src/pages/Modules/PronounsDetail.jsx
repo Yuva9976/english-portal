@@ -275,7 +275,7 @@ const PronounsDetail = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Compact Sticky Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white sticky top-0 z-50 shadow-lg">
+      <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white sticky top-0 z-50 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-6">
           <button
             onClick={() => navigate(-1)}
@@ -408,7 +408,7 @@ const PronounsDetail = () => {
             
             <div className="grid md:grid-cols-2 gap-4">
               {videos.map(video => (
-                <div key={video.id} className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <div key={video.id} className="bg-gradient-to-br from-rose-50 to-teal-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
                   <div className="aspect-video bg-gray-900">
                     <iframe
                       className="w-full h-full"
@@ -473,7 +473,7 @@ const PronounsDetail = () => {
 
         {/* READING EXERCISE */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-md p-5 md:p-6 border border-blue-300">
+          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl shadow-md p-5 md:p-6 border border-teal-300">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
               <span className="text-2xl mr-2">📚</span>
               Reading Exercise
@@ -538,7 +538,7 @@ const PronounsDetail = () => {
                 setModalQuizAnswers({});
                 setSingleQuestionMode(false);
               }}
-              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="inline-block bg-gradient-to-r from-teal-600 to-rose-500 hover:from-teal-700 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
             >
               ▶️ Start Full Quiz
             </button>
@@ -606,7 +606,7 @@ const PronounsDetail = () => {
                 {!singleQuestionMode && (
                   <div className="h-1.5 bg-slate-100">
                     <div 
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-teal-500 to-rose-500 transition-all duration-300"
                       style={{ width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%` }}
                     ></div>
                   </div>
@@ -754,7 +754,7 @@ const PronounsDetail = () => {
                               <button
                                 onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
                                 disabled={!answered || currentQuestionIndex === quizQuestions.length - 1}
-                                className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-rose-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-teal-600 hover:to-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                               >
                                 Next →
                               </button>
@@ -800,7 +800,7 @@ const PronounsDetail = () => {
                         </div>
 
                         {/* Performance Message */}
-                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-xl border border-blue-200">
+                        <div className="bg-gradient-to-r from-teal-50 to-rose-50 p-5 rounded-xl border border-teal-200">
                           <p className="text-lg md:text-xl font-bold text-slate-800 leading-relaxed">
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length === quizQuestions.length
                               ? '🏆 Perfect! You\'re a pronoun master!'
@@ -908,7 +908,7 @@ const PronounsDetail = () => {
         </section>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-md p-6 text-white text-center">
+        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 rounded-xl shadow-md p-6 text-white text-center">
           <h3 className="text-xl font-bold mb-2">🎓 Ready for More?</h3>
           <p className="text-sm mb-4 text-blue-100">
             Continue your grammar journey!

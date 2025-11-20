@@ -7,6 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -14,7 +15,8 @@ export default function Login() {
     setError('');
 
     try {
-      const res = await apiClient.post('/auth/login', { email, password });
+      const loginUrl = isAdmin ? '/auth/admin-login' : '/auth/login';
+      const res = await apiClient.post(loginUrl, { email, password });
 
       if (res.data?.user) {
         localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -31,7 +33,7 @@ export default function Login() {
         }
       }
 
-      navigate('/dashboard');
+      navigate(isAdmin ? '/admin-dashboard' : '/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       setError(
@@ -44,7 +46,7 @@ export default function Login() {
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-  <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">Welcome Back</h2>
+  <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">{isAdmin ? 'Admin Login' : 'Welcome Back'}</h2>
       {error && <div className="text-red-600 mb-3 text-center font-medium">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -72,13 +74,31 @@ export default function Login() {
           />
         </div>
 
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="adminLogin"
+            checked={isAdmin}
+            onChange={(e) => setIsAdmin(e.target.checked)}
+            className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+          />
+          <label htmlFor="adminLogin" className="ml-2 block text-sm text-gray-700 cursor-pointer">
+            Admin Login
+          </label>
+        </div>
+
   <button type="submit" className="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded transition duration-200">
-          Login
+          {isAdmin ? 'Admin Login' : 'Login'}
         </button>
       </form>
 
-      <div className="text-sm text-center mt-4">
-        Don't have an account? <a href="/register" className="text-teal-600 hover:underline">Register</a>
+      <div className="text-sm text-center mt-4 space-y-2">
+        <div>
+          Don't have an account? <a href="/register" className="text-teal-600 hover:underline">Register</a>
+        </div>
+        <div>
+          <a href="/forgot-password" className="text-teal-600 hover:underline">Forgot Password?</a>
+        </div>
       </div>
     </div>
   );

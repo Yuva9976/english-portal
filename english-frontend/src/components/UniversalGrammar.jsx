@@ -99,7 +99,7 @@ const UniversalGrammar = ({ onClose }) => {
                   Understanding universal patterns helps you recognize similarities between languages and learn grammar structures more efficiently.
                 </p>
               </div>
-              <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+              <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
                 <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
                   <span className="mr-2">✓</span>
                   Natural Learning Process
@@ -124,13 +124,13 @@ const UniversalGrammar = ({ onClose }) => {
           <div className="mb-8">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">Common Patterns Across Languages</h3>
             <div className="space-y-3">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
+              <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-4 border border-teal-200">
                 <h4 className="font-bold text-gray-800 mb-2">Subject-Verb-Object Order</h4>
                 <p className="text-sm text-gray-600 mb-3">Most languages follow some version of this pattern:</p>
                 <div className="space-y-2 text-sm">
-                  <p><span className="font-semibold">English:</span> <span className="text-blue-600">I</span> <span className="text-purple-600">eat</span> <span className="text-pink-600">apples</span></p>
-                  <p><span className="font-semibold">Spanish:</span> <span className="text-blue-600">Yo</span> <span className="text-purple-600">como</span> <span className="text-pink-600">manzanas</span></p>
-                  <p><span className="font-semibold">French:</span> <span className="text-blue-600">Je</span> <span className="text-purple-600">mange</span> <span className="text-pink-600">des pommes</span></p>
+                  <p><span className="font-semibold">English:</span> <span className="text-teal-600">I</span> <span className="text-rose-600">eat</span> <span className="text-yellow-600">apples</span></p>
+                  <p><span className="font-semibold">Spanish:</span> <span className="text-teal-600">Yo</span> <span className="text-rose-600">como</span> <span className="text-yellow-600">manzanas</span></p>
+                  <p><span className="font-semibold">French:</span> <span className="text-teal-600">Je</span> <span className="text-rose-600">mange</span> <span className="text-yellow-600">des pommes</span></p>
                 </div>
               </div>
 
@@ -184,7 +184,7 @@ const UniversalGrammar = ({ onClose }) => {
           </div>
 
           {/* Further Learning */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+          <div className="bg-gradient-to-r from-teal-600 to-rose-600 rounded-lg p-6 text-white">
             <h3 className="text-xl font-bold mb-4">Continue Learning</h3>
             <div className="space-y-3">
               <a

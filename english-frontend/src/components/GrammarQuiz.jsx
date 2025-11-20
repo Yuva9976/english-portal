@@ -159,7 +159,7 @@ const GrammarQuiz = ({ onClose }) => {
     if (percentage === 100) return { text: "🏆 Perfect Score! You're a Grammar Master!", color: "text-yellow-600" };
     if (percentage >= 80) return { text: "🌟 Excellent! Keep up the great work!", color: "text-green-600" };
     if (percentage >= 60) return { text: "👍 Good job! You're on the right track!", color: "text-blue-600" };
-    if (percentage >= 40) return { text: "📚 Nice try! Practice makes perfect!", color: "text-purple-600" };
+    if (percentage >= 40) return { text: "📚 Nice try! Practice makes perfect!", color: "text-rose-600" };
     return { text: "💪 Keep learning! You'll get better!", color: "text-pink-600" };
   };
 
@@ -189,7 +189,7 @@ const GrammarQuiz = ({ onClose }) => {
             )}
 
             <div className="flex gap-3 justify-center mt-4">
-              <button onClick={handlePlayAgain} className="px-4 py-2 bg-blue-600 text-white rounded-md">Play Again</button>
+              <button onClick={handlePlayAgain} className="px-4 py-2 bg-teal-600 text-white rounded-md">Play Again</button>
               <button onClick={onClose} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md">Close</button>
             </div>
           </div>
@@ -204,7 +204,7 @@ const GrammarQuiz = ({ onClose }) => {
 
             {/* Progress */}
             <div className="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
-              <div className="bg-blue-500 h-2" style={{ width: `${progressPercentage}%` }} />
+              <div className="bg-teal-500 h-2" style={{ width: `${progressPercentage}%` }} />
             </div>
 
             {/* Question & options */}
@@ -215,7 +215,7 @@ const GrammarQuiz = ({ onClose }) => {
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = selectedAnswer === option;
                   const base = 'w-full text-left px-4 py-3 rounded-md border transition-colors duration-150 flex items-center justify-between';
-                  const cls = isSelected ? `${base} bg-blue-50 border-blue-200` : `${base} bg-white border-gray-200 hover:bg-gray-50`;
+                  const cls = isSelected ? `${base} bg-teal-50 border-teal-200` : `${base} bg-white border-gray-200 hover:bg-gray-50`;
 
                   return (
                     <button
@@ -225,7 +225,7 @@ const GrammarQuiz = ({ onClose }) => {
                       disabled={showFeedback}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-semibold">{String.fromCharCode(65 + index)}</div>
+                        <div className="w-7 h-7 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center text-sm font-semibold">{String.fromCharCode(65 + index)}</div>
                         <div className="text-sm text-gray-800">{option}</div>
                       </div>
                       {isSelected && showFeedback && (
@@ -253,7 +253,7 @@ const GrammarQuiz = ({ onClose }) => {
             {/* Footer */}
             <div className="mt-4 flex justify-end">
               {showFeedback ? (
-                <button onClick={handleNext} className="px-4 py-2 bg-blue-600 text-white rounded-md">{currentQuestion < quizQuestions.length - 1 ? 'Next' : 'Finish'}</button>
+                <button onClick={handleNext} className="px-4 py-2 bg-teal-600 text-white rounded-md">{currentQuestion < quizQuestions.length - 1 ? 'Next' : 'Finish'}</button>
               ) : (
                 <div className="text-sm text-gray-500">Select an answer to continue</div>
               )}

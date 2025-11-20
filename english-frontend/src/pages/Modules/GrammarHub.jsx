@@ -27,7 +27,7 @@ const GrammarHub = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center"><span className="text-3xl mr-3">📚</span>What is Grammar?</h2>
           <p className="text-gray-700 leading-relaxed mb-6">Grammar is the system of rules that governs how words are combined to form meaningful sentences. It includes the structure, syntax, and organization of language, helping us communicate clearly and effectively in both written and spoken forms.</p>
           
-          <div className="border-l-4 border-blue-400 bg-blue-50 p-6 rounded-r-lg">
+          <div className="border-l-4 border-teal-400 bg-teal-50 p-6 rounded-r-lg">
             <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
               <span className="text-xl mr-2">💡</span>
               Why is grammar important?
@@ -40,7 +40,7 @@ const GrammarHub = () => {
 
         {/* Brief History of English Grammar */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-purple-600 mb-6 text-center">Brief History of English Grammar</h2>
+          <h2 className="text-2xl font-bold text-teal-600 mb-6 text-center">Brief History of English Grammar</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-md p-6 border-t-4 border-yellow-400 hover:shadow-lg transition-all duration-300">
               <div className="text-center mb-3">
@@ -62,7 +62,7 @@ const GrammarHub = () => {
                 After the Norman Conquest, French influenced English grammar. The language simplified, and word order became more important.
               </p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md p-6 border-t-4 border-purple-400 hover:shadow-lg transition-all duration-300">
+            <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-lg shadow-md p-6 border-t-4 border-rose-400 hover:shadow-lg transition-all duration-300">
               <div className="text-center mb-3">
                 <span className="text-3xl">🌍</span>
               </div>
@@ -77,21 +77,21 @@ const GrammarHub = () => {
 
         {/* Quick Grammar Resources */}
         <div className="mb-12 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-purple-600 mb-8 text-center">Quick Grammar Resources</h2>
+          <h2 className="text-3xl font-bold text-teal-600 mb-8 text-center">Quick Grammar Resources</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            <button onClick={() => setShowGrammarGuide(true)} className="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-blue-200 hover:border-blue-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
+            <button onClick={() => setShowGrammarGuide(true)} className="group bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-teal-200 hover:border-teal-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
               <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">📖</span>
               <span className="text-base font-bold text-gray-800">Grammar Guide</span>
             </button>
-            <button onClick={() => setShowUniversalGrammar(true)} className="group bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-green-200 hover:border-green-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
+            <button onClick={() => setShowUniversalGrammar(true)} className="group bg-gradient-to-br from-teal-50 to-rose-50 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-teal-200 hover:border-teal-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
               <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🌐</span>
               <span className="text-base font-bold text-gray-800">Universal Grammar</span>
             </button>
-            <button onClick={() => setShowTwentyRules(true)} className="group bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-purple-200 hover:border-purple-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
+            <button onClick={() => setShowTwentyRules(true)} className="group bg-gradient-to-br from-rose-50 to-yellow-50 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-yellow-200 hover:border-yellow-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
               <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">📋</span>
               <span className="text-base font-bold text-gray-800">20 Grammar Rules</span>
             </button>
-            <button onClick={() => setShowVocabulary(true)} className="group bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-pink-200 hover:border-pink-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
+            <button onClick={() => setShowVocabulary(true)} className="group bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-md hover:shadow-2xl p-6 text-center transition-all duration-300 border-2 border-rose-200 hover:border-rose-400 flex flex-col items-center justify-center min-h-[140px] transform hover:-translate-y-2">
               <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">📝</span>
               <span className="text-base font-bold text-gray-800">Grammar Vocabulary</span>
             </button>
@@ -189,8 +189,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Verb</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Expresses action or state of being</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-purple-500 text-purple-700 rounded-lg hover:bg-purple-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/verbs')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-purple-500 text-purple-700 rounded-lg hover:bg-purple-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/verbs-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -202,8 +202,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Adjective</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Describes or modifies a noun</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-pink-500 text-pink-700 rounded-lg hover:bg-pink-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/adjectives')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-pink-500 text-pink-700 rounded-lg hover:bg-pink-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/adjectives-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -215,8 +215,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Adverb</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Modifies a verb, adjective, or adverb</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-yellow-500 text-yellow-700 rounded-lg hover:bg-yellow-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/adverbs')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-yellow-500 text-yellow-700 rounded-lg hover:bg-yellow-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/adverbs-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -228,8 +228,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Preposition</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Shows relationship between words</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-indigo-500 text-indigo-700 rounded-lg hover:bg-indigo-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/prepositions')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-indigo-500 text-indigo-700 rounded-lg hover:bg-indigo-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/prepositions-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -241,8 +241,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Conjunction</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Connects words, phrases, or clauses</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/conjunctions')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/conjunctions-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
 
@@ -254,8 +254,8 @@ const GrammarHub = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Interjection</h3>
               <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Expresses emotion or feeling</p>
               <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/learn-english/grammar')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-teal-500 text-teal-700 rounded-lg hover:bg-teal-500 hover:text-white transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/learn-english/grammar?practice=1')} className="flex-1 px-3 py-2 text-xs font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300">Quiz</button>
+                <button onClick={() => navigate('/modules/grammar-hub/interjections')} className="flex-1 px-3 py-2 text-xs font-semibold border-2 border-teal-500 text-teal-700 rounded-lg hover:bg-teal-500 hover:text-white transition-all duration-300">Learn</button>
+                <button onClick={() => navigate('/modules/grammar-hub/interjections-quiz')} className="flex-1 px-3 py-2 text-xs font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300">Quiz</button>
               </div>
             </div>
           </div>
