@@ -130,77 +130,114 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
 
   if (!quizStarted) {
     return (
-      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-        <div className="w-full h-full relative">
-          <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
-            <button onClick={onClose} className="absolute top-4 right-4 text-white hover:text-gray-200">
-              <span className="text-2xl">✕</span>
+      <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-white to-rose-50 z-50 overflow-hidden">
+        <div className="w-full h-full flex flex-col">
+          {/* Compact Header */}
+          <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-3 shadow-xl">
+            <button onClick={onClose} className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20">
+              <span className="text-lg font-bold">✕</span>
             </button>
-            <div className="flex items-center space-x-3">
-              <span className="text-4xl">✍️</span>
-              <div>
-                <h2 className="text-3xl font-bold">Grammar Quizzes</h2>
-                <p className="text-teal-100 text-sm">Test your grammar knowledge</p>
-              </div>
+            <div className="text-center mb-2">
+              <span className="text-3xl block mb-1">✍️</span>
+              <h2 className="text-2xl font-bold">Grammar Quizzes</h2>
+              <p className="text-white/90 text-sm mt-1">Test your grammar knowledge & earn badges</p>
             </div>
           </div>
 
-          <div className="p-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Choose Your Difficulty Level</h3>
+          {/* Main Content - No Scroll */}
+          <div className="flex-1 overflow-hidden px-6 py-4 flex flex-col">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-teal-600 via-purple-500 to-rose-500 bg-clip-text text-transparent mb-4 text-center">Choose Your Difficulty Level</h3>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            {/* Difficulty Cards - More Compact */}
+            <div className="grid md:grid-cols-3 gap-4 mb-4 flex-shrink-0">
               {Object.entries(difficultyInfo).map(([key, info]) => (
                 <div
                   key={key}
-                  className={`border-2 border-${info.color}-300 rounded-xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105`}
+                  className="bg-white border-2 border-teal-300 rounded-lg p-4 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 hover:border-rose-400 group"
                   onClick={() => handleStartQuiz(key)}
                 >
                   <div className="text-center">
-                    <span className="text-6xl block mb-4">{info.icon}</span>
-                    <h4 className={`text-xl font-bold text-${info.color}-600 mb-2`}>{info.title}</h4>
-                    <p className="text-gray-600 text-sm mb-4">{info.description}</p>
-                    <div className="space-y-2 text-sm text-gray-700">
-                      <div className="flex items-center justify-center space-x-2">
+                    <div className="mb-2 transform group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-5xl block">{info.icon}</span>
+                    </div>
+                    <h4 className="text-lg font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-1">{info.title}</h4>
+                    <p className="text-gray-600 text-xs mb-3">{info.description}</p>
+                    <div className="space-y-1.5 text-xs text-gray-700 mb-3">
+                      <div className="flex items-center justify-center space-x-1.5 bg-gradient-to-r from-teal-50 to-rose-50 py-1.5 rounded">
                         <span>📝</span>
-                        <span>{info.questions} Questions</span>
+                        <span className="font-semibold">{info.questions} Questions</span>
                       </div>
-                      <div className="flex items-center justify-center space-x-2">
+                      <div className="flex items-center justify-center space-x-1.5 bg-gradient-to-r from-teal-50 to-rose-50 py-1.5 rounded">
                         <span>⏱️</span>
-                        <span>{info.time} Time Limit</span>
+                        <span className="font-semibold">{info.time} Time Limit</span>
                       </div>
-                      <div className="flex items-center justify-center space-x-2">
+                      <div className="flex items-center justify-center space-x-1.5 bg-gradient-to-r from-teal-50 to-rose-50 py-1.5 rounded">
                         <span>⭐</span>
-                        <span>{key === 'beginner' ? '10' : key === 'intermediate' ? '15' : '20'} pts/question</span>
+                        <span className="font-semibold">{key === 'beginner' ? '10' : key === 'intermediate' ? '15' : '20'} pts/question</span>
                       </div>
                     </div>
-                    <button className={`mt-4 w-full bg-${info.color}-600 text-white py-2 rounded-lg hover:bg-${info.color}-700 transition-colors font-semibold`}>
-                      Start Quiz
+                    <button className="w-full bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white py-2 rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 font-bold text-sm">
+                      Start Quiz →
                     </button>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-6">
-              <h4 className="font-bold text-lg text-gray-800 mb-3">📊 Features</h4>
-              <ul className="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500">✓</span>
-                  <span>Instant feedback on answers</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500">✓</span>
-                  <span>Detailed explanations</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500">✓</span>
-                  <span>Timed challenges</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-500">✓</span>
-                  <span>Achievement badges</span>
-                </li>
-              </ul>
+            {/* Bottom Info Section - Compact Side by Side */}
+            <div className="grid md:grid-cols-2 gap-4 flex-shrink-0">
+              {/* Motivational Section */}
+              <div className="bg-gradient-to-br from-teal-100 to-purple-100 rounded-lg p-3 border-2 border-teal-300 shadow-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">💡</span>
+                  <h4 className="font-bold text-sm bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent">Why Practice Grammar?</h4>
+                </div>
+                <p className="text-xs text-gray-700 italic mb-2">"Grammar is the foundation of clear communication. Master it, and unlock the power to express yourself with confidence."</p>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  <div className="flex items-center space-x-1.5 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Writing Skills</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Confidence</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Communication</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Excellence</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Features Section */}
+              <div className="bg-gradient-to-br from-rose-100 to-purple-100 rounded-lg p-3 border-2 border-rose-300 shadow-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">📊</span>
+                  <h4 className="font-bold text-sm bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent">Quiz Features</h4>
+                </div>
+                <ul className="space-y-1.5 text-xs text-gray-700">
+                  <li className="flex items-center space-x-2 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Instant feedback on answers</span>
+                  </li>
+                  <li className="flex items-center space-x-2 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Detailed explanations</span>
+                  </li>
+                  <li className="flex items-center space-x-2 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Timed challenges</span>
+                  </li>
+                  <li className="flex items-center space-x-2 bg-white/70 px-2 py-1.5 rounded">
+                    <span className="text-green-500 text-sm">✓</span>
+                    <span className="font-semibold">Achievement badges</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -215,45 +252,47 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
     const timeUsed = 180 - timeLeft;
 
     return (
-      <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+      <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-white to-rose-50 z-50 overflow-hidden">
         <div className="w-full h-full flex flex-col">
-          <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white p-8 text-center">
-            <span className="text-7xl block mb-4 animate-bounce">🎉</span>
-            <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
-            <p className="text-green-100">Great job completing the {difficultyInfo[selectedDifficulty].title} quiz!</p>
+          <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-6 text-center shadow-xl">
+            <span className="text-5xl block mb-3 animate-bounce">🎉</span>
+            <h2 className="text-2xl font-bold mb-2">Quiz Complete!</h2>
+            <p className="text-white/90 text-sm">Great job completing the {difficultyInfo[selectedDifficulty].title} quiz!</p>
           </div>
 
-          <div className="p-8">
-            <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-xl p-6 mb-6">
-              <div className="text-center mb-6">
-                <div className="text-5xl font-bold text-gray-800 mb-2">{percentage}%</div>
-                <div className="text-gray-600">Your Score: {score} / {maxScore}</div>
+          <div className="p-4 flex-1 flex flex-col justify-center max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-teal-100 via-purple-50 to-rose-100 rounded-xl p-5 mb-5 border-2 border-teal-300 shadow-xl">
+              <div className="text-center mb-4">
+                <div className="text-5xl font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-2">{percentage}%</div>
+                <div className="text-base text-gray-700 font-semibold">Your Score: <span className="text-teal-600">{score}</span> / <span className="text-rose-600">{maxScore}</span></div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="bg-white/70 rounded-lg p-3 border-2 border-green-300">
                   <div className="text-2xl font-bold text-green-600">{score / (selectedDifficulty === 'beginner' ? 10 : selectedDifficulty === 'intermediate' ? 15 : 20)}</div>
-                  <div className="text-xs text-gray-600">Correct</div>
+                  <div className="text-xs text-gray-700 font-semibold mt-1">Correct ✅</div>
                 </div>
-                <div>
+                <div className="bg-white/70 rounded-lg p-3 border-2 border-red-300">
                   <div className="text-2xl font-bold text-red-600">{questions.length - (score / (selectedDifficulty === 'beginner' ? 10 : selectedDifficulty === 'intermediate' ? 15 : 20))}</div>
-                  <div className="text-xs text-gray-600">Incorrect</div>
+                  <div className="text-xs text-gray-700 font-semibold mt-1">Incorrect ❌</div>
                 </div>
-                <div>
+                <div className="bg-white/70 rounded-lg p-3 border-2 border-blue-300">
                   <div className="text-2xl font-bold text-blue-600">{formatTime(timeUsed)}</div>
-                  <div className="text-xs text-gray-600">Time Used</div>
+                  <div className="text-xs text-gray-700 font-semibold mt-1">Time Used ⏱️</div>
                 </div>
               </div>
             </div>
 
             {badges.length > 0 && (
-              <div className="mb-6">
-                <h3 className="font-bold text-lg text-gray-800 mb-3 text-center">🏆 Badges Earned</h3>
-                <div className="flex justify-center space-x-4">
+              <div className="mb-4">
+                <h3 className="font-bold text-base bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-3 text-center flex items-center justify-center gap-2">
+                  <span>🏆</span> Badges Earned
+                </h3>
+                <div className="flex justify-center gap-3 flex-wrap">
                   {badges.map((badge, index) => (
-                    <div key={index} className={`bg-${badge.color}-100 border-2 border-${badge.color}-300 rounded-lg p-3 text-center`}>
-                      <span className="text-3xl block">{badge.icon}</span>
-                      <span className="text-xs font-semibold text-gray-700">{badge.name}</span>
+                    <div key={index} className="bg-gradient-to-br from-yellow-100 to-yellow-200 border-2 border-yellow-400 rounded-lg p-3 text-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl block mb-1">{badge.icon}</span>
+                      <span className="text-xs font-bold text-gray-800">{badge.name}</span>
                     </div>
                   ))}
                 </div>
@@ -261,10 +300,10 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
             )}
 
             <div className="space-y-3">
-              <button onClick={resetQuiz} className="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
-                Try Another Quiz
+              <button onClick={resetQuiz} className="w-full bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white py-3 rounded-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-sm flex items-center justify-center gap-2">
+                <span>🔄</span> Try Another Quiz
               </button>
-              <button onClick={onClose} className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold">
+              <button onClick={onClose} className="w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-3 rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 font-bold text-sm">
                 Close
               </button>
             </div>
@@ -279,83 +318,113 @@ const EnhancedGrammarQuizzes = ({ onClose }) => {
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-white to-rose-50 z-50 overflow-hidden">
       <div className="w-full h-full flex flex-col">
-        <div className={`bg-gradient-to-r from-${difficultyInfo[selectedDifficulty].color}-600 to-${difficultyInfo[selectedDifficulty].color}-700 text-white p-6 sticky top-0 z-10`}>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">{difficultyInfo[selectedDifficulty].icon}</span>
-              <span className="font-bold">{difficultyInfo[selectedDifficulty].title}</span>
+        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-4 shadow-xl">
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+              <span className="text-xl">{difficultyInfo[selectedDifficulty].icon}</span>
+              <span className="font-bold text-sm">{difficultyInfo[selectedDifficulty].title}</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <span>⏱️</span>
-                <span className="font-bold">{formatTime(timeLeft)}</span>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+                <span className="text-base">⏱️</span>
+                <span className="font-bold text-sm">{formatTime(timeLeft)}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <span>⭐</span>
-                <span className="font-bold">{score}</span>
+              <div className="flex items-center space-x-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+                <span className="text-base">⭐</span>
+                <span className="font-bold text-sm">{score}</span>
               </div>
             </div>
           </div>
           
-          <div className="mb-2">
-            <div className="flex justify-between text-sm mb-1">
+          <div>
+            <div className="flex justify-between text-xs font-semibold mb-1">
               <span>Question {currentQuestion + 1} of {questions.length}</span>
               <span>{progress.toFixed(0)}%</span>
             </div>
-            <div className="w-full bg-white bg-opacity-30 rounded-full h-3">
-              <div className="bg-white h-3 rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
+            <div className="w-full bg-white/30 rounded-full h-2 shadow-inner">
+              <div className="bg-gradient-to-r from-yellow-300 to-yellow-400 h-2 rounded-full transition-all duration-500 shadow-lg" style={{ width: `${progress}%` }}></div>
             </div>
           </div>
         </div>
 
-        <div className="p-8 flex-1 overflow-y-auto">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">{currentQ.question}</h3>
+        <div className="p-4 flex-1 overflow-hidden flex flex-col max-w-4xl mx-auto w-full">
+          <div className="bg-gradient-to-r from-teal-100/80 to-rose-100/80 rounded-xl p-4 mb-4 border-2 border-teal-300 shadow-lg">
+            <div className="flex items-start gap-2">
+              <span className="text-xl flex-shrink-0">💭</span>
+              <h3 className="text-base font-bold text-gray-800 leading-snug">{currentQ.question}</h3>
+            </div>
+          </div>
 
-          <div className="space-y-3 mb-6">
-            {currentQ.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(index)}
-                disabled={showFeedback}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all duration-300 ${
-                  selectedAnswer === index
-                    ? isCorrect
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-red-500 bg-red-50'
-                    : showFeedback && index === currentQ.correct
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-200 hover:border-gray-400'
-                }`}
-              >
-                <div className="flex items-center">
-                  <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 font-bold">
-                    {String.fromCharCode(65 + index)}
-                  </span>
-                  <span className="font-semibold">{option}</span>
-                  {showFeedback && index === currentQ.correct && <span className="ml-auto text-green-500">✓</span>}
-                  {showFeedback && selectedAnswer === index && !isCorrect && <span className="ml-auto text-red-500">✗</span>}
-                </div>
-              </button>
-            ))}
+          <div className="space-y-3 mb-4 flex-1 overflow-y-auto">
+            {currentQ.options.map((option, index) => {
+              const isSelectedAnswer = selectedAnswer === index;
+              const isCorrectAnswer = showFeedback && index === currentQ.correct;
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleAnswer(index)}
+                  disabled={showFeedback}
+                  className={`w-full p-3 rounded-lg border-2 text-left transition-all duration-300 shadow-md hover:shadow-lg ${
+                    isCorrectAnswer
+                      ? 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 ring-2 ring-green-300'
+                      : isSelectedAnswer && !isCorrect
+                      ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100 ring-2 ring-red-300'
+                      : isSelectedAnswer
+                      ? 'border-teal-400 bg-gradient-to-r from-teal-50 to-rose-50 ring-2 ring-teal-300 transform scale-105'
+                      : 'border-gray-300 bg-white hover:border-teal-400 hover:bg-gradient-to-r hover:from-teal-50 hover:to-rose-50 hover:scale-102'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 font-bold text-white text-sm shadow-md ${
+                        isCorrectAnswer
+                          ? 'bg-gradient-to-r from-green-500 to-green-600'
+                          : isSelectedAnswer && !isCorrect
+                          ? 'bg-gradient-to-r from-red-500 to-red-600'
+                          : 'bg-gradient-to-r from-teal-500 to-rose-500'
+                      }`}>
+                        {String.fromCharCode(65 + index)}
+                      </span>
+                      <span className="font-semibold text-sm text-gray-800">{option}</span>
+                    </div>
+                    {showFeedback && isCorrectAnswer && <span className="text-xl flex-shrink-0">✅</span>}
+                    {showFeedback && isSelectedAnswer && !isCorrect && <span className="text-xl flex-shrink-0">❌</span>}
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
           {showFeedback && (
-            <div className={`p-4 rounded-lg mb-6 ${isCorrect ? 'bg-green-50 border-l-4 border-green-500' : 'bg-blue-50 border-l-4 border-blue-500'}`}>
-              <p className="font-semibold text-gray-800 mb-2">
-                {isCorrect ? '✅ Correct!' : '💡 Explanation:'}
-              </p>
-              <p className="text-gray-700">{currentQ.explanation}</p>
+            <div className={`rounded-xl p-3 mb-3 shadow-lg border-2 ${isCorrect ? 'bg-gradient-to-r from-green-50 via-teal-50 to-green-50 border-green-400' : 'bg-gradient-to-r from-rose-50 via-orange-50 to-rose-50 border-rose-400'}`}>
+              <div className="flex items-start gap-2">
+                <span className="text-2xl flex-shrink-0">{isCorrect ? '🎉' : '💡'}</span>
+                <div>
+                  <p className="font-bold text-sm text-gray-800 mb-1">
+                    {isCorrect ? '🌟 Excellent!' : '🤔 Not quite right'}
+                  </p>
+                  <p className="text-xs text-gray-700 leading-snug">{currentQ.explanation}</p>
+                  {isCorrect && (
+                    <div className="mt-1 text-xs font-bold text-teal-600">+{selectedDifficulty === 'beginner' ? '10' : selectedDifficulty === 'intermediate' ? '15' : '20'} points! 🎯</div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
           {showFeedback && (
             <button
               onClick={handleNextQuestion}
-              className={`w-full bg-${difficultyInfo[selectedDifficulty].color}-600 text-white py-3 rounded-lg hover:bg-${difficultyInfo[selectedDifficulty].color}-700 transition-colors font-semibold`}
+              className="w-full bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white py-3 rounded-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold text-sm flex items-center justify-center gap-2"
             >
-              {currentQuestion + 1 < questions.length ? 'Next Question →' : 'View Results'}
+              {currentQuestion + 1 < questions.length ? (
+                <><span>Next Question</span> <span className="text-lg">→</span></>
+              ) : (
+                <><span>View Results</span> <span className="text-lg">🏁</span></>
+              )}
             </button>
           )}
         </div>

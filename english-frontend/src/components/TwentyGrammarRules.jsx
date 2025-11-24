@@ -177,99 +177,95 @@ const TwentyGrammarRules = ({ onClose }) => {
   const progress = (completedRules.length / rules.length) * 100;
 
   return (
-    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-      <div className="w-full h-full relative">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
+    <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-white to-rose-50 z-50 overflow-hidden">
+      <div className="w-full h-full flex flex-col">
+        {/* Compact Header */}
+        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-3 shadow-xl">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
           >
-            <span className="text-2xl">✕</span>
+            <span className="text-lg font-bold">✕</span>
           </button>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-4xl">📋</span>
-              <div>
-                <h2 className="text-3xl font-bold">20 Essential Grammar Rules</h2>
-                <p className="text-teal-100 text-sm">Master these rules for correct English</p>
-              </div>
-            </div>
+          <div className="text-center mb-2">
+            <span className="text-3xl block mb-1">📚</span>
+            <h2 className="text-2xl font-bold">Grammar Mastery: 20 Core Rules</h2>
+            <p className="text-white/90 text-sm mt-1">Your Essential Guide to Perfect English</p>
           </div>
           
-          {/* Progress Bar */}
+          {/* Compact Progress Bar */}
           <div>
-            <div className="flex justify-between text-sm mb-2">
+            <div className="flex justify-between text-xs mb-1">
               <span>Your Progress</span>
               <span>{completedRules.length} / {rules.length} completed</span>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-full h-3 overflow-hidden">
+            <div className="bg-white/30 rounded-full h-2 overflow-hidden shadow-inner">
               <div
-                className="bg-yellow-400 h-full transition-all duration-500"
+                className="bg-gradient-to-r from-yellow-300 to-yellow-400 h-full transition-all duration-500 shadow-lg"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-8">
-          <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-            <p className="text-gray-700">
-              <span className="font-semibold">💡 Tip:</span> Click the checkbox next to each rule as you learn it to track your progress!
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-4 py-3">
+          <div className="mb-3 bg-gradient-to-r from-teal-50 to-rose-50 border-l-4 border-teal-500 p-3 rounded-r-lg shadow-sm">
+            <p className="text-gray-700 text-sm">
+              <span className="font-semibold text-teal-700">💡 Tip:</span> Click the checkbox next to each rule as you learn it to track your progress!
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-3">
             {rules.map((rule) => {
               const isCompleted = completedRules.includes(rule.id);
               return (
                 <div
                   key={rule.id}
-                  className={`border-2 rounded-lg p-5 transition-all duration-300 ${
+                  className={`border-2 rounded-lg p-3 transition-all duration-300 shadow-sm ${
                     isCompleted
                       ? 'border-green-400 bg-green-50'
-                      : 'border-gray-200 bg-white hover:border-teal-300'
+                      : 'border-teal-200 bg-white hover:border-rose-400 hover:shadow-md'
                   }`}
                 >
-                  <div className="flex items-start space-x-4">
-                    {/* Checkbox */}
+                  <div className="flex items-start space-x-2">
+                    {/* Compact Checkbox */}
                     <button
                       onClick={() => toggleRule(rule.id)}
-                      className={`flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                      className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
                         isCompleted
-                          ? 'bg-green-500 border-green-500 text-white'
+                          ? 'bg-gradient-to-r from-green-500 to-green-600 border-green-500 text-white shadow-md'
                           : 'border-gray-300 hover:border-teal-500'
                       }`}
                     >
-                      {isCompleted && <span className="text-xl">✓</span>}
+                      {isCompleted && <span className="text-sm">✓</span>}
                     </button>
 
-                    {/* Content */}
+                    {/* Compact Content */}
                     <div className="flex-1">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="text-lg font-bold text-gray-800">
+                      <div className="flex items-start justify-between mb-1">
+                        <h3 className="text-sm font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent leading-tight">
                           Rule {rule.id}: {rule.rule}
                         </h3>
-                        <span className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        <span className="bg-gradient-to-r from-teal-100 to-rose-100 text-teal-700 px-1.5 py-0.5 rounded-full text-xs font-semibold ml-1">
                           #{rule.id}
                         </span>
                       </div>
 
-                      <p className="text-gray-700 mb-3">{rule.explanation}</p>
+                      <p className="text-gray-700 text-xs mb-1.5 leading-snug">{rule.explanation}</p>
 
-                      <div className="space-y-2 mb-3">
-                        <div className="bg-green-50 border-l-4 border-green-500 p-3 rounded-r-lg">
-                          <p className="text-sm text-gray-700">{rule.example}</p>
+                      <div className="space-y-1 mb-1.5">
+                        <div className="bg-green-50 border-l-2 border-green-500 p-1.5 rounded-r">
+                          <p className="text-xs text-gray-700">{rule.example}</p>
                         </div>
-                        <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
-                          <p className="text-sm text-gray-700">{rule.wrong}</p>
+                        <div className="bg-red-50 border-l-2 border-red-500 p-1.5 rounded-r">
+                          <p className="text-xs text-gray-700">{rule.wrong}</p>
                         </div>
                       </div>
 
-                      <div className="bg-blue-50 rounded-lg p-3">
-                        <p className="text-sm text-gray-700">
-                          <span className="font-semibold text-blue-700">💡 Quick Tip:</span> {rule.tip}
+                      <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded p-1.5">
+                        <p className="text-xs text-gray-700">
+                          <span className="font-semibold text-teal-700">💡</span> {rule.tip}
                         </p>
                       </div>
                     </div>
@@ -279,18 +275,18 @@ const TwentyGrammarRules = ({ onClose }) => {
             })}
           </div>
 
-          {/* Practice Section */}
-          <div className="mt-8 bg-gradient-to-r from-teal-600 to-rose-600 rounded-lg p-6 text-white">
-            <h3 className="text-xl font-bold mb-4">Ready to Practice?</h3>
-            <p className="mb-4">Test your knowledge of these rules with interactive exercises!</p>
-            <div className="flex gap-3">
+          {/* Compact Practice Section */}
+          <div className="mt-4 bg-gradient-to-r from-teal-100 via-purple-50 to-rose-100 rounded-lg p-4 border-2 border-teal-300 shadow-lg">
+            <h3 className="text-base font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-2">Ready to Practice?</h3>
+            <p className="text-sm text-gray-700 mb-3">Test your knowledge with interactive exercises!</p>
+            <div className="flex gap-2">
               <a
                 href="https://www.grammarly.com/blog/grammar-rules/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="flex-1 bg-gradient-to-r from-teal-600 to-rose-400 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition-all duration-300 text-center"
               >
-                More Grammar Rules →
+                More Rules →
               </a>
               <button
                 onClick={() => {
@@ -304,19 +300,19 @@ const TwentyGrammarRules = ({ onClose }) => {
                   a.download = '20-grammar-rules.txt';
                   a.click();
                 }}
-                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="flex-1 bg-white text-teal-600 border-2 border-teal-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-50 transition-colors text-center"
               >
-                📥 Download Rules
+                📥 Download
               </button>
             </div>
           </div>
 
-          {/* Completion Message */}
+          {/* Compact Completion Message */}
           {completedRules.length === rules.length && (
-            <div className="mt-6 bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 text-center animate-scale-in">
-              <span className="text-6xl block mb-3">🎉</span>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Congratulations!</h3>
-              <p className="text-gray-700">
+            <div className="mt-3 bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-400 rounded-lg p-4 text-center animate-scale-in shadow-lg">
+              <span className="text-4xl block mb-2">🎉</span>
+              <h3 className="text-lg font-bold text-gray-800 mb-1">Congratulations!</h3>
+              <p className="text-sm text-gray-700">
                 You've completed all 20 grammar rules! You're on your way to grammar mastery!
               </p>
             </div>

@@ -35,31 +35,56 @@ const InterjectionDetail = () => {
     }
   };
 
+  const data = apiData;
+
+  const sections = [
+    { id: 'overview', name: 'Overview', icon: '📖' },
+    { id: 'types', name: 'Types', icon: '📚' },
+    { id: 'tips', name: 'Tips', icon: '💡' },
+    { id: 'writing', name: 'Writing', icon: '✍️' },
+    { id: 'videos', name: 'Videos', icon: '🎥' },
+    { id: 'quiz', name: 'Quiz', icon: '🎯' },
+    { id: 'resources', name: 'Resources', icon: '🔗' }
+  ];
+
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p>Loading...</p></div>;
   if (!data) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
-      <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto max-w-6xl px-4 py-6">
-          <button onClick={() => navigate(-1)} className="mb-3 flex items-center space-x-1 text-white hover:text-purple-100 text-sm">
-            <span className="text-lg">←</span>
+      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
+        <div className="container mx-auto max-w-6xl px-4 py-3">
+          <button onClick={() => navigate(-1)} className="mb-2 flex items-center space-x-1 text-white hover:text-purple-100 text-sm">
+            <span className="text-base">←</span>
             <span className="font-medium">Back</span>
           </button>
 
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-3xl">{data.icon}</span>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl md:text-3xl">{data.icon}</span>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">{data.name}</h1>
-                <p className="text-sm text-purple-100">Master {data.name.toLowerCase()} & add emotion to your writing</p>
+                <h1 className="text-xl md:text-2xl font-bold">{data.name}</h1>
+                <p className="text-xs md:text-sm text-purple-100">Master {data.name.toLowerCase()} & add emotion to your writing</p>
               </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {sections.map(section => (
+                <button
+                  key={section.id}
+                  onClick={() => document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm"
+                >
+                  <span className="mr-1">{section.icon}</span>
+                  {section.name}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 mt-4">
         <section id="overview" className="mb-12">
           <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-4">What is an {data.name}?</h2>

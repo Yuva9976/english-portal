@@ -3,14 +3,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'primary': '#14b8a6',
-        'primary-focus': '#0f766e',
+        'primary': '#0057b8', // blue
+        'primary-focus': '#003f7d',
         'primary-content': '#ffffff',
-        'secondary': '#f43f5e',
-        'secondary-focus': '#be123c',
+        'secondary': '#ffb300', // amber
+        'secondary-focus': '#b37a00',
         'secondary-content': '#ffffff',
-        'accent': '#3b82f6',
-        'accent-focus': '#2563eb',
+        'accent': '#e63946', // red
+        'accent-focus': '#a4161a',
         'accent-content': '#ffffff',
         'neutral': '#3d4451',
         'neutral-focus': '#2a2e37',

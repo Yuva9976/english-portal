@@ -196,58 +196,56 @@ const GrammarGuide = ({ onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-      <div className="w-full h-full relative">
+    <div className="fixed inset-0 bg-white z-50 overflow-hidden">
+      <div className="w-full h-full flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-6 sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-3 shadow-xl flex-shrink-0">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
           >
-            <span className="text-2xl">✕</span>
+            <span className="text-lg font-bold">✕</span>
           </button>
-          <div className="flex items-center space-x-3">
-            <span className="text-4xl">📖</span>
-            <div>
-              <h2 className="text-3xl font-bold">Grammar Guide</h2>
-              <p className="text-teal-100 text-sm">Your comprehensive English grammar reference</p>
-            </div>
+          <div className="text-center mb-2">
+            <span className="text-3xl block mb-1">📖</span>
+            <h2 className="text-2xl font-bold">Grammar Guide</h2>
+            <p className="text-white/90 text-sm mt-1">Your comprehensive English grammar reference</p>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row h-full">
+        <div className="flex flex-1 overflow-hidden">
           {/* Sidebar Navigation */}
-          <div className="md:w-64 bg-gray-50 p-4 border-r border-gray-200 md:overflow-y-auto">
-            <h3 className="text-sm font-bold text-gray-600 mb-3 uppercase">Contents</h3>
+          <div className="md:w-56 bg-gray-50 p-3 border-r border-gray-200 overflow-y-auto">
+            <h3 className="text-sm font-bold text-gray-600 mb-2 uppercase px-2">Contents</h3>
             <nav className="space-y-1">
               {sections.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center space-x-3 ${
+                  className={`w-full text-left px-3 py-2 rounded transition-all duration-200 flex items-center space-x-2 text-sm ${
                     activeSection === section.id
-                      ? 'bg-teal-600 text-white shadow-md'
+                      ? 'bg-teal-600 text-white'
                       : 'hover:bg-gray-200 text-gray-700'
                   }`}
                 >
-                  <span className="text-xl">{section.icon}</span>
-                  <span className="text-sm font-medium">{section.name}</span>
+                  <span className="text-lg">{section.icon}</span>
+                  <span className="font-medium">{section.name}</span>
                 </button>
               ))}
             </nav>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 p-8 overflow-y-auto">
+          <div className="flex-1 p-6 overflow-y-auto">
             {/* Introduction */}
             {activeSection === 'intro' && (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">What is Grammar?</h3>
-                  <p className="text-gray-700 leading-relaxed mb-4">
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">What is Grammar?</h3>
+                  <p className="text-gray-700 leading-relaxed mb-3">
                     Grammar is the set of rules that governs how words are combined to form meaningful sentences in a language. It includes the structure, syntax, and organization of language elements.
                   </p>
-                  <div className="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                  <div className="bg-teal-50 border-l-4 border-teal-500 p-3 rounded-r-lg">
                     <p className="text-gray-700 italic">
                       "Grammar is the backbone of clear communication. It helps us express our ideas accurately and be understood by others."
                     </p>
@@ -255,41 +253,41 @@ const GrammarGuide = ({ onClose }) => {
                 </div>
 
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Why is Grammar Important?</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                      <div className="flex items-start space-x-3">
-                        <span className="text-2xl">✓</span>
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">Why is Grammar Important?</h3>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-xl">✓</span>
                         <div>
-                          <h4 className="font-semibold text-gray-800 mb-1">Clear Communication</h4>
-                          <p className="text-sm text-gray-600">Express your ideas precisely and avoid misunderstandings</p>
+                          <h4 className="font-semibold text-gray-800 text-sm">Clear Communication</h4>
+                          <p className="text-sm text-gray-600">Express ideas precisely and avoid misunderstandings</p>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
-                      <div className="flex items-start space-x-3">
-                        <span className="text-2xl">✓</span>
+                    <div className="bg-teal-50 rounded-lg p-3 border border-teal-200">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-xl">✓</span>
                         <div>
-                          <h4 className="font-semibold text-gray-800 mb-1">Professional Success</h4>
-                          <p className="text-sm text-gray-600">Good grammar is essential in the workplace and academics</p>
+                          <h4 className="font-semibold text-gray-800 text-sm">Professional Success</h4>
+                          <p className="text-sm text-gray-600">Essential in workplace and academics</p>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                      <div className="flex items-start space-x-3">
-                        <span className="text-2xl">✓</span>
+                    <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-xl">✓</span>
                         <div>
-                          <h4 className="font-semibold text-gray-800 mb-1">Credibility</h4>
-                          <p className="text-sm text-gray-600">Proper grammar builds trust and makes you appear knowledgeable</p>
+                          <h4 className="font-semibold text-gray-800 text-sm">Credibility</h4>
+                          <p className="text-sm text-gray-600">Builds trust and makes you appear knowledgeable</p>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
-                      <div className="flex items-start space-x-3">
-                        <span className="text-2xl">✓</span>
+                    <div className="bg-pink-50 rounded-lg p-3 border border-pink-200">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-xl">✓</span>
                         <div>
-                          <h4 className="font-semibold text-gray-800 mb-1">Better Writing</h4>
-                          <p className="text-sm text-gray-600">Strong grammar foundation improves all forms of writing</p>
+                          <h4 className="font-semibold text-gray-800 text-sm">Better Writing</h4>
+                          <p className="text-sm text-gray-600">Improves all forms of writing</p>
                         </div>
                       </div>
                     </div>
@@ -301,103 +299,90 @@ const GrammarGuide = ({ onClose }) => {
             {/* Parts of Speech */}
             {activeSection === 'parts' && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">The 8 Parts of Speech</h3>
-                <p className="text-gray-600 mb-6">
-                  Every word in English belongs to one of these eight categories. Understanding them is fundamental to mastering grammar.
+                <h3 className="text-xl font-bold text-gray-800 mb-3">The 8 Parts of Speech</h3>
+                <p className="text-gray-600 mb-4">
+                  Every word in English belongs to one of these eight categories.
                 </p>
+                <div className="grid md:grid-cols-2 gap-3">
                 {partsOfSpeech.map((part, index) => (
-                  <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-5 hover:border-blue-400 transition-colors">
-                    <div className="flex items-start space-x-4">
-                      <span className="text-4xl flex-shrink-0">{part.icon}</span>
+                  <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-3xl flex-shrink-0">{part.icon}</span>
                       <div className="flex-1">
-                        <h4 className="text-xl font-bold text-gray-800 mb-2">{part.name}</h4>
-                        <p className="text-gray-600 mb-3">{part.description}</p>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-sm font-semibold text-gray-700 mb-2">Examples:</p>
-                            <div className="flex flex-wrap gap-2">
-                              {part.examples.map((example, i) => (
-                                <span key={i} className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm">
-                                  {example}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-700 mb-2">Types:</p>
-                            <ul className="text-sm text-gray-600 space-y-1">
-                              {part.types.map((type, i) => (
-                                <li key={i} className="flex items-start">
-                                  <span className="mr-2">•</span>
-                                  <span>{type}</span>
-                                </li>
-                              ))}
-                            </ul>
+                        <h4 className="text-lg font-bold text-gray-800 mb-2">{part.name}</h4>
+                        <p className="text-sm text-gray-600 mb-2">{part.description}</p>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-700 mb-1">Examples:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {part.examples.map((example, i) => (
+                              <span key={i} className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-sm">
+                                {example}
+                              </span>
+                            ))}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
+                </div>
               </div>
             )}
 
             {/* Sentence Structure */}
             {activeSection === 'structure' && (
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Sentence Structure</h3>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Sentence Structure</h3>
                 
-                <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-6 border border-teal-200">
-                  <h4 className="text-xl font-bold text-gray-800 mb-3">Basic Word Order</h4>
-                  <div className="flex items-center justify-center space-x-4 text-lg">
+                <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-4 border border-teal-200">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Basic Word Order</h4>
+                  <div className="flex items-center justify-center space-x-3 text-sm">
                     <div className="bg-teal-500 text-white px-4 py-2 rounded-lg font-semibold">Subject</div>
-                    <span className="text-2xl">→</span>
+                    <span className="text-xl">→</span>
                     <div className="bg-teal-500 text-white px-4 py-2 rounded-lg font-semibold">Verb</div>
-                    <span className="text-2xl">→</span>
+                    <span className="text-xl">→</span>
                     <div className="bg-pink-500 text-white px-4 py-2 rounded-lg font-semibold">Object</div>
                   </div>
-                  <p className="text-center text-gray-600 mt-4 italic">Example: "I (Subject) eat (Verb) apples (Object)."</p>
+                  <p className="text-center text-gray-600 mt-3 italic">Example: "I (Subject) eat (Verb) apples (Object)."</p>
                 </div>
 
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">Sentence Types</h4>
-                  <div className="space-y-4">
-                    <div className="bg-white border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm">
-                      <h5 className="font-bold text-gray-800 mb-2">Simple Sentence</h5>
-                      <p className="text-sm text-gray-600 mb-2">Contains one independent clause (subject + verb)</p>
-                      <p className="text-gray-700 italic">Example: "The cat sleeps."</p>
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Sentence Types</h4>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div className="bg-white border-l-4 border-green-500 p-3 rounded-r-lg">
+                      <h5 className="font-bold text-gray-800 mb-1">Simple Sentence</h5>
+                      <p className="text-sm text-gray-600 mb-1">One independent clause</p>
+                      <p className="text-sm text-gray-700 italic">"The cat sleeps."</p>
                     </div>
-                    <div className="bg-white border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm">
-                      <h5 className="font-bold text-gray-800 mb-2">Compound Sentence</h5>
-                      <p className="text-sm text-gray-600 mb-2">Two independent clauses joined by a conjunction</p>
-                      <p className="text-gray-700 italic">Example: "The cat sleeps, and the dog plays."</p>
+                    <div className="bg-white border-l-4 border-blue-500 p-3 rounded-r-lg">
+                      <h5 className="font-bold text-gray-800 mb-1">Compound Sentence</h5>
+                      <p className="text-sm text-gray-600 mb-1">Two independent clauses</p>
+                      <p className="text-sm text-gray-700 italic">"The cat sleeps, and the dog plays."</p>
                     </div>
-                    <div className="bg-white border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
-                      <h5 className="font-bold text-gray-800 mb-2">Complex Sentence</h5>
-                      <p className="text-sm text-gray-600 mb-2">One independent + one dependent clause</p>
-                      <p className="text-gray-700 italic">Example: "The cat sleeps when it's tired."</p>
+                    <div className="bg-white border-l-4 border-teal-500 p-3 rounded-r-lg">
+                      <h5 className="font-bold text-gray-800 mb-1">Complex Sentence</h5>
+                      <p className="text-sm text-gray-600 mb-1">Independent + dependent clause</p>
+                      <p className="text-sm text-gray-700 italic">"The cat sleeps when it's tired."</p>
                     </div>
-                    <div className="bg-white border-l-4 border-pink-500 p-4 rounded-r-lg shadow-sm">
-                      <h5 className="font-bold text-gray-800 mb-2">Compound-Complex Sentence</h5>
-                      <p className="text-sm text-gray-600 mb-2">Two or more independent clauses + one or more dependent clauses</p>
-                      <p className="text-gray-700 italic">Example: "The cat sleeps when it's tired, and the dog plays outside."</p>
+                    <div className="bg-white border-l-4 border-pink-500 p-3 rounded-r-lg">
+                      <h5 className="font-bold text-gray-800 mb-1">Compound-Complex</h5>
+                      <p className="text-sm text-gray-600 mb-1">2+ independent + dependent clauses</p>
+                      <p className="text-sm text-gray-700 italic">"Cat sleeps when tired, and dog plays."</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">Forming Questions</h4>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                      <h5 className="font-semibold text-gray-800 mb-2">Yes/No Questions</h5>
-                      <p className="text-sm text-gray-600 mb-2">Use auxiliary verb + subject + main verb</p>
-                      <p className="text-sm text-gray-700"><span className="font-semibold">Statement:</span> You are happy.</p>
-                      <p className="text-sm text-gray-700"><span className="font-semibold">Question:</span> Are you happy?</p>
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Forming Questions</h4>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                      <h5 className="font-semibold text-gray-800 mb-1">Yes/No Questions</h5>
+                      <p className="text-sm text-gray-600 mb-1">Auxiliary + subject + verb</p>
+                      <p className="text-sm text-gray-700 italic">Are you happy?</p>
                     </div>
-                    <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
-                      <h5 className="font-semibold text-gray-800 mb-2">Wh- Questions</h5>
-                      <p className="text-sm text-gray-600 mb-2">Use question word + auxiliary + subject + verb</p>
-                      <p className="text-sm text-gray-700"><span className="font-semibold">Examples:</span> What, Where, When, Why, Who, How</p>
+                    <div className="bg-teal-50 rounded-lg p-3 border border-teal-200">
+                      <h5 className="font-semibold text-gray-800 mb-1">Wh- Questions</h5>
+                      <p className="text-sm text-gray-600 mb-1">Question word + auxiliary + subject</p>
                       <p className="text-sm text-gray-700 italic">Where do you live?</p>
                     </div>
                   </div>
@@ -407,79 +392,73 @@ const GrammarGuide = ({ onClose }) => {
 
             {/* Tenses */}
             {activeSection === 'tenses' && (
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">English Tenses</h3>
-                <p className="text-gray-600 mb-6">
-                  English has 12 main tenses that help us talk about actions in different time periods.
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">English Tenses</h3>
+                <p className="text-gray-600 mb-3">
+                  English has 12 main tenses for different time periods.
                 </p>
+                <div className="space-y-4">
                 {tenseData.map((category, idx) => (
-                  <div key={idx} className="space-y-3">
-                    <h4 className={`text-xl font-bold text-${category.color}-600 mb-3`}>{category.category}</h4>
+                  <div key={idx}>
+                    <h4 className="text-lg font-bold text-gray-700 mb-2">{category.category}</h4>
+                    <div className="grid md:grid-cols-2 gap-3">
                     {category.tenses.map((tense, i) => (
-                      <div key={i} className={`bg-${category.color}-50 border-l-4 border-${category.color}-500 rounded-r-lg p-4`}>
-                        <div className="flex items-start justify-between mb-2">
-                          <h5 className="font-bold text-gray-800">{tense.name}</h5>
-                          <span className={`bg-${category.color}-200 text-${category.color}-800 px-3 py-1 rounded-full text-xs font-semibold`}>
-                            {tense.form}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2"><span className="font-semibold">Use:</span> {tense.use}</p>
-                        <p className="text-sm text-gray-700 italic">"{tense.example}"</p>
+                      <div key={i} className="bg-gray-50 border-l-4 border-teal-500 rounded-r p-3">
+                        <h5 className="font-bold text-gray-800 text-sm">{tense.name}</h5>
+                        <p className="text-sm text-gray-600 italic">{tense.form}</p>
                       </div>
                     ))}
+                    </div>
                   </div>
                 ))}
+                </div>
               </div>
             )}
 
             {/* Common Mistakes */}
             {activeSection === 'mistakes' && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Common Grammar Mistakes</h3>
-                <p className="text-gray-600 mb-6">
-                  Learn to avoid these frequent errors that even native speakers make.
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Common Grammar Mistakes</h3>
+                <p className="text-gray-600 mb-3">
+                  Learn to avoid these frequent errors.
                 </p>
+                <div className="grid md:grid-cols-2 gap-3">
                 {commonMistakes.map((item, index) => (
-                  <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-5 hover:border-red-400 transition-colors">
-                    <h4 className="text-lg font-bold text-gray-800 mb-3">{item.mistake}</h4>
-                    <div className="space-y-2 mb-3">
+                  <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-4">
+                    <h4 className="text-base font-bold text-gray-800 mb-2">{item.mistake}</h4>
+                    <div className="space-y-2">
                       <div className="flex items-start space-x-2">
-                        <span className="text-red-500 font-bold flex-shrink-0">✗</span>
-                        <p className="text-gray-700 line-through">{item.wrong}</p>
+                        <span className="text-red-500 font-bold">✗</span>
+                        <p className="text-sm text-gray-700 line-through">{item.wrong}</p>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="text-green-500 font-bold flex-shrink-0">✓</span>
-                        <p className="text-gray-700 font-semibold">{item.correct}</p>
+                        <span className="text-green-500 font-bold">✓</span>
+                        <p className="text-sm text-gray-700 font-semibold">{item.correct}</p>
                       </div>
-                    </div>
-                    <div className="bg-teal-50 border-l-4 border-teal-400 p-3 rounded-r-lg">
-                      <p className="text-sm text-gray-700"><span className="font-semibold">💡 Tip:</span> {item.tip}</p>
                     </div>
                   </div>
                 ))}
+                </div>
               </div>
             )}
 
             {/* Punctuation */}
             {activeSection === 'punctuation' && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Punctuation Marks</h3>
-                <p className="text-gray-600 mb-6">
-                  Proper punctuation makes your writing clear and easy to understand.
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Punctuation Marks</h3>
+                <p className="text-gray-600 mb-3">
+                  Proper punctuation makes writing clear.
                 </p>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-3">
                   {punctuationRules.map((rule, index) => (
-                    <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-purple-400 transition-colors">
-                      <div className="flex items-start space-x-3">
-                        <div className="bg-rose-100 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
-                          <span className="text-2xl font-bold text-rose-600">{rule.mark}</span>
+                    <div key={index} className="bg-white border-2 border-gray-200 rounded-lg p-3">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <div className="bg-rose-100 rounded w-10 h-10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xl font-bold text-rose-600">{rule.mark}</span>
                         </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-800 mb-1">{rule.name}</h4>
-                          <p className="text-xs text-gray-600 mb-2">{rule.use}</p>
-                          <p className="text-sm text-gray-700 italic bg-gray-50 p-2 rounded">"{rule.example}"</p>
-                        </div>
+                        <h4 className="font-bold text-gray-800">{rule.name}</h4>
                       </div>
+                      <p className="text-sm text-gray-700 italic">"{rule.example}"</p>
                     </div>
                   ))}
                 </div>
@@ -488,30 +467,30 @@ const GrammarGuide = ({ onClose }) => {
 
             {/* Practice */}
             {activeSection === 'practice' && (
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Quick Practice</h3>
-                <p className="text-gray-600 mb-6">
-                  Test your knowledge with these practice resources and exercises.
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Quick Practice</h3>
+                <p className="text-gray-600 mb-3">
+                  Test your knowledge with practice exercises.
                 </p>
                 
-                <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-6 border-2 border-green-200">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">Practice Questions</h4>
-                  <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
-                      <p className="font-semibold text-gray-800 mb-2">1. Identify the verb in this sentence:</p>
-                      <p className="text-gray-700 mb-2">"The cat quickly jumped over the fence."</p>
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-4 border-2 border-green-200">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Practice Questions</h4>
+                  <div className="space-y-3">
+                    <div className="bg-white rounded-lg p-3">
+                      <p className="font-semibold text-gray-800 mb-2">1. Identify the verb:</p>
+                      <p className="text-sm text-gray-700 mb-2">"The cat quickly jumped over the fence."</p>
                       <details className="text-sm">
-                        <summary className="cursor-pointer text-teal-600 hover:text-teal-700 font-semibold">Show Answer</summary>
+                        <summary className="cursor-pointer text-teal-600 font-semibold">Show Answer</summary>
                         <p className="mt-2 text-green-600 font-semibold">✓ "jumped" is the verb (action word)</p>
                       </details>
                     </div>
                     
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="bg-white rounded-lg p-3">
                       <p className="font-semibold text-gray-800 mb-2">2. Which sentence is correct?</p>
-                      <p className="text-gray-700">a) She don't like coffee.</p>
-                      <p className="text-gray-700">b) She doesn't like coffee.</p>
+                      <p className="text-sm text-gray-700">a) She don't like coffee.</p>
+                      <p className="text-sm text-gray-700">b) She doesn't like coffee.</p>
                       <details className="text-sm mt-2">
-                        <summary className="cursor-pointer text-teal-600 hover:text-teal-700 font-semibold">Show Answer</summary>
+                        <summary className="cursor-pointer text-teal-600 font-semibold">Show Answer</summary>
                         <p className="mt-2 text-green-600 font-semibold">✓ (b) is correct. Use "doesn't" with she/he/it.</p>
                       </details>
                     </div>

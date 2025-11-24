@@ -76,46 +76,44 @@ const GrammarVocabulary = ({ onClose }) => {
   }, [filteredVocabulary]);
 
   return (
-    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-      <div className="w-full h-full relative">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-6 sticky top-0 z-10">
+    <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-rose-50 to-amber-50 z-50 overflow-hidden">
+      <div className="w-full h-full flex flex-col">
+        {/* Compact Header */}
+        <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white p-3 shadow-xl">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
           >
-            <span className="text-2xl">✕</span>
+            <span className="text-lg font-bold">✕</span>
           </button>
-          <div className="flex items-center space-x-3 mb-4">
-            <span className="text-4xl">📚</span>
-            <div>
-              <h2 className="text-3xl font-bold">Grammar Vocabulary</h2>
-              <p className="text-teal-100 text-sm">Essential grammar terms explained</p>
-            </div>
+          <div className="text-center mb-2">
+            <span className="text-3xl block mb-1">📚</span>
+            <h2 className="text-2xl font-bold">Grammar Vocabulary</h2>
+            <p className="text-white/90 text-sm mt-1">Essential grammar terms explained</p>
           </div>
 
-          {/* Search Bar */}
+          {/* Compact Search Bar */}
           <div className="relative">
             <input
               type="text"
               placeholder="Search terms or definitions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+              className="w-full px-4 py-2 rounded-lg text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300"
             />
-            <span className="absolute right-4 top-3 text-2xl">🔍</span>
+            <span className="absolute right-3 top-2 text-xl">🔍</span>
           </div>
         </div>
 
-        {/* Alphabet Filter */}
-        <div className="bg-gray-50 border-b border-gray-200 p-4 sticky top-[180px] z-10">
-          <div className="flex flex-wrap gap-2 justify-center">
+        {/* Compact Alphabet Filter */}
+        <div className="bg-white/80 backdrop-blur-sm border-b border-teal-200 px-4 py-2 shadow-sm">
+          <div className="flex flex-wrap gap-1 justify-center">
             <button
               onClick={() => setSelectedLetter('All')}
-              className={`px-3 py-1 rounded-lg font-semibold text-sm transition-colors ${
+              className={`px-2 py-1 rounded font-semibold text-xs transition-all duration-300 ${
                 selectedLetter === 'All'
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-100'
+                  ? 'bg-gradient-to-r from-teal-600 to-rose-400 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               All
@@ -124,10 +122,10 @@ const GrammarVocabulary = ({ onClose }) => {
               <button
                 key={letter}
                 onClick={() => setSelectedLetter(letter)}
-                className={`w-8 h-8 rounded-full font-semibold text-sm transition-colors ${
+                className={`w-7 h-7 rounded-full font-semibold text-xs transition-all duration-300 ${
                   selectedLetter === letter
-                    ? 'bg-teal-600 text-white'
-                    : 'bg-white text-gray-600 hover:bg-gray-100'
+                    ? 'bg-gradient-to-r from-teal-600 to-rose-400 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
                 {letter}
@@ -136,47 +134,47 @@ const GrammarVocabulary = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-8">
+        {/* Content - Scrollable Area */}
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           {filteredVocabulary.length === 0 ? (
-            <div className="text-center py-12">
-              <span className="text-6xl block mb-4">🔍</span>
-              <p className="text-gray-600 text-lg">No terms found matching your search.</p>
+            <div className="text-center py-8">
+              <span className="text-4xl block mb-3">🔍</span>
+              <p className="text-gray-600 mb-3">No terms found matching your search.</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedLetter('All');
                 }}
-                className="mt-4 px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300 text-sm font-semibold"
               >
                 Clear Filters
               </button>
             </div>
           ) : (
-            <div className="space-y-8">
+            <div className="space-y-4">
               {Object.keys(groupedByLetter).sort().map(letter => (
                 <div key={letter}>
-                  <div className="flex items-center mb-4">
-                    <div className="bg-teal-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold mr-4">
+                  <div className="flex items-center mb-2">
+                    <div className="bg-gradient-to-r from-teal-600 to-rose-400 text-white w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold mr-3 shadow-md">
                       {letter}
                     </div>
-                    <div className="flex-1 h-1 bg-gradient-to-r from-teal-200 to-transparent rounded"></div>
+                    <div className="flex-1 h-0.5 bg-gradient-to-r from-teal-300 via-purple-200 to-rose-300 rounded"></div>
                   </div>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {groupedByLetter[letter].map((item, index) => (
                       <div
                         key={index}
-                        className="bg-white border-2 border-gray-200 rounded-lg p-5 hover:border-teal-400 hover:shadow-md transition-all duration-300"
+                        className="bg-white border-2 border-teal-200 rounded-lg p-3 hover:border-rose-400 hover:shadow-lg transition-all duration-300"
                       >
                         <div className="flex items-start">
-                          <span className="text-2xl mr-3 flex-shrink-0">📖</span>
+                          <span className="text-xl mr-2 flex-shrink-0">📖</span>
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">{item.term}</h3>
-                            <p className="text-gray-700 mb-3">{item.definition}</p>
-                            <div className="bg-cyan-50 border-l-4 border-cyan-400 p-3 rounded-r-lg">
-                              <p className="text-sm text-gray-700">
-                                <span className="font-semibold text-cyan-700">Example:</span> {item.example}
+                            <h3 className="text-base font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-1">{item.term}</h3>
+                            <p className="text-gray-700 text-sm mb-2">{item.definition}</p>
+                            <div className="bg-gradient-to-r from-teal-50 to-rose-50 border-l-4 border-teal-400 p-2 rounded-r">
+                              <p className="text-xs text-gray-700">
+                                <span className="font-semibold text-teal-700">Example:</span> {item.example}
                               </p>
                             </div>
                           </div>
@@ -186,36 +184,36 @@ const GrammarVocabulary = ({ onClose }) => {
                   </div>
                 </div>
               ))}
+
+              {/* Inline Tip */}
+              <div className="mt-4 bg-gradient-to-r from-teal-100 via-purple-50 to-rose-100 rounded-lg p-3 border-2 border-teal-300">
+                <div className="flex items-start gap-2">
+                  <span className="text-xl flex-shrink-0">💡</span>
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-800 mb-1">Learning Tip</h4>
+                    <p className="text-xs text-gray-700">
+                      Master 2-3 new grammar terms each week and practice using them in sentences to build your vocabulary naturally!
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
-
-          {/* Info Box */}
-          <div className="mt-8 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-lg p-6 text-white">
-            <h3 className="text-xl font-bold mb-3">Did You Know?</h3>
-            <p className="mb-4">
-              Understanding grammar terminology helps you learn faster and communicate more effectively with teachers and in language resources.
-            </p>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4">
-              <p className="text-sm">
-                <span className="font-semibold">💡 Tip:</span> Learn 2-3 new grammar terms each week and practice using them in sentences!
-              </p>
-            </div>
-          </div>
         </div>
 
-        {/* Footer Stats */}
-        <div className="bg-gray-50 border-t border-gray-200 p-4 sticky bottom-0">
-          <div className="flex justify-center items-center space-x-8 text-center">
+        {/* Compact Footer Stats */}
+        <div className="bg-white/80 backdrop-blur-sm border-t-2 border-teal-200 px-4 py-2 shadow-lg">
+          <div className="flex justify-center items-center space-x-6 text-center">
             <div>
-              <div className="text-2xl font-bold text-teal-600">{vocabulary.length}</div>
+              <div className="text-xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">{vocabulary.length}</div>
               <div className="text-xs text-gray-600">Total Terms</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-cyan-600">{filteredVocabulary.length}</div>
+              <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">{filteredVocabulary.length}</div>
               <div className="text-xs text-gray-600">Showing</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-blue-600">{Object.keys(groupedByLetter).length}</div>
+              <div className="text-xl font-bold bg-gradient-to-r from-rose-600 to-rose-700 bg-clip-text text-transparent">{Object.keys(groupedByLetter).length}</div>
               <div className="text-xs text-gray-600">Letters</div>
             </div>
           </div>

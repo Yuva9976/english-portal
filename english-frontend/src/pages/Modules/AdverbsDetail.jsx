@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LearnMoreModal from '../../components/LearnMoreModal';
 
 const AdverbsDetail = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('overview');
   const [writingRevealed, setWritingRevealed] = useState(false);
   const [readingRevealed, setReadingRevealed] = useState(false);
+  
+  // Learn More Modal States
+  const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const sections = [
     { id: 'overview', name: 'Overview', icon: '📖' },
@@ -37,19 +42,19 @@ const AdverbsDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
-      <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto max-w-6xl px-4 py-6">
-          <button onClick={() => navigate(-1)} className="mb-3 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm">
-            <span className="text-lg">←</span>
+      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
+        <div className="container mx-auto max-w-6xl px-4 py-3">
+          <button onClick={() => navigate(-1)} className="mb-2 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm">
+            <span className="text-base">←</span>
             <span className="font-medium">Back</span>
           </button>
 
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-3xl md:text-4xl">🕑</span>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl md:text-3xl">🕑</span>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Adverbs</h1>
-                <p className="text-sm md:text-base text-blue-100">Modify verbs, adjectives and other adverbs</p>
+                <h1 className="text-xl md:text-2xl font-bold">Adverbs</h1>
+                <p className="text-xs md:text-sm text-blue-100">Modify verbs, adjectives and other adverbs</p>
               </div>
             </div>
 
@@ -58,7 +63,7 @@ const AdverbsDetail = () => {
                 <button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${activeSection === s.id ? 'bg-white text-blue-600 shadow-md' : 'bg-blue-500 bg-opacity-40 text-white hover:bg-opacity-60'}`}>
+                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${activeSection === s.id ? 'bg-white text-teal-600 shadow-md' : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'}`}>
                   <span className="mr-1">{s.icon}</span>{s.name}
                 </button>
               ))}
@@ -67,7 +72,7 @@ const AdverbsDetail = () => {
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 mt-4">
         <section id="overview" className="mb-12 scroll-mt-32">
           <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 mb-6 hover:shadow-md transition-all">
             <div className="flex items-start gap-2 md:gap-3 mb-2">
@@ -121,11 +126,12 @@ const AdverbsDetail = () => {
                     ))}
                   </div>
 
-                  <div className="flex flex-wrap gap-1 mt-auto">
+                  <div className="flex flex-wrap gap-1 mt-auto mb-3">
                     {t.sampleWords.slice(0, 4).map((w, idx) => (
                       <span key={idx} className={`bg-${t.color}-100 text-${t.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}>{w}</span>
                     ))}
                   </div>
+                  <button onClick={() => { setSelectedItem(t); setShowLearnMoreModal(true); }} className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-rose-400 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"><span>📚</span> Learn More <span>→</span></button>
                 </div>
               </div>
             ))}
@@ -211,6 +217,14 @@ const AdverbsDetail = () => {
       </div>
 
       <style jsx>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>
+      
+      {/* Learn More Modal */}
+      <LearnMoreModal 
+        isOpen={showLearnMoreModal} 
+        onClose={() => setShowLearnMoreModal(false)} 
+        selectedItem={selectedItem}
+        title="Adverbs"
+      />
     </div>
   );
 };

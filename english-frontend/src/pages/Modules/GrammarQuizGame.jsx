@@ -337,22 +337,22 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
 
   if (!quizStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full bg-white rounded-xl shadow-xl p-8 md:p-12">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 pt-6">
+        <div className="max-w-xl w-full bg-white rounded-xl shadow-xl p-6 md:p-8 mx-auto mt-4">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
               {quizType === 'nouns' ? '🏛️' : '💬'} {quizTitle}
             </h1>
-            <p className="text-gray-600 text-base md:text-lg mb-6">
+            <p className="text-gray-600 text-sm md:text-base mb-4">
               {quizType === 'nouns' 
                 ? 'Test your knowledge of noun types, usage, and identification!' 
                 : 'Test your knowledge of pronoun types, usage, and identification!'}
             </p>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-6 mb-8 border-l-4 border-blue-500">
-            <h2 className="font-bold text-gray-800 mb-3 text-lg">📋 Quiz Information:</h2>
-            <ul className="space-y-2 text-gray-700">
+          <div className="bg-gradient-to-r from-teal-50 to-rose-50 rounded-lg p-4 mb-6 border-l-4 border-teal-500">
+            <h2 className="font-bold text-gray-800 mb-2 text-base">📋 Quiz Information:</h2>
+            <ul className="space-y-1.5 text-gray-700 text-sm">
               <li className="flex items-center"><span className="mr-2">✅</span> <strong>10 Questions</strong> - Multiple choice and fill-in-the-blank</li>
               <li className="flex items-center"><span className="mr-2">⏱️</span> <strong>~10-15 minutes</strong> - No time limit</li>
               <li className="flex items-center"><span className="mr-2">🎯</span> <strong>100 Points</strong> - 10 points per correct answer</li>
@@ -360,35 +360,35 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
             </ul>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">10</div>
-              <div className="text-xs text-green-700 font-medium mt-1">Questions</div>
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg p-3 text-center">
+              <div className="text-xl font-bold text-teal-600">10</div>
+              <div className="text-xs text-teal-700 font-medium mt-0.5">Questions</div>
             </div>
-            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-600">100</div>
-              <div className="text-xs text-yellow-700 font-medium mt-1">Points</div>
+            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-3 text-center">
+              <div className="text-xl font-bold text-yellow-600">100</div>
+              <div className="text-xs text-yellow-700 font-medium mt-0.5">Points</div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">8-9</div>
-              <div className="text-xs text-blue-700 font-medium mt-1">Questions/Topic</div>
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center">
+              <div className="text-xl font-bold text-blue-600">8-9</div>
+              <div className="text-xs text-blue-700 font-medium mt-0.5">Questions/Topic</div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-purple-600">100%</div>
-              <div className="text-xs text-purple-700 font-medium mt-1">Goal</div>
+            <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-lg p-3 text-center">
+              <div className="text-xl font-bold text-rose-600">100%</div>
+              <div className="text-xs text-rose-700 font-medium mt-0.5">Goal</div>
             </div>
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={() => setQuizStarted(true)}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold text-base hover:shadow-lg transition-all duration-300"
+              className="flex-1 bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2.5 rounded-lg font-bold text-sm hover:shadow-lg transition-all duration-300"
             >
               Start Quiz 🚀
             </button>
             <button
               onClick={() => navigate(-1)}
-              className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50 transition-colors"
+              className="flex-1 border-2 border-gray-300 text-gray-700 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-50 transition-colors"
             >
               Go Back
             </button>
@@ -403,23 +403,23 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
     const grade = percentage === 100 ? 'A+ Perfect!' : percentage >= 80 ? 'A Excellent!' : percentage >= 60 ? 'B Good' : 'C Keep Practicing';
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 py-12">
-        <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8 md:p-12">
-          <div className="text-center mb-8">
-            <div className="text-6xl mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 py-8">
+        <div className="max-w-xl mx-auto bg-white rounded-xl shadow-xl p-6 md:p-8">
+          <div className="text-center mb-6">
+            <div className="text-5xl mb-3">
               {percentage === 100 ? '🏆' : percentage >= 80 ? '🥇' : percentage >= 60 ? '🥈' : '📚'}
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Quiz Complete!</h1>
-            <p className="text-gray-600">Great effort! Review your results below.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">Quiz Complete!</h1>
+            <p className="text-gray-600 text-sm">Great effort! Review your results below.</p>
           </div>
 
-          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg p-8 text-center mb-8 border-2 border-yellow-400">
-            <div className="text-5xl font-bold text-gray-800 mb-2">{quizScore}/100</div>
-            <div className="text-xl font-bold text-gray-700 mb-1">{grade}</div>
+          <div className="bg-gradient-to-r from-teal-100 to-rose-100 rounded-lg p-6 text-center mb-6 border-2 border-teal-400">
+            <div className="text-4xl font-bold text-gray-800 mb-1.5">{quizScore}/100</div>
+            <div className="text-lg font-bold text-gray-700 mb-1">{grade}</div>
             <div className="text-sm text-gray-600">You answered {Object.values(quizAnswers).filter(a => a.correct).length} out of 10 correctly!</div>
           </div>
 
-          <div className="space-y-3 mb-8">
+          <div className="space-y-2.5 mb-6">
             {questions.map((q, index) => (
               <div
                 key={q.id}
@@ -449,13 +449,13 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
           <div className="flex gap-3">
             <button
               onClick={restartQuiz}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition-all"
+              className="flex-1 bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2.5 rounded-lg font-bold text-sm hover:shadow-lg transition-all"
             >
               Retake Quiz
             </button>
             <button
               onClick={() => navigate(-1)}
-              className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50 transition-colors"
+              className="flex-1 border-2 border-gray-300 text-gray-700 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-50 transition-colors"
             >
               Go Back
             </button>
@@ -469,69 +469,69 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
   const isAnswered = quizAnswers[question.id];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 py-8">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 pt-6">
+      <div className="max-w-2xl mx-auto">
         {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
             <span className="text-sm font-semibold text-gray-700">
               Question {currentQuestionIndex + 1} of {questions.length}
             </span>
-            <span className="text-sm font-bold bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full">
+            <span className="text-xs font-bold bg-gradient-to-r from-teal-500 to-rose-400 text-white px-2.5 py-0.5 rounded-full">
               {quizScore} pts
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-teal-500 to-rose-400 h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Question Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-6">
-          <div className="flex items-start gap-4 mb-4">
-            <span className="text-3xl">{question.emoji}</span>
+        <div className="bg-white rounded-xl shadow-lg p-5 md:p-6 mb-4">
+          <div className="flex items-start gap-3 mb-3">
+            <span className="text-2xl">{question.emoji}</span>
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="bg-teal-100 text-teal-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
                   {question.type === 'multiple-choice' ? 'Multiple Choice' : 'Fill-in-the-Blank'}
                 </span>
               </div>
-              <h2 className="text-lg md:text-xl font-bold text-gray-800">{question.question}</h2>
+              <h2 className="text-base md:text-lg font-bold text-gray-800">{question.question}</h2>
             </div>
           </div>
 
           {question.hint && !isAnswered && (
-            <details className="mb-6 bg-blue-50 rounded-lg border border-blue-200">
-              <summary className="cursor-pointer p-3 font-semibold text-blue-700 hover:bg-blue-100 transition">
+            <details className="mb-4 bg-teal-50 rounded-lg border border-teal-200">
+              <summary className="cursor-pointer p-2.5 font-semibold text-teal-700 hover:bg-teal-100 transition text-sm">
                 💡 Need a hint?
               </summary>
-              <div className="p-3 pt-0 text-blue-700 text-sm">{question.hint}</div>
+              <div className="px-2.5 pb-2.5 text-teal-700 text-xs">{question.hint}</div>
             </details>
           )}
 
           {/* Options */}
-          <div className="space-y-2 mb-6">
+          <div className="space-y-2 mb-4">
             {question.options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => !isAnswered && handleAnswer(index)}
                 disabled={isAnswered}
-                className={`w-full p-3 md:p-4 rounded-lg border-2 text-left font-medium transition-all duration-200 ${
+                className={`w-full p-2.5 md:p-3 rounded-lg border-2 text-left text-sm font-medium transition-all duration-200 ${
                   isAnswered
                     ? index === question.correct
                       ? 'bg-green-50 border-green-400 text-green-900'
                       : index === quizAnswers[question.id]?.selected
                       ? 'bg-red-50 border-red-400 text-red-900'
                       : 'bg-gray-50 border-gray-200 text-gray-400'
-                    : 'bg-white border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                    : 'bg-white border-gray-300 hover:border-teal-400 hover:bg-teal-50'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center">
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-sm font-bold mr-3">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold mr-2.5">
                       {String.fromCharCode(65 + index)}
                     </span>
                     {option}
@@ -545,17 +545,17 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
 
           {/* Feedback */}
           {isAnswered && (
-            <div className={`p-4 rounded-lg border-l-4 mb-6 ${
+            <div className={`p-3 rounded-lg border-l-4 mb-4 ${
               quizAnswers[question.id].correct
                 ? 'bg-green-50 border-green-500'
                 : 'bg-orange-50 border-orange-500'
             }`}>
-              <p className="text-sm text-gray-800 mb-2">
+              <p className="text-xs text-gray-800 mb-1.5">
                 <span className="font-bold">{quizAnswers[question.id].correct ? '🎉 Correct!' : '📝 Not quite!'}</span>
               </p>
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">{question.explanation}</p>
+              <p className="text-xs text-gray-700 leading-relaxed mb-2">{question.explanation}</p>
               {question.funFact && (
-                <p className="text-sm italic text-gray-700">{question.funFact}</p>
+                <p className="text-xs italic text-gray-700">{question.funFact}</p>
               )}
             </div>
           )}
@@ -564,7 +564,7 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
           {isAnswered && (
             <button
               onClick={nextQuestion}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition-all"
+              className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2.5 rounded-lg font-bold text-sm hover:shadow-lg transition-all"
             >
               {currentQuestionIndex === questions.length - 1 ? 'View Results 🎯' : 'Next Question →'}
             </button>

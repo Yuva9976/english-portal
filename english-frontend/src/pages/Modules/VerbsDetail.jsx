@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { grammarAPI } from '../../apiClient';
+import LearnMoreModal from '../../components/LearnMoreModal';
 
 const VerbsDetail = () => {
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ const VerbsDetail = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [modalQuizAnswers, setModalQuizAnswers] = useState({});
   const [singleQuestionMode, setSingleQuestionMode] = useState(false);
+  const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
+  const [learnMoreData, setLearnMoreData] = useState(null);
+  const [loadingLearnMore, setLoadingLearnMore] = useState(false);
+  const [activeLearnTab, setActiveLearnTab] = useState('overview');
   
   // API Data State
   const [apiData, setApiData] = useState(null);
@@ -118,22 +123,22 @@ const VerbsDetail = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
       {/* Compact Sticky Header */}
-      <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto max-w-6xl px-4 py-6">
+      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
+        <div className="container mx-auto max-w-6xl px-4 py-3">
           <button
             onClick={() => navigate(-1)}
-            className="mb-3 flex items-center space-x-1 text-white hover:text-teal-100 transition-colors text-sm"
+            className="mb-2 flex items-center space-x-1 text-white hover:text-teal-100 transition-colors text-sm"
           >
-            <span className="text-lg">←</span>
+            <span className="text-base">←</span>
             <span className="font-medium">Back</span>
           </button>
 
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-3xl md:text-4xl">🔤</span>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl md:text-3xl">🔤</span>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Verbs</h1>
-                <p className="text-sm md:text-base text-teal-100">Comprehensive verb guide and practice</p>
+                <h1 className="text-xl md:text-2xl font-bold">Verbs</h1>
+                <p className="text-xs md:text-sm text-teal-100">Comprehensive verb guide and practice</p>
               </div>
             </div>
 
@@ -146,7 +151,7 @@ const VerbsDetail = () => {
                   className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${
                     activeSection === section.id
                       ? 'bg-white text-teal-600 shadow-md'
-                      : 'bg-blue-500 bg-opacity-40 text-white hover:bg-opacity-60'
+                      : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'
                   }`}
                 >
                   <span className="mr-1">{section.icon}</span>
@@ -158,7 +163,7 @@ const VerbsDetail = () => {
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 mt-4">
         {/* OVERVIEW */}
         <section id="overview" className="mb-12 scroll-mt-32">
           <div className="bg-gradient-to-r from-slate-50 to-teal-50 rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 mb-6 hover:shadow-md transition-all">
@@ -257,16 +262,27 @@ const VerbsDetail = () => {
                       </div>
                     )}
                     
-                    <button
-                      onClick={() => {
-                        setSelectedType(type);
-                        setShowComprehensiveModal(true);
-                        setExpandedSections({});
-                      }}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-teal-500 to-rose-500 text-white rounded-lg font-semibold hover:shadow-md transition-all text-sm"
-                    >
-                      📖 Learn More
-                    </button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedType(type);
+                          setShowComprehensiveModal(true);
+                          setExpandedSections({});
+                        }}
+                        className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-md transition-all text-sm"
+                      >
+                        📖 Details
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLearnMoreData(type);
+                          setShowLearnMoreModal(true);
+                        }}
+                        className="px-4 py-2.5 bg-gradient-to-r from-teal-500 to-rose-400 text-white rounded-lg font-semibold hover:shadow-md transition-all text-sm"
+                      >
+                        📚 Learn More
+                      </button>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -1066,6 +1082,14 @@ const VerbsDetail = () => {
       )}
 
       <style jsx>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>
+      
+      {/* Learn More Modal */}
+      <LearnMoreModal 
+        isOpen={showLearnMoreModal} 
+        onClose={() => setShowLearnMoreModal(false)} 
+        selectedItem={learnMoreData}
+        title="Verbs"
+      />
     </div>
   );
 };
