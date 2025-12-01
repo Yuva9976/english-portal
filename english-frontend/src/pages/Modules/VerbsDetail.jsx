@@ -198,97 +198,62 @@ const VerbsDetail = () => {
             </h2>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-              {verbTopics.map(topic => (
-                <div key={topic.id} className={`bg-gradient-to-br from-${topic.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${topic.color}-200 overflow-hidden flex flex-col h-full`}>
-                  <div className={`bg-gradient-to-r from-${topic.color}-100 to-${topic.color}-50 px-4 py-3 border-b-2 border-${topic.color}-200`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-2xl">{topic.icon}</span>
-                      <h3 className={`text-base font-bold text-${topic.color}-800`}>{topic.type}</h3>
-                    </div>
-                  </div>
-
-                  <div className="p-4 flex-1 flex flex-col">
-                    <p className="text-sm text-gray-700 leading-relaxed mb-3">{topic.definition}</p>
-
-                    <div className="space-y-1.5 mb-3">
-                      {topic.examples.slice(0,2).map((ex, i) => (
-                        <div key={i} className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300">
-                          <p className="text-sm text-gray-700" dangerouslySetInnerHTML={{ __html: ex }} />
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex flex-wrap gap-1 mt-auto">
-                      {topic.sampleWords.slice(0,4).map((w, idx) => (
-                        <span key={idx} className={`bg-${topic.color}-100 text-${topic.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}>{w}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* COMPREHENSIVE VERB TYPES SECTION */}
-          <div className="mt-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1 flex items-center">
-              <span className="text-3xl mr-2">🎓</span>
-              Comprehensive Verb Type Guides
-            </h3>
-            <p className="text-gray-600 text-sm mb-6">Deep dive into each verb type with detailed explanations, examples, and practice</p>
-            
-            <div className="grid md:grid-cols-2 gap-4">
               {apiData?.types && apiData.types.length > 0 ? (
                 apiData.types.map((type) => (
-                  <div key={type.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all border-2 border-gray-100 p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start gap-3 flex-1">
-                        <span className="text-4xl">{type.icon}</span>
-                        <div>
-                          <h4 className="text-lg font-bold text-gray-800">{type.name}</h4>
-                          <p className="text-sm text-gray-600 mt-1">{type.description}</p>
-                        </div>
-                      </div>
+                  <div key={type.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${type.color || 'purple'}-200 hover:border-${type.color || 'purple'}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${type.color || 'purple'}-300`} style={{ borderTop: `6px solid var(--tw-color-${type.color || 'purple'}-400)` }}>
+                    <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{type.icon}</div>
+                    <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
+                      <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${type.color || 'purple'}-500)` }}>{type.icon}</span>
+                      <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{type.name}</h3>
                     </div>
-                    
-                    {type.examples && type.examples.length > 0 && (
-                      <div className="mb-4 bg-gray-50 rounded-lg p-3">
-                        <p className="text-sm font-semibold text-gray-700 mb-2">Examples:</p>
-                        <ul className="space-y-1.5">
+                    <div className="px-7 pb-8 flex-1 flex flex-col z-10">
+                      <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{type.description}</p>
+                      {type.examples && type.examples.length > 0 && (
+                        <div className="space-y-4 mb-5">
                           {type.examples.slice(0, 2).map((ex, idx) => (
-                            <li key={idx} className="text-sm text-gray-700">• {ex}</li>
+                            <div key={idx} className="bg-gradient-to-r from-${type.color || 'purple'}-50 to-blue-50 px-5 py-3 rounded-xl border border-${type.color || 'purple'}-100 shadow group-hover:scale-[1.03] group-hover:border-${type.color || 'purple'}-300 transition-all">
+                              <p className="text-base text-gray-700 font-medium">{ex}</p>
+                            </div>
                           ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedType(type);
-                          setShowComprehensiveModal(true);
-                          setExpandedSections({});
-                        }}
-                        className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-md transition-all text-sm"
-                      >
-                        📖 Details
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLearnMoreData(type);
-                          setShowLearnMoreModal(true);
-                        }}
-                        className="px-4 py-2.5 bg-gradient-to-r from-teal-500 to-rose-400 text-white rounded-lg font-semibold hover:shadow-md transition-all text-sm"
-                      >
-                        📚 Learn More
-                      </button>
+                        </div>
+                      )}
+                      {type.sample_words && type.sample_words.length > 0 && (
+                        <div className="flex flex-wrap gap-3 mb-5">
+                          {type.sample_words.slice(0, 4).map((word, idx) => (
+                            <span key={idx} className={`bg-gradient-to-r from-${type.color || 'purple'}-200 to-blue-200 text-${type.color || 'purple'}-700 px-5 py-2 rounded-full text-base font-bold border border-${type.color || 'purple'}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}>{word}</span>
+                          ))}
+                        </div>
+                      )}
+                      <button onClick={() => { setLearnMoreData(type); setShowLearnMoreModal(true); }} className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.04] group-hover:ring-2 group-hover:ring-teal-400">Learn More</button>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="col-span-2 bg-teal-50 border-2 border-teal-300 rounded-lg p-6 text-center">
-                  <p className="text-gray-700">Loading verb type details...</p>
-                </div>
+                verbTopics.map(topic => (
+                  <div key={topic.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${topic.color}-200 hover:border-${topic.color}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${topic.color}-300`} style={{ borderTop: `6px solid var(--tw-color-${topic.color}-400)` }}>
+                    <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{topic.icon}</div>
+                    <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
+                      <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${topic.color}-500)` }}>{topic.icon}</span>
+                      <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{topic.type}</h3>
+                    </div>
+                    <div className="px-7 pb-8 flex-1 flex flex-col z-10">
+                      <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{topic.definition}</p>
+                      <div className="space-y-4 mb-5">
+                        {topic.examples.slice(0,2).map((ex, i) => (
+                          <div key={i} className={`bg-gradient-to-r from-${topic.color}-50 to-blue-50 px-5 py-3 rounded-xl border border-${topic.color}-100 shadow group-hover:scale-[1.03] group-hover:border-${topic.color}-300 transition-all`}>
+                            <p className="text-base text-gray-700 font-medium" dangerouslySetInnerHTML={{ __html: ex }} />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-3 mb-5">
+                        {topic.sampleWords.slice(0,4).map((w, idx) => (
+                          <span key={idx} className={`bg-gradient-to-r from-${topic.color}-200 to-blue-200 text-${topic.color}-700 px-5 py-2 rounded-full text-base font-bold border border-${topic.color}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}>{w}</span>
+                        ))}
+                      </div>
+                      <button onClick={() => { setLearnMoreData(topic); setShowLearnMoreModal(true); }} className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.04] group-hover:ring-2 group-hover:ring-teal-400">Learn More</button>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>

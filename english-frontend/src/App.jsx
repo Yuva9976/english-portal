@@ -15,22 +15,15 @@ import LearnEnglish from './pages/Modules/LearnEnglish';
 import LessonView from './components/Module2/LessonView';
 import GrammarHub from './pages/Modules/GrammarHub';
 import PartsOfSpeechIndex from './pages/Modules/PartsOfSpeechIndex';
-import NounDetail from './pages/Modules/NounDetail';
-import PronounDetail from './pages/Modules/PronounDetail';
-import VerbsDetail from './pages/Modules/VerbsDetail';
-import AdjectiveDetail from './pages/Modules/AdjectiveDetail';
-import AdverbDetail from './pages/Modules/AdverbDetail';
-import PrepositionDetail from './pages/Modules/PrepositionDetail';
-import ConjunctionDetail from './pages/Modules/ConjunctionDetail';
-import InterjectionDetail from './pages/Modules/InterjectionDetail';
 import NounsDetail from './pages/Modules/NounsDetail';
 import PronounsDetail from './pages/Modules/PronounsDetail';
+import VerbsDetail from './pages/Modules/VerbsDetail';
 import AdjectivesDetail from './pages/Modules/AdjectivesDetail';
 import AdverbsDetail from './pages/Modules/AdverbsDetail';
 import PrepositionsDetail from './pages/Modules/PrepositionsDetail';
 import ConjunctionsDetail from './pages/Modules/ConjunctionsDetail';
-import DeterminersDetail from './pages/Modules/DeterminersDetail';
 import InterjectionsDetail from './pages/Modules/InterjectionsDetail';
+import DeterminersDetail from './pages/Modules/DeterminersDetail';
 import GrammarQuizGame from './pages/Modules/GrammarQuizGame';
 import NavBar from './components/NavBar'
 import SiteFooter from './components/SiteFooter'
@@ -55,13 +48,13 @@ export default function App() {
           <Route path='/modules/learn-english/:slug' element={<LessonView />} />
           <Route path='/modules/grammar-hub' element={<GrammarHub />} />
           <Route path='/modules/parts-of-speech' element={<PartsOfSpeechIndex />} />
-          <Route path='/modules/noun' element={<NounDetail />} />
-          <Route path='/modules/pronoun' element={<PronounDetail />} />
-          <Route path='/modules/adjective' element={<AdjectiveDetail />} />
-          <Route path='/modules/adverb' element={<AdverbDetail />} />
-          <Route path='/modules/preposition' element={<PrepositionDetail />} />
-          <Route path='/modules/conjunction' element={<ConjunctionDetail />} />
-          <Route path='/modules/interjection' element={<InterjectionDetail />} />
+          <Route path='/modules/noun' element={<NounsDetail />} />
+          <Route path='/modules/pronoun' element={<PronounsDetail />} />
+          <Route path='/modules/adjective' element={<AdjectivesDetail />} />
+          <Route path='/modules/adverb' element={<AdverbsDetail />} />
+          <Route path='/modules/preposition' element={<PrepositionsDetail />} />
+          <Route path='/modules/conjunction' element={<ConjunctionsDetail />} />
+          <Route path='/modules/interjection' element={<InterjectionsDetail />} />
           <Route path='/modules/grammar-hub/nouns' element={<NounsDetail />} />
           <Route path='/modules/grammar-hub/nouns-quiz' element={<GrammarQuizGame quizType="nouns" />} />
           <Route path='/modules/grammar-hub/pronouns' element={<PronounsDetail />} />

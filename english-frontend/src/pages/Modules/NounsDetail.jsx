@@ -20,19 +20,19 @@ const NounsDetail = () => {
   const [loadingLearnMore, setLoadingLearnMore] = useState(false);
   const [activeLearnTab, setActiveLearnTab] = useState('overview');
 
-  // All 10 noun types
+  // All noun types with correct database IDs
   const nounTypes = [
     {
-      id: 1,
+      id: 249,
       type: 'Proper Nouns',
-      icon: '⭐',
+      icon: '⭐',
       color: 'purple',
       definition: 'Specific names of people, places, or things. Always start with a capital letter.',
       examples: ['<strong>John</strong> visited <strong>Paris</strong>.', '<strong>Google</strong> is in <strong>California</strong>.'],
       sampleWords: ['London', 'Sarah', 'Microsoft', 'Monday', 'Christmas']
     },
     {
-      id: 2,
+      id: 250,
       type: 'Common Nouns',
       icon: '🏠',
       color: 'blue',
@@ -41,7 +41,7 @@ const NounsDetail = () => {
       sampleWords: ['table', 'city', 'teacher', 'car', 'mountain']
     },
     {
-      id: 3,
+      id: 251,
       type: 'Concrete Nouns',
       icon: '👁️',
       color: 'green',
@@ -50,7 +50,7 @@ const NounsDetail = () => {
       sampleWords: ['apple', 'rain', 'perfume', 'rock', 'bell']
     },
     {
-      id: 4,
+      id: 252,
       type: 'Abstract Nouns',
       icon: '💭',
       color: 'pink',
@@ -59,7 +59,7 @@ const NounsDetail = () => {
       sampleWords: ['love', 'freedom', 'happiness', 'justice', 'time']
     },
     {
-      id: 5,
+      id: 255,
       type: 'Collective Nouns',
       icon: '👥',
       color: 'orange',
@@ -68,7 +68,7 @@ const NounsDetail = () => {
       sampleWords: ['family', 'committee', 'audience', 'herd', 'class']
     },
     {
-      id: 6,
+      id: 253,
       type: 'Countable Nouns',
       icon: '🔢',
       color: 'teal',
@@ -77,7 +77,7 @@ const NounsDetail = () => {
       sampleWords: ['cat → cats', 'book → books', 'chair → chairs', 'friend → friends']
     },
     {
-      id: 7,
+      id: 254,
       type: 'Uncountable Nouns',
       icon: '💧',
       color: 'indigo',
@@ -86,16 +86,16 @@ const NounsDetail = () => {
       sampleWords: ['water', 'money', 'information', 'rice', 'furniture']
     },
     {
-      id: 8,
-      type: 'Singular Nouns',
-      icon: '1️⃣',
+      id: 256,
+      type: 'Compound Nouns',
+      icon: '🔗',
       color: 'cyan',
-      definition: 'Name one person, place, or thing.',
-      examples: ['A <strong>boy</strong> is playing.', 'The <strong>car</strong> is red.'],
-      sampleWords: ['boy', 'car', 'apple', 'dog', 'city']
+      definition: 'Nouns made of two or more words combined together.',
+      examples: ['She made a <strong>birthday cake</strong>.', 'The <strong>football</strong> game was exciting.'],
+      sampleWords: ['notebook', 'sunflower', 'toothbrush', 'ice cream', 'mother-in-law']
     },
     {
-      id: 9,
+      id: 257,
       type: 'Plural Nouns',
       icon: '👥',
       color: 'violet',
@@ -106,7 +106,7 @@ const NounsDetail = () => {
     {
       id: 10,
       type: 'Compound Nouns',
-      icon: '🔗',
+      icon: '🎭',
       color: 'rose',
       definition: 'Words made by joining two or more words together.',
       examples: ['I need <strong>toothpaste</strong>.', 'Meet me at the <strong>bus stop</strong>.'],
@@ -135,7 +135,7 @@ const NounsDetail = () => {
     {
       id: 1,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Which of the following is a PROPER noun?',
       hint: 'Proper nouns name specific people, places, or things and are capitalized.',
       options: ['school', 'Oxford University', 'building', 'teacher'],
@@ -146,84 +146,84 @@ const NounsDetail = () => {
     {
       id: 2,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Identify the ABSTRACT noun: "The strength of her character impressed everyone."',
       hint: 'Abstract nouns represent ideas, qualities, or concepts - things you cannot touch.',
       options: ['character', 'strength', 'everyone', 'impressed'],
       correct: 1,
       explanation: '✨ Perfect! "Strength" is an abstract noun - it\'s a quality or characteristic you cannot physically touch or see.',
-      funFact: '🏆Å¡ Common abstract nouns often end in: -ness, -ment, -tion, -ity (kindness, movement, creation, ability)'
+      funFact: '💡 Common abstract nouns often end in: -ness, -ment, -tion, -ity (kindness, movement, creation, ability)'
     },
     {
       id: 3,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Which noun is UNCOUNTABLE (cannot be counted)?',
       hint: 'Can you say "one, two, three" of this item? If not, it\'s uncountable.',
       options: ['chair', 'furniture', 'student', 'pencil'],
       correct: 1,
-      explanation: 'Ââ  Excellent! "Furniture" is uncountable. We say "pieces of furniture" or "some furniture", not "three furnitures".',
-      funFact: '🏆Â¢ Uncountable nouns use: much, some, a lot of - not "many". Examples: water, advice, luggage, baggage'
+      explanation: ' Excellent! "Furniture" is uncountable. We say "pieces of furniture" or "some furniture", not "three furnitures".',
+      funFact: '💡 Uncountable nouns use: much, some, a lot of - not "many". Examples: water, advice, luggage, baggage'
     },
     {
       id: 4,
       type: 'fill-in-the-blank',
-      emoji: '',
+      emoji: '📚',
       question: 'Fill in the blank: "A _____ of musicians performed at the concert."',
       hint: 'This word refers to a group of people working together.',
       options: ['group', 'team', 'band', 'orchestra'],
       correct: 3,
-      explanation: '🔗ŸŽµ Great! "Orchestra" is the most specific collective noun here for musicians. "Band" (option 2) is also acceptable.',
-      funFact: '🔗ŸŽ­ Other collective nouns: cast (actors), crew (sailors), troupe (dancers), ensemble (musicians)'
+      explanation: '🎭 Great! "Orchestra" is the most specific collective noun here for musicians. "Band" (option 2) is also acceptable.',
+      funFact: '🎭 Other collective nouns: cast (actors), crew (sailors), troupe (dancers), ensemble (musicians)'
     },
     {
       id: 5,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Which word is a COMPOUND noun (made of two or more words)?',
       hint: 'Look for two smaller words combined together to make one noun.',
       options: ['beautiful', 'breakfast', 'running', 'slowly'],
       correct: 1,
-      explanation: 'Â¥Â Fantastic! "Breakfast" is a compound noun made from "break" + "fast". It names one specific thing.',
-      funFact: '🏆Â¤ Compound nouns can be: one word (bedroom), two words (ice cream), or hyphenated (sister-in-law)'
+      explanation: ' Fantastic! "Breakfast" is a compound noun made from "break" + "fast". It names one specific thing.',
+      funFact: '💡 Compound nouns can be: one word (bedroom), two words (ice cream), or hyphenated (sister-in-law)'
     },
     {
       id: 6,
       type: 'fill-in-the-blank',
-      emoji: '',
+      emoji: '📚',
       question: 'Fill in the blank: "She could smell the _____ of fresh flowers in the garden."',
       hint: 'This noun refers to something you can perceive with one of your five senses.',
       options: ['scent', 'aroma', 'fragrance', 'all of the above'],
       correct: 3,
-      explanation: 'ÅÂ¸ Perfect! All three options (scent, aroma, fragrance) are concrete nouns - things you can physically perceive.',
-      funFact: '🏆Æ Concrete nouns appeal to the five senses: smell, taste, touch, sight, and hearing.'
+      explanation: ' Perfect! All three options (scent, aroma, fragrance) are concrete nouns - things you can physically perceive.',
+      funFact: '💡 Concrete nouns appeal to the five senses: smell, taste, touch, sight, and hearing.'
     },
     {
       id: 7,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Identify the noun type: "The committee decided to postpone the meeting."',
       hint: 'This noun represents multiple people acting as one unit. What type is it?',
       options: ['Concrete', 'Collective', 'Possessive', 'Abstract'],
       correct: 1,
-      explanation: '🏆Â¥ Excellent! "Committee" is a collective noun because it refers to a group of people (committee members) as one single unit.',
+      explanation: '💡 Excellent! "Committee" is a collective noun because it refers to a group of people (committee members) as one single unit.',
       funFact: '☝️ More collective nouns: jury, audience, crowd, government, parliament, congress'
     },
     {
       id: 8,
       type: 'fill-in-the-blank',
-      emoji: '',
+      emoji: '📚',
       question: 'Identify which is SINGULAR: "The _____ lay on the table."',
       hint: 'Singular means ONE. Look for a noun that\'s one item.',
       options: ['book', 'books', 'book\'s', 'books\''],
       correct: 0,
-      explanation: '🏆â Correct! "Book" is singular - it refers to one book. To make it plural, we add -s: books.',
+      explanation: '💡 Correct! "Book" is singular - it refers to one book. To make it plural, we add -s: books.',
       funFact: '1️⃣ Singular nouns: a book, this person, that dog. Plural nouns: books, people, dogs'
     },
     {
       id: 9,
       type: 'multiple-choice',
-      emoji: '',
+      emoji: '📚',
       question: 'Which sentence uses NOUNS correctly?',
       hint: 'Look for proper capitalization and correct singular/plural usage.',
       options: [
@@ -233,27 +233,27 @@ const NounsDetail = () => {
         'I need some advices from you.'
       ],
       correct: 2,
-      explanation: '✓â¦ Perfect! Option 3 is correct. "Experience" is uncountable (not "experiences"), and we use "much" not "many" with uncountable nouns.',
-      funFact: '🏆Â Common mistake: "advices" (wrong). Advice is uncountable! "Could you give me some advice?"'
+      explanation: '✓ Perfect! Option 3 is correct. "Experience" is uncountable (not "experiences"), and we use "much" not "many" with uncountable nouns.',
+      funFact: '💡 Common mistake: "advices" (wrong). Advice is uncountable! "Could you give me some advice?"'
     },
     {
       id: 10,
       type: 'fill-in-the-blank',
-      emoji: '',
+      emoji: '📚',
       question: 'Which classification fits "Water is essential for human survival"?',
       hint: 'Consider whether water can be counted. Can you say "one water, two waters"?',
       options: ['Countable and Concrete', 'Uncountable and Concrete', 'Countable and Abstract', 'Uncountable and Abstract'],
       correct: 1,
-      explanation: '🏆Â§ Excellent! "Water" is uncountable (we don\'t say "waters" in general) AND concrete (you can see it, touch it, taste it).',
-      funFact: 'ÅÅ  Other uncountable concrete nouns: air, sand, rice, oil, sugar, salt, coffee'
+      explanation: '💡 Excellent! "Water" is uncountable (we don\'t say "waters" in general) AND concrete (you can see it, touch it, taste it).',
+      funFact: ' Other uncountable concrete nouns: air, sand, rice, oil, sugar, salt, coffee'
     }
   ];
 
   const tips = [
-    { icon: '', type: 'DO', text: 'Always capitalize proper nouns.', color: 'green' },
-    { icon: '', type: 'DO', text: 'Use "a" or "an" with singular countable nouns.', color: 'green' },
-    { icon: '', type: "DON'T", text: 'Don\'t pluralize uncountable nouns.', color: 'red' },
-    { icon: '', type: "DON'T", text: 'Don\'t forget articles with countable nouns.', color: 'red' }
+    { icon: '✅', type: 'DO', text: 'Always capitalize proper nouns.', color: 'green' },
+    { icon: '✅', type: 'DO', text: 'Use "a" or "an" with singular countable nouns.', color: 'green' },
+    { icon: '❌', type: "DON'T", text: 'Don\'t pluralize uncountable nouns.', color: 'red' },
+    { icon: '❌', type: "DON'T", text: 'Don\'t forget articles with countable nouns.', color: 'red' }
   ];
 
   const sections = [
@@ -262,7 +262,7 @@ const NounsDetail = () => {
     { id: 'writing', name: 'Writing', icon: '✍️' },
     { id: 'reading', name: 'Reading', icon: '📚' },
     { id: 'quiz', name: 'Quiz', icon: '🎯' },
-    { id: 'resources', name: 'Resources', icon: '🔗' }
+    { id: 'resources', name: 'Resources', icon: '🎭' }
   ];
 
   const handleInteractiveQuiz = (questionId, answerIndex) => {
@@ -291,10 +291,15 @@ const NounsDetail = () => {
     setActiveLearnTab('overview');
 
     try {
-      // Fetch comprehensive learning data from backend
-      const response = await fetch(`http://localhost:5000/api/noun-types/${nounType.id}/learn-more`);
+      // Fetch comprehensive learning data from backend - correct port and endpoint
+      const response = await fetch(`http://localhost:4000/api/grammar/types/${nounType.id}/learn-more`);
+      
+      if (!response.ok) {
+        throw new Error('Learn More content not available');
+      }
+      
       const data = await response.json();
-      setLearnMoreData(data);
+      setLearnMoreData(data.content);
     } catch (error) {
       console.error('Error fetching learn more data:', error);
       // Fallback to mock data if backend not available
@@ -355,13 +360,13 @@ const NounsDetail = () => {
         {
           title: `Understanding ${nounType.type}`,
           duration: '5:30',
-          thumbnail: 'Å½Â¥',
+          thumbnail: '',
           description: `Complete guide to ${nounType.type.toLowerCase()} with examples`
         },
         {
           title: `${nounType.type} in Real Life`,
           duration: '8:15',
-          thumbnail: '🏆Âº',
+          thumbnail: '💡',
           description: 'See how native speakers use these in conversation'
         }
       ],
@@ -378,7 +383,7 @@ const NounsDetail = () => {
         words: nounType.sampleWords.map(word => ({
           word: word,
           phonetic: `/${word.toLowerCase()}/`,
-          audio: '🏆Å '
+          audio: '💡'
         }))
       },
       vocabulary: {
@@ -439,44 +444,35 @@ const NounsDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white">
       {/* Compact Sticky Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
-        <div className="container mx-auto max-w-6xl px-4 py-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="mb-2 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm"
-          >
-            <span className="text-base">â</span>
-            <span className="font-medium">Back</span>
-          </button>
-          
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl md:text-3xl">🔗ï¸</span>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold">Nouns</h1>
-                <p className="text-xs md:text-sm text-blue-100">Master the building blocks of English</p>
-              </div>
-            </div>
-
-            {/* Navigation Pills */}
-            <div className="flex flex-wrap gap-2">
-              {sections.map(section => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${
-                    activeSection === section.id
-                      ? 'bg-white text-teal-600 shadow-md'
-                      : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'
-                  }`}
-                >
-                  <span className="mr-1">{section.icon}</span>
-                  {section.name}
-                </button>
-              ))}
-            </div>
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-2xl md:text-3xl">🎭</span>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Nouns</h1>
+            <span className="text-sm text-teal-600 ml-2">Master the building blocks of English</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
+                    : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
+                }`}
+              >
+                <span className="mr-1">{section.icon}</span>
+                {section.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -485,88 +481,77 @@ const NounsDetail = () => {
         {/* OVERVIEW SECTION */}
         <section id="overview" className="mb-12 scroll-mt-32">
           {/* What are Nouns - Super Compact Header Card */}
-          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 mb-6 hover:shadow-md transition-all">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
             <div className="flex items-start gap-2 md:gap-3 mb-2">
-              <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">🔗</span>
+              <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">🎭</span>
               <div className="flex-1 min-w-0">
-                <h2 className="text-base md:text-lg font-bold text-slate-800 leading-tight">What is Noun?</h2>
+                <h2 className="text-lg font-bold text-gray-800 leading-tight">What is a Noun?</h2>
               </div>
             </div>
-            
-            <p className="text-xs md:text-sm text-slate-700 leading-snug mb-2 pl-7 md:pl-8">
+            <p className="text-base text-gray-700 leading-snug mb-2 pl-7">
               A <strong>noun</strong> names a person, place, thing, or idea. Foundation of clear communication.
             </p>
-            
             <div className="grid grid-cols-2 gap-2 pl-0">
-              <div className="bg-white border border-blue-200 rounded-lg p-2 md:p-2.5">
-                <p className="text-xs md:text-xs font-semibold text-blue-700">🔗¡ Why Learn?</p>
-                <p className="text-xs text-slate-600 leading-tight mt-0.5">Clear, effective communication</p>
+              <div className="bg-white border border-teal-200 rounded-lg p-2">
+                <p className="text-sm font-semibold text-teal-600">🎭 Why Learn?</p>
+                <p className="text-sm text-gray-700 leading-tight mt-0.5">Clear, effective communication</p>
               </div>
-              <div className="bg-white border border-purple-200 rounded-lg p-2 md:p-2.5">
-                <p className="text-xs md:text-xs font-semibold text-purple-700">🔗¯ Quick Fact</p>
-                <p className="text-xs text-slate-600 leading-tight mt-0.5">25% of English words!</p>
+              <div className="bg-white border border-rose-200 rounded-lg p-2">
+                <p className="text-sm font-semibold text-rose-400">🎭 Quick Fact</p>
+                <p className="text-sm text-gray-700 leading-tight mt-0.5">25% of English words!</p>
               </div>
             </div>
           </div>
 
           {/* 10 Types of Nouns - Compact Design */}
           <div className="mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center">
-              <span className="text-3xl mr-2">🔗¨</span>
-              10 Types of Nouns
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center flex items-center justify-center tracking-tight">
+              <span className="text-2xl mr-2">🎭</span>
+              <span className="text-lg md:text-xl font-bold text-gray-800">10 Types of Nouns</span>
             </h2>
-            
-            {/* Compact Cards Grid - 2-3 per row */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+            {/* Modern Cards Grid - 2-3 per row, aesthetic design */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
               {nounTypes.map((noun) => (
                 <div
                   key={noun.id}
-                  className={`bg-gradient-to-br from-${noun.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${noun.color}-200 overflow-hidden flex flex-col h-full`}
+                  className="relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-teal-200 hover:border-teal-400 hover:shadow-[0_8px_32px_0_rgba(20,184,166,0.15)] hover:ring-2 hover:ring-teal-300"
+                  style={{ borderTop: `6px solid ${noun.color ? `var(--tw-color-${noun.color}-400)` : '#14b8a6'}` }}
                 >
-                  {/* Card Header - Compact */}
-                  <div className={`bg-gradient-to-r from-${noun.color}-100 to-${noun.color}-50 px-4 py-3 border-b-2 border-${noun.color}-200`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-2xl">{noun.icon}</span>
-                      <h3 className={`text-base font-bold text-${noun.color}-800`}>{noun.type}</h3>
-                    </div>
+                  <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">
+                    {noun.icon}
                   </div>
-                  
-                  {/* Card Body - Tight Spacing */}
-                  <div className="p-4 flex-1 flex flex-col">
-                    {/* Definition */}
-                    <p className="text-sm text-gray-700 leading-relaxed mb-3">{noun.definition}</p>
-                    
-                    {/* Examples - Minimal */}
-                    <div className="space-y-1.5 mb-3">
+                  <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
+                    <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${noun.color}-500)` }}>{noun.icon}</span>
+                    <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{noun.type}</h3>
+                  </div>
+                  <div className="px-7 pb-8 flex-1 flex flex-col z-10">
+                    <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{noun.definition}</p>
+                    <div className="space-y-4 mb-5">
                       {noun.examples.slice(0, 2).map((example, index) => (
                         <div
                           key={index}
-                          className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300"
+                          className="bg-gradient-to-r from-teal-50 to-blue-50 px-5 py-3 rounded-xl border border-teal-100 shadow group-hover:scale-[1.03] group-hover:border-teal-300 transition-all"
                         >
                           <p
-                            className="text-sm text-gray-700"
+                            className="text-base text-gray-700 font-medium"
                             dangerouslySetInnerHTML={{ __html: example }}
                           />
                         </div>
                       ))}
                     </div>
-                    
-                    {/* Sample Words - Compact Tags */}
-                    <div className="flex flex-wrap gap-1 mb-3">
+                    <div className="flex flex-wrap gap-3 mb-5">
                       {noun.sampleWords.slice(0, 4).map((word, index) => (
                         <span
                           key={index}
-                          className={`bg-${noun.color}-100 text-${noun.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}
+                          className="bg-gradient-to-r from-teal-200 to-blue-200 text-teal-700 px-5 py-2 rounded-full text-base font-bold border border-teal-300 shadow group-hover:ring-2 group-hover:ring-blue-200"
                         >
                           {word}
                         </span>
                       ))}
                     </div>
-                    
-                    {/* Learn More Button */}
                     <button
                       onClick={() => handleLearnMore(noun)}
-                      className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.04] group-hover:ring-2 group-hover:ring-teal-400"
                     >
                       Learn More
                     </button>
@@ -577,22 +562,21 @@ const NounsDetail = () => {
           </div>
 
           {/* Pro Tips - Compact */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl shadow-md p-5 md:p-6 border border-yellow-300">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🔗</span>
+          <div className="bg-white rounded-2xl shadow-lg border border-yellow-200 p-6 md:p-8">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+              <span className="text-2xl mr-2">💡</span>
               Pro Tips & Common Confusions
             </h3>
-            
-            <div className="grid sm:grid-cols-2 gap-3 mb-4">
+            <div className="grid sm:grid-cols-2 gap-6 mb-8">
               {tips.map((tip, index) => (
                 <div
                   key={index}
-                  className={`bg-${tip.color}-50 border-l-4 border-${tip.color}-500 p-3 rounded-r-lg`}
+                  className={`bg-${tip.color}-50 border border-${tip.color}-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow`}
                 >
-                  <div className="flex items-start gap-2">
-                    <span className="text-xl flex-shrink-0">{tip.icon}</span>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl flex-shrink-0">{tip.icon}</span>
                     <div>
-                      <span className={`font-semibold text-${tip.color}-700 block mb-0.5 text-sm`}>
+                      <span className={`font-semibold text-${tip.color}-700 block mb-1 text-base`}>
                         {tip.type}
                       </span>
                       <p className="text-gray-700 text-sm">{tip.text}</p>
@@ -601,25 +585,15 @@ const NounsDetail = () => {
                 </div>
               ))}
             </div>
-
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h4 className="font-semibold text-base text-gray-800 mb-3 flex items-center">
-                <span className="text-lg mr-1.5">🔗</span>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+              <h4 className="font-bold text-yellow-700 mb-4 text-lg flex items-center">
+                <span className="text-xl mr-2">🎭</span>
                 Advanced Tips
               </h4>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold mt-0.5">â¢</span>
-                  <p className="text-gray-700"><strong>Plural forms:</strong> Add "-s" or "-es" (cat → cats, box → boxes)</p>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold mt-0.5"></span>
-                  <p className="text-gray-700"><strong>Irregular plurals:</strong> Some change completely (child → children)</p>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold mt-0.5"></span>
-                  <p className="text-gray-700"><strong>Possessive:</strong> Add apostrophe + s (John's book)</p>
-                </li>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 text-base">
+                <li><strong>Plural forms:</strong> Add "-s" or "-es" (cat → cats, box → boxes)</li>
+                <li><strong>Irregular plurals:</strong> Some change completely (child → children)</li>
+                <li><strong>Possessive:</strong> Add apostrophe + s (John's book)</li>
               </ul>
             </div>
           </div>
@@ -627,18 +601,18 @@ const NounsDetail = () => {
 
         {/* VIDEO LESSONS - Compact */}
         <section id="videos" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+              <span className="text-2xl mr-2">🎬</span>
               Video Lessons
             </h2>
-            <p className="text-gray-600 text-sm mb-5">Watch these helpful videos</p>
-            
-            <div className="grid md:grid-cols-2 gap-4">
+            <p className="text-gray-500 text-base mb-6">Watch these helpful videos.</p>
+            <div className="grid md:grid-cols-2 gap-8">
               {videos.map(video => (
-                <div key={video.id} className="bg-gradient-to-br from-rose-50 to-teal-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
-                  <div className="aspect-video bg-gray-900">
+                <div key={video.id} className="bg-blue-50 border border-blue-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden">
                     <iframe
-                      className="w-full h-full"
+                      className="w-full h-full rounded-t-xl border border-blue-200"
                       src={`https://www.youtube.com/embed/${video.embedId}`}
                       title={video.title}
                       frameBorder="0"
@@ -646,9 +620,12 @@ const NounsDetail = () => {
                       allowFullScreen
                     />
                   </div>
-                  <div className="p-3">
-                    <h3 className="font-semibold text-base text-gray-800 mb-1">{video.title}</h3>
-                    <p className="text-sm text-gray-600">{video.description}</p>
+                  <div className="p-5">
+                    <h3 className="font-semibold text-base text-gray-800 mb-2 flex items-center">
+                      <span className="text-lg mr-2">🎬</span>
+                      {video.title}
+                    </h3>
+                    <p className="text-sm text-gray-700">{video.description}</p>
                   </div>
                 </div>
               ))}
@@ -658,117 +635,109 @@ const NounsDetail = () => {
 
         {/* WRITING EXERCISE - Compact */}
         <section id="writing" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl shadow-md p-5 md:p-6 border border-green-300">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-green-200 p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+              <span className="text-2xl mr-2">✍️</span>
               Writing Exercise
             </h2>
-            <p className="text-gray-600 text-sm mb-4">Practice using different types of nouns</p>
-
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="bg-green-100 border-l-4 border-green-500 p-3 rounded-r-lg mb-4">
-                <h3 className="font-semibold text-gray-800 mb-1 text-sm">🏆Â Your Task:</h3>
-                <p className="text-gray-700 text-sm">
-                  Write five sentences, each using a different type of noun (Common, Proper, Abstract, Collective, Compound).
-                </p>
-              </div>
-
-              <textarea
-                className="w-full border-2 border-gray-300 rounded-lg p-4 mb-4 focus:border-green-500 focus:outline-none min-h-[200px]"
-                placeholder="Type your sentences here...&#10;&#10;Example:&#10;1. The dog (common noun) ran quickly."
-              />
-
-              <div className="flex gap-3 flex-wrap">
-                <button
-                  onClick={() => setWritingRevealed(!writingRevealed)}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
-                >
-                  {writingRevealed ? 'Hide' : 'Show'} Sample Answer
-                </button>
-                <button
-                  onClick={() => setWritingSubmitted(true)}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                >
-                  Submit for Review
-                </button>
-              </div>
-
-              {writingSubmitted && (
-                <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg animate-fade-in">
-                  <p className="text-blue-800 font-semibold">✓â Submitted! A teacher will review your work soon.</p>
-                </div>
-              )}
-
-              {writingRevealed && (
-                <div className="mt-6 bg-green-50 border-2 border-green-300 rounded-xl p-6 animate-fade-in">
-                  <h4 className="font-bold text-gray-800 mb-4">🏆â¹ Sample Answer:</h4>
-                  <ol className="space-y-3 list-decimal list-inside text-gray-700">
-                    <li>The <span className="bg-blue-100 px-2 py-1 rounded font-semibold">teacher</span> (common) explained the lesson.</li>
-                    <li><span className="bg-purple-100 px-2 py-1 rounded font-semibold">London</span> (proper) is a beautiful city.</li>
-                    <li>Her <span className="bg-pink-100 px-2 py-1 rounded font-semibold">honesty</span> (abstract) earned respect.</li>
-                    <li>The <span className="bg-orange-100 px-2 py-1 rounded font-semibold">committee</span> (collective) made a decision.</li>
-                    <li>I left my <span className="bg-rose-100 px-2 py-1 rounded font-semibold">toothbrush</span> (compound) at home.</li>
-                  </ol>
-                </div>
-              )}
+            <p className="text-gray-500 text-base mb-6">Practice using different types of nouns in your own sentences.</p>
+            <div className="bg-green-50 border border-green-100 rounded-xl p-5 shadow-sm mb-6">
+              <h3 className="font-semibold text-gray-800 mb-2 text-base flex items-center">
+                <span className="mr-2">💡</span> Your Task
+              </h3>
+              <p className="text-gray-700 text-sm">Write five sentences, each using a different type of noun (Common, Proper, Abstract, Collective, Compound).</p>
             </div>
+            <textarea
+              className="w-full border-2 border-gray-300 rounded-xl p-5 mb-4 focus:border-green-500 focus:outline-none min-h-[180px] text-base"
+              placeholder="Type your sentences here...\n\nExample:\n1. The dog (common noun) ran quickly."
+            />
+            <div className="flex gap-4 flex-wrap mb-2">
+              <button
+                onClick={() => setWritingRevealed(!writingRevealed)}
+                className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors shadow"
+              >
+                {writingRevealed ? 'Hide' : 'Show'} Sample Answer
+              </button>
+              <button
+                onClick={() => setWritingSubmitted(true)}
+                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow"
+              >
+                Submit for Review
+              </button>
+            </div>
+            {writingSubmitted && (
+              <div className="mt-4 bg-blue-50 border border-blue-300 rounded-xl p-5 animate-fade-in">
+                <p className="text-blue-800 font-semibold">✓ Submitted! A teacher will review your work soon.</p>
+              </div>
+            )}
+            {writingRevealed && (
+              <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-6 animate-fade-in">
+                <h4 className="font-bold text-gray-800 mb-4">💡 Sample Answer:</h4>
+                <ol className="space-y-3 list-decimal list-inside text-gray-700 text-base">
+                  <li>The <span className="bg-blue-100 px-2 py-1 rounded font-semibold">teacher</span> (common) explained the lesson.</li>
+                  <li><span className="bg-purple-100 px-2 py-1 rounded font-semibold">London</span> (proper) is a beautiful city.</li>
+                  <li>Her <span className="bg-pink-100 px-2 py-1 rounded font-semibold">honesty</span> (abstract) earned respect.</li>
+                  <li>The <span className="bg-orange-100 px-2 py-1 rounded font-semibold">committee</span> (collective) made a decision.</li>
+                  <li>I left my <span className="bg-rose-100 px-2 py-1 rounded font-semibold">toothbrush</span> (compound) at home.</li>
+                </ol>
+              </div>
+            )}
           </div>
         </section>
 
         {/* READING EXERCISE - Compact */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl shadow-md p-5 md:p-6 border border-teal-300">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+              <span className="text-2xl mr-2">📖</span>
               Reading Exercise
             </h2>
-            <p className="text-gray-600 text-sm mb-4">Read the passage and identify the nouns</p>
-
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="bg-blue-100 border-l-4 border-blue-500 p-3 rounded-r-lg mb-4">
-                <h3 className="font-semibold text-gray-800 mb-2 text-sm">🏆â Read this short story:</h3>
-                <p className="text-gray-700 text-base leading-relaxed">
-                  <strong className="text-purple-600">Sarah</strong> woke up early on <strong className="text-purple-600">Monday</strong> morning. 
-                  She needed to catch the <strong className="text-blue-600">train</strong> to <strong className="text-purple-600">London</strong>. 
-                  Her <strong className="text-pink-600">excitement</strong> was obvious as she packed her <strong className="text-rose-600">suitcase</strong>. 
-                  The <strong className="text-orange-600">family</strong> gathered to say goodbye, showing their <strong className="text-pink-600">love</strong>. 
-                  She grabbed her <strong className="text-rose-600">backpack</strong> and headed to the <strong className="text-blue-600">station</strong>.
-                </p>
-              </div>
-
-              <button
-                onClick={() => setReadingRevealed(!readingRevealed)}
-                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3"
-              >
-                {readingRevealed ? 'Hide' : 'Show'} All Nouns
-              </button>
-
-              {readingRevealed && (
-                <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 animate-fade-in">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-sm">✓â Nouns Identified:</h4>
-                  <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                    <div className="bg-purple-100 p-2 rounded">
-                      <span className="font-semibold text-purple-700">Proper Nouns:</span>
-                      <p className="text-gray-700">Sarah, Monday, London</p>
-                    </div>
-                    <div className="bg-blue-100 p-2 rounded">
-                      <span className="font-semibold text-blue-700">Common Nouns:</span>
-                      <p className="text-gray-700">train, station</p>
-                    </div>
-                    <div className="bg-pink-100 p-2 rounded">
-                      <span className="font-semibold text-pink-700">Abstract Nouns:</span>
-                      <p className="text-gray-700">excitement, love</p>
-                    </div>
-                    <div className="bg-orange-100 p-2 rounded">
-                      <span className="font-semibold text-orange-700">Collective Nouns:</span>
-                      <p className="text-gray-700">family</p>
-                    </div>
-                    <div className="bg-rose-100 p-2 rounded">
-                      <span className="font-semibold text-rose-700">Compound Nouns:</span>
-                      <p className="text-gray-700">suitcase, backpack</p>
-                    </div>
+            <p className="text-gray-500 text-base mb-6">Read the passage and identify the nouns.</p>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 shadow-sm mb-6">
+              <h3 className="font-semibold text-gray-800 mb-2 text-base flex items-center">
+                <span className="mr-2">💡</span> Read this short story
+              </h3>
+              <p className="text-gray-700 text-base leading-relaxed">
+                <strong className="text-purple-600">Sarah</strong> woke up early on <strong className="text-purple-600">Monday</strong> morning. 
+                She needed to catch the <strong className="text-blue-600">train</strong> to <strong className="text-purple-600">London</strong>. 
+                Her <strong className="text-pink-600">excitement</strong> was obvious as she packed her <strong className="text-rose-600">suitcase</strong>. 
+                The <strong className="text-orange-600">family</strong> gathered to say goodbye, showing their <strong className="text-pink-600">love</strong>. 
+                She grabbed her <strong className="text-rose-600">backpack</strong> and headed to the <strong className="text-blue-600">station</strong>.
+              </p>
+            </div>
+            <button
+              onClick={() => setReadingRevealed(!readingRevealed)}
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow mb-3"
+            >
+              {readingRevealed ? 'Hide' : 'Show'} All Nouns
+            </button>
+            {readingRevealed && (
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 animate-fade-in">
+                <h4 className="font-semibold text-gray-800 mb-3 text-base">✓ Nouns Identified:</h4>
+                <div className="grid sm:grid-cols-2 gap-3 text-base">
+                  <div className="bg-purple-100 p-3 rounded">
+                    <span className="font-semibold text-purple-700">Proper Nouns:</span>
+                    <p className="text-gray-700">Sarah, Monday, London</p>
+                  </div>
+                  <div className="bg-blue-100 p-3 rounded">
+                    <span className="font-semibold text-blue-700">Common Nouns:</span>
+                    <p className="text-gray-700">train, station</p>
+                  </div>
+                  <div className="bg-pink-100 p-3 rounded">
+                    <span className="font-semibold text-pink-700">Abstract Nouns:</span>
+                    <p className="text-gray-700">excitement, love</p>
+                  </div>
+                  <div className="bg-orange-100 p-3 rounded">
+                    <span className="font-semibold text-orange-700">Collective Nouns:</span>
+                    <p className="text-gray-700">family</p>
+                  </div>
+                  <div className="bg-rose-100 p-3 rounded">
+                    <span className="font-semibold text-rose-700">Compound Nouns:</span>
+                    <p className="text-gray-700">suitcase, backpack</p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -776,13 +745,11 @@ const NounsDetail = () => {
         <section id="quiz" className="mb-16 scroll-mt-32">
           {/* Quiz Header */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-3">
-              <span className="text-3xl mr-3">🔗¯</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center justify-center mb-3">
+              <span className="text-3xl mr-3">🧩</span>
               Quiz Practice
             </h2>
-            <p className="text-sm text-gray-600 mb-4">Review questions or take the full quiz</p>
-            
-            {/* Start Quiz Button */}
+            <p className="text-gray-500 text-base mb-6">Review questions or take the full quiz.</p>
             <button
               onClick={() => {
                 setShowQuizModal(true);
@@ -790,14 +757,14 @@ const NounsDetail = () => {
                 setModalQuizAnswers({});
                 setSingleQuestionMode(false);
               }}
-              className="inline-block bg-gradient-to-r from-teal-600 to-rose-500 hover:from-teal-700 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
             >
               ▶️ Start Full Quiz
             </button>
           </div>
 
           {/* Quiz Questions Grid - Review Mode */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {interactiveQuiz.map((question, qIndex) => {
               const answered = quizAnswers[question.id];
               return (
@@ -809,7 +776,7 @@ const NounsDetail = () => {
                     setModalQuizAnswers({});
                     setSingleQuestionMode(true);
                   }}
-                  className="bg-white rounded-lg p-3 shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105"
+                  className="bg-blue-50 rounded-xl p-5 shadow-md border border-blue-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105"
                 >
                   {/* Status Badge */}
                   <div className="flex justify-between items-start mb-2">
@@ -817,7 +784,7 @@ const NounsDetail = () => {
                       Q{question.id}
                     </span>
                     {answered && (
-                      <span className={`text-lg ${answered.correct ? '✓â¦' : 'Ã¢ÂÅ'}`}></span>
+                      <span className={`text-lg ${answered.correct ? '✓' : ''}`}></span>
                     )}
                   </div>
 
@@ -839,7 +806,6 @@ const NounsDetail = () => {
                       {answered.correct ? 'Correct!' : 'Try again'}
                     </div>
                   )}
-                  
                   {!answered && (
                     <div className="text-xs text-blue-600 font-medium">
                       Click to attempt
@@ -961,8 +927,8 @@ const NounsDetail = () => {
                                     {String.fromCharCode(65 + index)}
                                   </span>
                                   <span className="flex-1 text-sm md:text-base text-slate-700 group-hover:text-slate-800">{option}</span>
-                                  {answered && index === question.correct && <span className="text-lg">✓â¦</span>}
-                                  {answered && answered.selected === index && index !== question.correct && <span className="text-lg">Ã¢ÂÅ</span>}
+                                  {answered && index === question.correct && <span className="text-lg">✓</span>}
+                                  {answered && answered.selected === index && index !== question.correct && <span className="text-lg"></span>}
                                 </div>
                               </button>
                             ))}
@@ -976,7 +942,7 @@ const NounsDetail = () => {
                                 : 'bg-orange-50 border-orange-500'
                             }`}>
                               <p className="font-bold text-base">
-                                {answered.correct ? '🎓° Correct!' : 'Ã¢ÂÅ Not quite right!'}
+                                {answered.correct ? '🎓° Correct!' : ' Not quite right!'}
                               </p>
                               <p className="text-slate-700 text-xs md:text-sm leading-relaxed">
                                 {question.explanation}
@@ -987,7 +953,7 @@ const NounsDetail = () => {
                           {answered?.correct && (
                             <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg">
                               <p className="text-xs md:text-sm text-purple-800">
-                                <span className="font-bold">🎓 Fun Fact:</span> {question.funFact}
+                                <span className="font-bold">🎓 Fun Fact:</span> {question.funFact}
                               </p>
                             </div>
                           )}
@@ -1000,7 +966,7 @@ const NounsDetail = () => {
                                 disabled={currentQuestionIndex === 0}
                                 className="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium text-sm md:text-base hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                               >
-                                ⏸Â Previous
+                                ⏸ Previous
                               </button>
                               <button
                                 onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
@@ -1022,7 +988,7 @@ const NounsDetail = () => {
                                 }}
                                 className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
                               >
-                                ⏸Â Back to Questions
+                                ⏸ Back to Questions
                               </button>
                             </div>
                           )}
@@ -1035,8 +1001,8 @@ const NounsDetail = () => {
                   <div className="p-6 md:p-8 text-center space-y-5">
                     <h3 className="text-3xl md:text-4xl font-bold text-slate-800">
                       {Object.keys(modalQuizAnswers).length === interactiveQuiz.length 
-                        ? 'Å½Å  Quiz Complete!' 
-                        : '⏸️¸Â Quiz Paused'}
+                        ? ' Quiz Complete!' 
+                        : '⏸️ Quiz Paused'}
                     </h3>
 
                     {Object.keys(modalQuizAnswers).length === interactiveQuiz.length && (
@@ -1054,12 +1020,12 @@ const NounsDetail = () => {
                         <div className="bg-gradient-to-r from-teal-50 to-rose-50 p-5 rounded-xl border border-teal-200">
                           <p className="text-lg md:text-xl font-bold text-slate-800 leading-relaxed">
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length === interactiveQuiz.length
-                              ? 'Ââ  Perfect! You\'re a noun master!'
+                              ? ' Perfect! You\'re a noun master!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 8
-                              ? 'Â¥â¡ Excellent work!'
+                              ? ' Excellent work!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
-                              ? '🏆Â Good effort!'
-                              : '🏆Å¡ Keep practicing!'}
+                              ? '💡 Good effort!'
+                              : '💡 Keep practicing!'}
                           </p>
                         </div>
 
@@ -1102,7 +1068,7 @@ const NounsDetail = () => {
                         }}
                         className="flex-1 px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium text-sm md:text-base hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
                       >
-                        🏆â Restart Quiz
+                        💡 Restart Quiz
                       </button>
                     </div>
                   </div>
@@ -1115,7 +1081,7 @@ const NounsDetail = () => {
           {Object.keys(quizAnswers).length === interactiveQuiz.length && (
             <div className="mt-8 max-w-2xl mx-auto bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 rounded-xl p-6 text-center shadow-lg border-2 border-yellow-400 animate-fade-in">
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                🏆Å  Grid Review Complete!
+                💡 Grid Review Complete!
               </h3>
               <p className="text-gray-700">
                 You've answered all questions. Click "Start Full Quiz" for a guided quiz experience.
@@ -1126,30 +1092,30 @@ const NounsDetail = () => {
 
         {/* RESOURCES - Compact */}
         <section id="resources" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-indigo-200 p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+              <span className="text-2xl mr-2">📚</span>
               Additional Resources
             </h2>
-            <p className="text-gray-600 text-sm mb-5">Explore more materials to master nouns</p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <p className="text-gray-500 text-base mb-6">Explore more materials to master nouns.</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { title: 'Grammar Guide', url: 'https://www.englishclub.com/grammar/nouns.htm', color: 'blue' },
-                { title: 'Noun Games', url: 'https://www.eslgamesplus.com/nouns/', color: 'green' },
-                { title: 'Worksheets', url: 'https://www.perfect-english-grammar.com/nouns-exercises.html', color: 'purple' },
-                { title: 'Video Playlist', url: 'https://www.youtube.com/results?search_query=english+nouns', color: 'red' },
-                { title: 'Quizzes', url: 'https://www.grammarbook.com/grammar_quiz/nouns_1.asp', color: 'yellow' },
-                { title: 'Dictionary', url: 'https://www.oxfordlearnersdictionaries.com/', color: 'indigo' }
+                { title: 'Grammar Guide', url: 'https://www.englishclub.com/grammar/nouns.htm', color: 'blue', icon: '📘' },
+                { title: 'Noun Games', url: 'https://www.eslgamesplus.com/nouns/', color: 'green', icon: '🎮' },
+                { title: 'Worksheets', url: 'https://www.perfect-english-grammar.com/nouns-exercises.html', color: 'purple', icon: '📄' },
+                { title: 'Video Playlist', url: 'https://www.youtube.com/results?search_query=english+nouns', color: 'red', icon: '🎬' },
+                { title: 'Quizzes', url: 'https://www.grammarbook.com/grammar_quiz/nouns_1.asp', color: 'yellow', icon: '📝' },
+                { title: 'Dictionary', url: 'https://www.oxfordlearnersdictionaries.com/', color: 'indigo', icon: '📖' }
               ].map((resource, index) => (
                 <a
                   key={index}
                   href={resource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`bg-gradient-to-br from-${resource.color}-50 to-${resource.color}-100 rounded-lg p-4 border border-${resource.color}-300 hover:shadow-md transition-all`}
+                  className={`bg-${resource.color}-50 border border-${resource.color}-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start`}
                 >
-                  <span className="text-2xl block mb-2">{resource.icon}</span>
-                  <h3 className={`font-semibold text-${resource.color}-700 text-base mb-1`}>{resource.title}</h3>
+                  <span className="text-3xl mb-3">{resource.icon}</span>
+                  <h3 className={`font-semibold text-${resource.color}-700 text-lg mb-2`}>{resource.title}</h3>
                   <p className="text-sm text-gray-600">Explore →</p>
                 </a>
               ))}
@@ -1159,7 +1125,7 @@ const NounsDetail = () => {
 
         {/* Call to Action - Compact */}
         <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 rounded-xl shadow-md p-6 text-white text-center">
-          <h3 className="text-xl font-bold mb-2">🎓 Ready for More?</h3>
+          <h3 className="text-xl font-bold mb-2">🎓 Ready for More?</h3>
           <p className="text-sm mb-4 text-blue-100">
             Continue your grammar journey!
           </p>
@@ -1180,7 +1146,7 @@ const NounsDetail = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;
