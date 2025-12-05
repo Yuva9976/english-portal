@@ -30,17 +30,27 @@ const GrammarHub = () => {
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50 relative overflow-x-hidden">
       {/* Header - aligned and sized as in screenshot */}
       <div className="w-full flex flex-col items-center justify-center pt-8 pb-2">
-        <h1 className="text-5xl font-extrabold mb-2 tracking-tight bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent drop-shadow-lg" style={{fontFamily:'inherit'}}>Grammar Hub</h1>
-        <p className="text-base text-gray-700 mb-1 font-medium">Master English grammar with comprehensive lessons, interactive quizzes, and expert resources.</p>
-        <p className="text-base text-gray-500">Your all-in-one platform for learning, practicing, and perfecting grammar skills.</p>
+        <div className="w-full flex flex-col items-center justify-center pt-8 pb-2 animate-fadeIn">
+          <div className="bg-gradient-to-br from-teal-100 via-cyan-50 to-white rounded-3xl shadow-2xl px-8 py-10 border-l-4 border-teal-500 card-hover w-full max-w-5xl">
+            <h1 className="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent drop-shadow-lg flex items-center gap-4 justify-center" style={{fontFamily:'inherit'}}>
+              <span className="text-5xl bg-gradient-to-r from-teal-500 to-cyan-500 p-3 rounded-2xl shadow-md">📚</span>
+              <span className="gradient-text text-4xl md:text-5xl">Grammar Hub</span>
+            </h1>
+            <div className="flex flex-col items-center">
+              <span className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-lg md:text-xl px-6 py-2 rounded-full shadow-lg mb-2">Your all-in-one platform for learning, practicing, and perfecting grammar skills.</span>
+              <p className="text-base text-gray-700 mb-1 font-medium">Master English grammar with comprehensive lessons, interactive quizzes, and expert resources.</p>
+            </div>
+            <div className="w-32 h-1 bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 rounded-full my-4 mx-auto"></div>
+          </div>
+        </div>
       </div>
 
       {/* What is Grammar - centered card, adjusted width/height/font as screenshot */}
       <div className="flex justify-center items-center w-full mt-2 mb-8">
-        <div className="bg-white rounded-2xl shadow-xl p-10 md:p-12 max-w-4xl w-full mx-4" style={{minHeight:'320px'}}>
+        <div className="bg-gradient-to-br from-blue-50 via-white to-teal-50 rounded-3xl shadow-2xl p-12 md:p-16 w-full max-w-7xl ml-0 border border-teal-100" style={{minHeight:'340px'}}>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent mb-6 flex items-center"><span className="text-3xl mr-2">📚</span>What is Grammar?</h2>
           <p className="text-gray-700 mb-6 text-base leading-relaxed">Grammar is the system of rules that governs how words are combined to form meaningful sentences. It includes the structure, syntax, and organization of language, helping us communicate clearly and effectively in both written and spoken forms.</p>
-          <div className="bg-[#f2f8fd] border-l-4 border-[#0080ff] rounded-lg p-6">
+          <div className="bg-[#f2f8fd] border-l-4 border-[#0080ff] rounded-xl p-8" style={{marginLeft: '50px', boxShadow: '0 8px 32px 0 rgba(14, 165, 233, 0.10)'}}>
             <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center"><span className="text-xl mr-2">💡</span>Why is grammar important?</h3>
             <p className="text-gray-700 text-sm italic">Good grammar helps you communicate clearly and be understood correctly. It's essential for writing, speaking professionally, and expressing your ideas precisely. Whether you're writing an email, giving a presentation, or having a conversation, proper grammar ensures your message is clear.</p>
           </div>

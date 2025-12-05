@@ -41,33 +41,35 @@ const AdverbsDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
-      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
-        <div className="container mx-auto max-w-6xl px-4 py-3">
-          <button onClick={() => navigate(-1)} className="mb-2 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm">
-            <span className="text-base">←</span>
-            <span className="font-medium">Back</span>
-          </button>
-
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl md:text-3xl">🕑</span>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold">Adverbs</h1>
-                <p className="text-xs md:text-sm text-blue-100">Modify verbs, adjectives and other adverbs</p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {sections.map(s => (
-                <button
-                  key={s.id}
-                  onClick={() => scrollToSection(s.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${activeSection === s.id ? 'bg-white text-teal-600 shadow-md' : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'}`}>
-                  <span className="mr-1">{s.icon}</span>{s.name}
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Compact Sticky Header (Noun/Pronoun/Adjective/Verb-style) */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-2xl md:text-3xl">🕑</span>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Adverbs</h1>
+            <span className="text-base text-teal-600 ml-2">Modify verbs, adjectives and other adverbs</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
+                    : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
+                }`}
+              >
+                <span className="mr-1">{section.icon}</span>
+                {section.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -108,17 +110,15 @@ const AdverbsDetail = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
             {types.map(t => (
-              <div key={t.id} className={`bg-gradient-to-br from-${t.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${t.color}-200 overflow-hidden flex flex-col h-full`}>
-                <div className={`bg-gradient-to-r from-${t.color}-100 to-${t.color}-50 px-4 py-3 border-b-2 border-${t.color}-200`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-2xl">{t.icon}</span>
-                    <h3 className={`text-base font-bold text-${t.color}-800`}>{t.type}</h3>
-                  </div>
+              <div key={t.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${t.color}-200 hover:border-${t.color}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${t.color}-300`} style={{ borderTop: `6px solid var(--tw-color-${t.color}-400)` }}>
+                <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{t.icon}</div>
+                <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
+                  <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${t.color}-500)` }}>{t.icon}</span>
+                  <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{t.type}</h3>
                 </div>
-
-                <div className="p-4 flex-1 flex flex-col">
-                  <p className="text-sm text-gray-700 leading-relaxed mb-3">{t.definition}</p>
-                  <div className="space-y-1.5 mb-3">
+                <div className="px-7 pb-8 flex-1 flex flex-col z-10">
+                  <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{t.definition}</p>
+                  <div className="space-y-4 mb-5">
                     {t.examples.slice(0, 2).map((ex, i) => (
                       <div key={i} className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300">
                         <p className="text-sm text-gray-700" dangerouslySetInnerHTML={{ __html: ex }} />

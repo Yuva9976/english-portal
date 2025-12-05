@@ -199,19 +199,19 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
           </div>
 
           {/* Quick Navigation Links */}
-          <div className="border-t border-white border-opacity-25 bg-gradient-to-r from-teal-600 via-cyan-600 to-rose-500 bg-opacity-80 backdrop-blur-md shadow-inner">
-            <div className="container mx-auto px-4 md:px-6 py-2">
-              <div className="flex items-center justify-center gap-2 text-teal-600 text-sm font-medium">
-                <span>📜 Scroll to:</span>
-                <a href="#overview" className="hover:bg-teal-50 px-3 py-1 rounded-full transition-all">Overview</a>
-                <span>•</span>
-                <a href="#examples" className="hover:bg-teal-50 px-3 py-1 rounded-full transition-all">Examples</a>
-                <span>•</span>
-                <a href="#grammar" className="hover:bg-teal-50 px-3 py-1 rounded-full transition-all">Grammar</a>
-                <span>•</span>
-                <a href="#practice" className="hover:bg-teal-50 px-3 py-1 rounded-full transition-all">Practice</a>
-                <span>•</span>
-                <a href="#resources" className="hover:bg-teal-50 px-3 py-1 rounded-full transition-all">Resources</a>
+          <div className="bg-white border-t border-gray-100 shadow-sm">
+            <div className="container mx-auto px-4 md:px-6 py-3">
+              <div className="flex items-center justify-center gap-3 bg-white rounded-2xl shadow text-teal-700 text-base font-semibold">
+                <span className="text-base">🧭 Quick Navigation:</span>
+                <a href="#overview" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Overview</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#examples" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Examples</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#grammar" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Grammar</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#practice" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Practice</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#resources" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Resources</a>
               </div>
             </div>
           </div>
@@ -249,7 +249,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                     {learnMoreData.overview.importance && (
                       <div className="mt-6 bg-white rounded-xl p-4 border border-teal-200">
                         <p className="text-base text-gray-800 font-medium">
-                          <strong className="text-teal-600">💡 Why it matters:</strong> {learnMoreData.overview.importance}
+                          <strong className="text-teal-600 text-base">💡 Why it matters:</strong> {learnMoreData.overview.importance}
                         </p>
                       </div>
                     )}
@@ -258,8 +258,8 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                   {learnMoreData.overview.key_points && learnMoreData.overview.key_points.length > 0 && (
                     <div className="bg-white rounded-xl shadow-md p-4 border border-teal-200">
                       <h4 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <span className="text-lg text-yellow-500">📌</span>
-                        <span>Key Points to Remember</span>
+                        <span className="text-base text-yellow-500">📌</span>
+                        <span className="text-base">Key Points to Remember</span>
                       </h4>
                       <div className="grid md:grid-cols-2 gap-3">
                         {learnMoreData.overview.key_points.map((point, idx) => (
@@ -268,7 +268,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                               <span className="text-teal-600 font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full shadow flex-shrink-0">
                                 {idx + 1}
                               </span>
-                              <p className="text-sm text-gray-700 leading-relaxed flex-1 font-normal">{point}</p>
+                              <p className="text-base text-gray-700 leading-relaxed flex-1 font-normal">{point}</p>
                             </div>
                           </div>
                         ))}
@@ -279,8 +279,8 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                   {learnMoreData.overview.common_words && learnMoreData.overview.common_words.length > 0 && (
                     <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10 border-t-4 border-rose-400">
                       <h4 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-6 flex items-center gap-3">
-                        <span className="text-4xl bg-gradient-to-r from-rose-400 to-pink-400 p-3 rounded-2xl shadow-md">📝</span>
-                        <span>Common {selectedItem?.type} Examples</span>
+                        <span className="text-2xl bg-gradient-to-r from-rose-400 to-pink-400 p-3 rounded-2xl shadow-md">📝</span>
+                        <span className="text-xl">Common {selectedItem?.type} Examples</span>
                       </h4>
                       <div className="flex flex-wrap gap-3">
                         {learnMoreData.overview.common_words.map((word, idx) => (
@@ -299,33 +299,33 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 <section id="detailed" className="space-y-6 animate-slideUp">
                   <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-2xl shadow-2xl p-4 md:p-5 border-l-4 border-indigo-500 card-hover">
                     <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                      <span className="text-xl">📚</span>
-                      <span className="gradient-text">Detailed Explanation</span>
+                      <span className="text-base">📚</span>
+                      <span className="gradient-text text-base">Detailed Explanation</span>
                     </h3>
-                    <p className="text-gray-600 text-xs">Deep dive into understanding {selectedItem?.type}</p>
+                    <p className="text-gray-600 text-base">Deep dive into understanding {selectedItem?.type}</p>
                   </div>
                   <div className="space-y-3">
                     {learnMoreData.detailed_explanation.sections?.map((section, idx) => (
                       <div key={idx} className="bg-white rounded-xl shadow p-3 border-t-4 border-indigo-400 hover:shadow-xl transition-all card-hover">
                         <h4 className="text-xs font-semibold text-indigo-800 mb-2 flex items-center gap-2">
                           <span className="text-base">🔍</span>
-                          {section.title}
+                          <span className="text-base">{section.title}</span>
                         </h4>
-                        <p className="text-xs text-gray-700 mb-2 leading-relaxed">{section.content}</p>
+                        <p className="text-base text-gray-700 mb-2 leading-relaxed">{section.content}</p>
                         {section.subsections?.map((sub, subIdx) => (
                           <div key={subIdx} className="mb-2 last:mb-0 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded p-2 border-l-4 border-indigo-400">
                             <h5 className="text-xs font-bold text-indigo-700 mb-2 flex items-center gap-1">
-                              <span className="bg-indigo-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">{subIdx + 1}</span>
-                              {sub.subtitle}
+                              <span className="bg-indigo-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-base font-bold">{subIdx + 1}</span>
+                              <span className="text-base">{sub.subtitle}</span>
                             </h5>
-                            <p className="text-xs text-gray-700 mb-2 leading-relaxed">{sub.text}</p>
+                            <p className="text-base text-gray-700 mb-2 leading-relaxed">{sub.text}</p>
                             {sub.examples && sub.examples.length > 0 && (
                               <div className="bg-white rounded p-2 border-l-4 border-indigo-400">
-                                <p className="text-xs font-semibold text-gray-600 mb-1">Examples:</p>
+                                <p className="text-base font-semibold text-gray-600 mb-1">Examples:</p>
                                 <div className="flex flex-wrap gap-1">
                                   {sub.examples.map((ex, i) => (
                                     <span key={i} className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-medium">
-                                      {ex}
+                                      <span className="text-base">{ex}</span>
                                     </span>
                                   ))}
                                 </div>
@@ -343,8 +343,8 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
               {learnMoreData?.video_resources && (
                 <section id="videos" className="space-y-6">
                   <div className="bg-white rounded-2xl shadow p-4 border-l-4 border-red-500">
-                    <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">Video Lessons</h3>
-                    <p className="text-gray-600 text-xs">Watch and learn {selectedItem?.type} through engaging video content</p>
+                    <h3 className="text-base font-bold text-gray-800 mb-2">Video Lessons</h3>
+                    <p className="text-gray-600 text-base">Watch and learn {selectedItem?.type} through engaging video content</p>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     {learnMoreData.video_resources.map((video, idx) => (
@@ -353,18 +353,18 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                           🎥
                         </div>
                         <div className="p-3">
-                          <h4 className="text-xs font-semibold text-gray-800 mb-1">{video.title}</h4>
-                          <p className="text-xs text-gray-600 mb-2">{video.description}</p>
+                          <h4 className="text-base font-semibold text-gray-800 mb-1">{video.title}</h4>
+                          <p className="text-base text-gray-600 mb-2">{video.description}</p>
                           <div className="flex items-center justify-between flex-wrap gap-1">
                             <div className="flex items-center gap-1">
-                              <span className="bg-gray-100 px-2 py-0.5 rounded-full text-xs text-gray-500">⏱️ {video.duration}</span>
-                              <span className="bg-blue-100 px-2 py-0.5 rounded-full text-xs text-blue-600">{video.level}</span>
+                              <span className="bg-gray-100 px-2 py-0.5 rounded-full text-base text-gray-500">⏱️ {video.duration}</span>
+                              <span className="bg-blue-100 px-2 py-0.5 rounded-full text-base text-blue-600">{video.level}</span>
                             </div>
                             <a 
                               href={video.url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="bg-gradient-to-r from-teal-500 to-rose-400 text-white px-3 py-1 rounded-full font-bold text-xs hover:shadow-lg transition-all flex items-center gap-1"
+                              className="bg-gradient-to-r from-teal-500 to-rose-400 text-white px-3 py-1 rounded-full font-bold text-base hover:shadow-lg transition-all flex items-center gap-1"
                             >
                               <span>▶</span> Watch
                             </a>
@@ -380,8 +380,8 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
               {learnMoreData?.grammar_rules && (
                 <section id="grammar" className="space-y-6">
                   <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-l-4 border-teal-500">
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Grammar Rules</h3>
-                    <p className="text-gray-600">Essential rules for using {selectedItem?.type} correctly</p>
+                    <h3 className="text-base font-bold text-gray-800 mb-2">Grammar Rules</h3>
+                    <p className="text-gray-600 text-base">Essential rules for using {selectedItem?.type} correctly</p>
                   </div>
                   
                   <div className="space-y-4">
@@ -392,8 +392,8 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                             {rule.rule_number}
                           </span>
                           <div className="flex-1">
-                            <h4 className="text-xl font-bold text-gray-800 mb-2">{rule.title}</h4>
-                            <p className="text-gray-700 mb-4">{rule.description}</p>
+                            <h4 className="text-base font-bold text-gray-800 mb-2">{rule.title}</h4>
+                            <p className="text-base text-gray-700 mb-4">{rule.description}</p>
                           </div>
                         </div>
                         
@@ -404,7 +404,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                             </h5>
                             <ul className="space-y-2">
                               {rule.correct_examples.map((ex, i) => (
-                                <li key={i} className="text-sm text-gray-700">{ex}</li>
+                                <li key={i} className="text-base text-gray-700">{ex}</li>
                               ))}
                             </ul>
                           </div>
@@ -415,7 +415,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                             </h5>
                             <ul className="space-y-2">
                               {rule.incorrect_examples.map((ex, i) => (
-                                <li key={i} className="text-sm text-gray-700 line-through">{ex}</li>
+                                <li key={i} className="text-base text-gray-700 line-through">{ex}</li>
                               ))}
                             </ul>
                           </div>
@@ -423,7 +423,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                         
                         <div className="mt-4 bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
                           <p className="text-sm text-gray-700">
-                            <strong className="text-blue-700">💡 Tip:</strong> {rule.tip}
+                            <strong className="text-blue-700 text-base">💡 Tip:</strong> {rule.tip}
                           </p>
                         </div>
                       </div>
@@ -437,24 +437,24 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 <section id="examples" className="space-y-6 animate-slideUp">
                   <div className="bg-gradient-to-br from-purple-100 via-pink-50 to-white rounded-2xl shadow-2xl p-4 md:p-5 border-l-4 border-purple-500 card-hover">
                     <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-                      <span className="text-xl">💡</span>
-                      <span className="gradient-text">Examples & Usage</span>
+                      <span className="text-base">💡</span>
+                      <span className="gradient-text text-base">Examples & Usage</span>
                     </h3>
-                    <p className="text-gray-600 text-xs">See how {selectedItem?.type} are used in real sentences</p>
+                    <p className="text-gray-600 text-base">See how {selectedItem?.type} are used in real sentences</p>
                   </div>
                   <div className="space-y-3">
                     {learnMoreData.examples.categories?.map((category, idx) => (
                       <div key={idx} className="bg-white rounded-xl shadow p-3 border-t-4 border-purple-400 hover:shadow-xl transition-all card-hover">
                         <h4 className="text-xs font-semibold text-purple-800 mb-2 flex items-center gap-2">
                           <span className="text-base bg-gradient-to-r from-purple-400 to-pink-400 p-1 rounded-xl shadow-md">{category.icon}</span>
-                          <span>{category.category}</span>
+                          <span className="text-base">{category.category}</span>
                         </h4>
                         <div className="space-y-2">
                           {category.examples.map((ex, i) => (
                             <div key={i} className="bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50 rounded-xl p-2 border-l-4 border-purple-400">
-                              <p className="text-xs text-gray-800 font-normal mb-1">{ex.sentence}</p>
+                              <p className="text-base text-gray-800 font-normal mb-1">{ex.sentence}</p>
                               <div className="bg-white rounded p-2 border-l-2 border-purple-300">
-                                <p className="text-xs text-gray-700 italic">💬 {ex.analysis}</p>
+                                <p className="text-base text-gray-700 italic">💬 {ex.analysis}</p>
                               </div>
                             </div>
                           ))}
@@ -470,10 +470,10 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 <section id="mistakes" className="space-y-8 animate-slideUp">
                   <div className="bg-gradient-to-br from-orange-100 via-red-50 to-white rounded-3xl shadow-2xl p-8 md:p-10 border-l-4 border-orange-500 card-hover">
                     <h3 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-3 flex items-center gap-3">
-                      <span className="text-5xl">⚠️</span>
-                      <span className="gradient-text">Common Mistakes to Avoid</span>
+                      <span className="text-base">⚠️</span>
+                      <span className="gradient-text text-base">Common Mistakes to Avoid</span>
                     </h3>
-                    <p className="text-gray-600 text-lg font-medium">Learn from these common errors and avoid them</p>
+                    <p className="text-gray-600 text-base font-medium">Learn from these common errors and avoid them</p>
                   </div>
                   
                   <div className="space-y-4">
@@ -481,33 +481,33 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                       <div key={idx} className="bg-white rounded-2xl shadow-md p-6 border-l-4 border-orange-400 hover:shadow-lg transition-shadow">
                         <div className="flex items-start gap-3 mb-4">
                           <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-bold">
-                            #{mistake.mistake_number}
+                            <span className="text-base">#{mistake.mistake_number}</span>
                           </span>
                           <div className="flex-1">
-                            <h4 className="text-lg font-bold text-gray-800 mb-1">{mistake.error_type}</h4>
+                            <h4 className="text-base font-bold text-gray-800 mb-1">{mistake.error_type}</h4>
                             <span className="inline-block bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-semibold">
-                              {mistake.frequency}
+                              <span className="text-base">{mistake.frequency}</span>
                             </span>
                           </div>
                         </div>
                         
                         <div className="space-y-3 mb-4">
                           <div className="bg-red-50 rounded-lg p-3 border-l-4 border-red-400">
-                            <p className="text-sm text-gray-600 mb-1 font-semibold">❌ Wrong:</p>
-                            <p className="text-gray-800">{mistake.wrong}</p>
+                            <p className="text-base text-gray-600 mb-1 font-semibold">❌ Wrong:</p>
+                            <p className="text-base text-gray-800">{mistake.wrong}</p>
                           </div>
                           
                           <div className="bg-green-50 rounded-lg p-3 border-l-4 border-green-400">
-                            <p className="text-sm text-gray-600 mb-1 font-semibold">✅ Correct:</p>
-                            <p className="text-gray-800">{mistake.correct}</p>
+                            <p className="text-base text-gray-600 mb-1 font-semibold">✅ Correct:</p>
+                            <p className="text-base text-gray-800">{mistake.correct}</p>
                           </div>
                         </div>
                         
-                        <p className="text-sm text-gray-700 mb-3">{mistake.explanation}</p>
+                        <p className="text-base text-gray-700 mb-3">{mistake.explanation}</p>
                         
                         <div className="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
                           <p className="text-sm text-gray-700">
-                            <strong className="text-blue-700">💡 Tip:</strong> {mistake.tip}
+                            <strong className="text-blue-700 text-base">💡 Tip:</strong> {mistake.tip}
                           </p>
                         </div>
                       </div>
@@ -521,32 +521,32 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 <section id="practice" className="space-y-8 animate-slideUp">
                   <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-white rounded-3xl shadow-2xl p-8 md:p-10 border-l-4 border-green-500 card-hover">
                     <h3 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-3 flex items-center gap-3">
-                      <span className="text-5xl">✍️</span>
-                      <span className="gradient-text">Practice Exercises</span>
+                      <span className="text-base">✍️</span>
+                      <span className="gradient-text text-base">Practice Exercises</span>
                     </h3>
-                    <p className="text-gray-600 text-lg font-medium">Test your understanding with these exercises</p>
+                    <p className="text-gray-600 text-base font-medium">Test your understanding with these exercises</p>
                   </div>
                   
                   {learnMoreData.practice_exercises.identification && (
                     <div className="bg-white rounded-3xl shadow-xl p-8 border-t-4 border-green-400 hover:shadow-2xl transition-all duration-300">
                       <h4 className="text-2xl md:text-3xl font-extrabold text-green-800 mb-5 flex items-center gap-3">
-                        <span className="text-4xl bg-gradient-to-r from-green-400 to-emerald-400 p-3 rounded-2xl shadow-md">🎯</span>
-                        {learnMoreData.practice_exercises.identification.title}
+                        <span className="text-base bg-gradient-to-r from-green-400 to-emerald-400 p-3 rounded-2xl shadow-md">🎯</span>
+                        <span className="text-base">{learnMoreData.practice_exercises.identification.title}</span>
                       </h4>
                       <p className="text-gray-700 mb-8 text-lg font-medium bg-green-50 p-4 rounded-xl border-l-4 border-green-400">
-                        📝 {learnMoreData.practice_exercises.identification.instructions}
+                        <span className="text-base">📝 {learnMoreData.practice_exercises.identification.instructions}</span>
                       </p>
                       
                       <div className="space-y-5">
                         {learnMoreData.practice_exercises.identification.questions.map((q, idx) => (
                           <div key={idx} className="bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 rounded-2xl p-6 border-l-4 border-green-400 hover:shadow-xl transition-all duration-300 transform hover:scale-102">
                             <p className="text-gray-800 font-bold mb-4 text-lg flex items-start gap-3">
-                              <span className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">{q.id}</span>
-                              <span className="flex-1">{q.sentence}</span>
+                              <span className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-base">{q.id}</span>
+                              <span className="flex-1 text-base">{q.sentence}</span>
                             </p>
                             <div className="bg-white rounded-lg p-4 mb-3 border-l-4 border-green-500">
                               <p className="text-base text-green-700 font-bold">
-                                ✓ Answer: <span className="text-green-800">{q.answer.join(', ')}</span>
+                                ✓ Answer: <span className="text-green-800 text-base">{q.answer.join(', ')}</span>
                               </p>
                             </div>
                             <p className="text-base text-gray-700 bg-emerald-50 p-4 rounded-lg italic font-medium">💡 {q.explanation}</p>
@@ -563,24 +563,24 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 <section id="quiz" className="space-y-8 animate-slideUp">
                   <div className="bg-gradient-to-br from-blue-100 via-indigo-50 to-white rounded-3xl shadow-2xl p-8 md:p-10 border-l-4 border-blue-500 card-hover">
                     <h3 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-3 flex items-center gap-3">
-                      <span className="text-5xl">🎯</span>
-                      <span className="gradient-text">Quiz Questions</span>
+                      <span className="text-base">🎯</span>
+                      <span className="gradient-text text-base">Quiz Questions</span>
                     </h3>
-                    <p className="text-gray-600 text-lg font-medium">Test your knowledge with these questions</p>
+                    <p className="text-gray-600 text-base font-medium">Test your knowledge with these questions</p>
                   </div>
                   
                   {['easy', 'medium', 'hard'].map(level => (
                     learnMoreData.quiz_questions[level] && (
                       <div key={level} className="bg-white rounded-3xl shadow-xl p-8 border-t-4 border-blue-400 hover:shadow-2xl transition-all duration-300">
                         <h4 className="text-2xl md:text-3xl font-extrabold text-blue-800 mb-6 capitalize flex items-center gap-3">
-                          <span className="text-4xl">{level === 'easy' ? '🟢' : level === 'medium' ? '🟡' : '🔴'}</span>
-                          <span>{level} Level Questions</span>
+                          <span className="text-base">{level === 'easy' ? '🟢' : level === 'medium' ? '🟡' : '🔴'}</span>
+                          <span className="text-base">{level} Level Questions</span>
                         </h4>
                         
                         <div className="space-y-6">
                           {learnMoreData.quiz_questions[level].map((q, idx) => (
                             <div key={idx} className="bg-blue-50 rounded-lg p-5 border-l-4 border-blue-300">
-                              <p className="text-gray-800 font-semibold mb-3">{q.id}. {q.question}</p>
+                              <p className="text-base text-gray-800 font-semibold mb-3">{q.id}. {q.question}</p>
                               
                               <div className="space-y-2 mb-3">
                                 {q.options.map((opt, i) => (
@@ -588,14 +588,14 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                                     key={i} 
                                     className={`p-3 rounded ${i === q.correct_answer ? 'bg-green-100 border-2 border-green-400' : 'bg-white border border-gray-300'}`}
                                   >
-                                    <span className="font-medium">{String.fromCharCode(65 + i)}.</span> {opt}
+                                    <span className="font-medium text-base">{String.fromCharCode(65 + i)}.</span> <span className="text-base">{opt}</span>
                                     {i === q.correct_answer && <span className="ml-2 text-green-600 font-bold">✓</span>}
                                   </div>
                                 ))}
                               </div>
                               
                               <p className="text-sm text-gray-700 bg-white rounded p-3 border-l-4 border-blue-400">
-                                <strong className="text-blue-700">Explanation:</strong> {q.explanation}
+                                <strong className="text-blue-700 text-base">Explanation:</strong> <span className="text-base">{q.explanation}</span>
                               </p>
                             </div>
                           ))}

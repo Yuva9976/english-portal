@@ -50,23 +50,35 @@ const AdjectivesDetail = () => {
   const scrollToSection = (id) => { setActiveSection(id); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
-      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
-        <div className="container mx-auto max-w-6xl px-4 py-3">
-          <button onClick={() => navigate(-1)} className="mb-2 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm"><span className="text-base">←</span><span className="font-medium">Back</span></button>
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl md:text-3xl">🖌️</span>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold">Adjectives</h1>
-                <p className="text-xs md:text-sm text-blue-100">Describe and give detail to nouns</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {sections.map(s => (
-                <button key={s.id} onClick={() => scrollToSection(s.id)} className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${activeSection===s.id?'bg-white text-teal-600 shadow-md':'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'}`}><span className="mr-1">{s.icon}</span>{s.name}</button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Compact Sticky Header (Noun/Pronoun-style) */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-2xl md:text-3xl">🖌️</span>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Adjectives</h1>
+            <span className="text-base text-teal-600 ml-2">Describe and give detail to nouns</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
+                    : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
+                }`}
+              >
+                <span className="mr-1">{section.icon}</span>
+                {section.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -85,18 +97,55 @@ const AdjectivesDetail = () => {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center"><span className="text-3xl mr-2">🎨</span>Common Adjective Types</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-              {types.map(t => (
-                <div key={t.id} className={`bg-gradient-to-br from-${t.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${t.color}-200 overflow-hidden flex flex-col h-full`}>
-                  <div className={`bg-gradient-to-r from-${t.color}-100 to-${t.color}-50 px-4 py-3 border-b-2 border-${t.color}-200`}>
-                    <div className="flex items-center gap-2 mb-1"><span className="text-2xl">{t.icon}</span><h3 className={`text-base font-bold text-${t.color}-800`}>{t.type}</h3></div>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center flex items-center justify-center tracking-tight">
+              <span className="text-lg mr-2">🎨</span>
+              <span className="text-xl font-bold text-gray-800">Types of Adjectives</span>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+              {types.map((type) => (
+                <div
+                  key={type.id}
+                  className={`relative rounded-2xl shadow-xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/70 border border-${type.color || 'teal'}-200 hover:border-${type.color || 'teal'}-400 hover:shadow-2xl hover:ring-2 hover:ring-${type.color || 'teal'}-300`}
+                  style={{ borderTop: `4px solid var(--tw-color-${type.color || 'teal'}-400)` }}
+                >
+                  <div className="absolute top-3 right-3 opacity-10 text-4xl pointer-events-none select-none">
+                    {type.icon}
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <p className="text-sm text-gray-700 leading-relaxed mb-3">{t.definition}</p>
-                    <div className="space-y-1.5 mb-3">{t.examples.slice(0,2).map((ex,i)=> (<div key={i} className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300"><p className="text-sm text-gray-700" dangerouslySetInnerHTML={{__html: ex}}/></div>))}</div>
-                    <div className="flex flex-wrap gap-1 mt-auto mb-3">{t.sampleWords.slice(0,4).map((w,idx)=>(<span key={idx} className={`bg-${t.color}-100 text-${t.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}>{w}</span>))}</div>
-                    <button onClick={() => { setSelectedItem(t); setShowLearnMoreModal(true); }} className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-rose-400 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"><span>📚</span> Learn More <span>→</span></button>
+                  <div className="flex items-center gap-2 px-4 pt-5 pb-2 z-10">
+                    <span className={`text-2xl drop-shadow-lg`} style={{ color: `var(--tw-color-${type.color || 'teal'}-500)` }}>{type.icon}</span>
+                    <h3 className="text-lg font-bold text-gray-800 tracking-tight drop-shadow">{type.type}</h3>
+                  </div>
+                  <div className="px-4 pb-5 flex-1 flex flex-col z-10">
+                    <p className="text-base text-gray-700 leading-relaxed mb-3 font-medium bg-white/80 rounded-lg px-2 py-1 shadow-sm">{type.definition}</p>
+                    <div className="space-y-2 mb-3">
+                      {type.examples.slice(0, 2).map((example, index) => (
+                        <div
+                          key={index}
+                          className={`bg-gradient-to-r from-${type.color || 'teal'}-50 to-blue-50 px-3 py-2 rounded-lg border border-${type.color || 'teal'}-100 shadow group-hover:scale-[1.02] group-hover:border-${type.color || 'teal'}-300 transition-all`}
+                        >
+                          <p
+                            className="text-base text-gray-700 font-medium"
+                            dangerouslySetInnerHTML={{ __html: example }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {type.sampleWords.slice(0, 4).map((word, index) => (
+                        <span
+                          key={index}
+                          className={`bg-gradient-to-r from-${type.color || 'teal'}-200 to-blue-200 text-${type.color || 'teal'}-700 px-3 py-1 rounded-full text-sm font-bold border border-${type.color || 'teal'}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => { setSelectedItem(type); setShowLearnMoreModal(true); }}
+                      className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2 rounded-xl font-bold text-base shadow hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.03] group-hover:ring-2 group-hover:ring-teal-400"
+                    >
+                      Learn More
+                    </button>
                   </div>
                 </div>
               ))}
@@ -117,19 +166,31 @@ const AdjectivesDetail = () => {
 
         <section id="quiz" className="mb-16 scroll-mt-32">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-3"><span className="text-3xl mr-3">🎯</span>Quiz Practice</h2>
-            <p className="text-sm text-gray-600 mb-4">Try short practice questions below</p>
-            <button onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(0); setModalQuizAnswers({}); setSingleQuestionMode(false); }} className="inline-block bg-gradient-to-r from-teal-600 to-rose-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg">▶️ Start Full Quiz</button>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 flex items-center justify-center mb-3"><span className="text-3xl mr-3">🎯</span>Quiz Practice</h2>
+            <p className="text-base text-gray-600 mb-4">Try short practice questions below</p>
+            <button onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(0); setModalQuizAnswers({}); setSingleQuestionMode(false); }} className="inline-block bg-gradient-to-r from-teal-500 to-rose-400 text-white font-bold py-3 px-8 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all">▶️ Start Full Quiz</button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {interactiveQuiz.map((q, qIndex) => {
               const answered = modalQuizAnswers[q.id];
               return (
-                <div key={q.id} onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(qIndex); setSingleQuestionMode(true); setModalQuizAnswers({}); }} className="bg-white rounded-lg p-3 shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105">
-                  <div className="flex justify-between items-start mb-2"><span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full">Q{q.id}</span>{answered && (<span className={`text-lg ${answered.correct ? 'text-green-600' : 'text-orange-600'}`}>{answered.correct ? '✅' : '❌'}</span>)}</div>
-                  <div className="flex items-start gap-2 mb-2"><span className="text-lg">{q.emoji}</span><p className="text-xs font-semibold text-gray-700 line-clamp-2">{q.question}</p></div>
-                  {!answered ? (<div className="text-xs text-blue-600 font-medium">Click to attempt</div>) : (<div className={`text-xs font-medium p-1.5 rounded ${answered.correct ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>{answered.correct ? 'Correct!' : 'Try again'}</div>)}
+                <div key={q.id} onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(qIndex); setSingleQuestionMode(true); setModalQuizAnswers({}); }} className="relative rounded-2xl shadow-xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/70 border border-blue-200 hover:border-blue-400 hover:shadow-2xl hover:ring-2 hover:ring-blue-300 cursor-pointer">
+                  <div className="absolute top-3 right-3 opacity-10 text-3xl pointer-events-none select-none">
+                    {q.emoji}
+                  </div>
+                  <div className="flex items-center gap-2 px-4 pt-5 pb-2 z-10">
+                    <span className="text-xl drop-shadow-lg text-blue-500">{q.emoji}</span>
+                    <span className="font-bold text-gray-800 tracking-tight drop-shadow">Q{q.id}</span>
+                  </div>
+                  <div className="px-4 pb-5 flex-1 flex flex-col z-10">
+                    <p className="text-base text-gray-700 font-medium mb-3">{q.question}</p>
+                    {!answered ? (
+                      <div className="text-xs text-blue-600 font-medium">Click to attempt</div>
+                    ) : (
+                      <div className={`text-xs font-medium p-1.5 rounded ${answered.correct ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>{answered.correct ? 'Correct!' : 'Try again'}</div>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -171,7 +232,17 @@ const AdjectivesDetail = () => {
 
         <section id="resources" className="mb-12 scroll-mt-32"><div className="bg-white rounded-xl shadow-md p-6"><h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">🔗</span>Additional Resources</h2><p className="text-gray-600 text-sm mb-5">Explore more materials to master adjectives</p><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">{[{ title: 'Adjective Order Guide', icon: '📖', url: 'https://www.englishclub.com/grammar/adjectives-order.htm', color: 'blue' }].map((resource, index) => (<a key={index} href={resource.url} target="_blank" rel="noopener noreferrer" className={`bg-gradient-to-br from-${resource.color}-50 to-${resource.color}-100 rounded-lg p-4 border border-${resource.color}-300 hover:shadow-md transition-all`}><span className="text-2xl block mb-2">{resource.icon}</span><h3 className={`font-semibold text-${resource.color}-700 text-base mb-1`}>{resource.title}</h3><p className="text-sm text-gray-600">Explore →</p></a>))}</div></div></section>
 
-        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 rounded-xl shadow-md p-6 text-white text-center"><h3 className="text-xl font-bold mb-2">🎓 Ready to practice?</h3><p className="text-sm mb-4 text-teal-100">Try quizzes and exercises to sharpen adjective skills.</p><div className="flex flex-wrap gap-4 justify-center"><button onClick={() => navigate('/modules/grammar-hub')} className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-teal-50 transition-colors shadow-lg">Grammar Hub</button><button onClick={() => navigate('/modules/learn-english')} className="bg-yellow-400 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition-colors shadow-lg">All Lessons</button></div></div>
+        <div className="bg-gradient-to-r from-teal-500 via-cyan-500 to-rose-400 rounded-2xl shadow-xl p-8 text-white text-center mt-12 mb-8">
+          <h3 className="text-2xl md:text-3xl font-extrabold mb-2 flex items-center justify-center gap-2">
+            <span className="text-3xl">🎓</span>
+            Ready for More?
+          </h3>
+          <p className="text-base mb-4 text-teal-100">Try quizzes and exercises to sharpen adjective skills.</p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <button onClick={() => navigate('/modules/grammar-hub')} className="bg-white text-teal-600 px-8 py-3 rounded-xl font-semibold hover:bg-teal-50 transition-colors shadow-xl">Grammar Hub</button>
+            <button onClick={() => navigate('/modules/learn-english')} className="bg-yellow-400 text-gray-800 px-8 py-3 rounded-xl font-semibold hover:bg-yellow-300 transition-colors shadow-xl">All Lessons</button>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>

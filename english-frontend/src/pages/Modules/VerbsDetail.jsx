@@ -70,7 +70,7 @@ const VerbsDetail = () => {
     { id: 7, type: 'Passive Voice', icon: '🎭', color: 'indigo', definition: 'Formed with be + past participle to focus on the receiver of an action.', examples: ['The cake <strong>was eaten</strong> by the children.'], sampleWords: ['was eaten', 'is built'] },
     { id: 8, type: 'Gerunds & Infinitives', icon: '🧩', color: 'cyan', definition: 'Some verbs take -ing forms, others take to + infinitive — meaning can differ.', examples: ['I enjoy <strong>reading</strong>.', 'I want <strong>to learn</strong>.'], sampleWords: ['reading', 'to learn'] },
     { id: 9, type: 'Imperatives & Modals', icon: '⚡', color: 'yellow', definition: 'Commands (Open!) and modal helpers (can, should, must) for ability/obligation.', examples: ['<strong>Open</strong> the door.', 'You <strong>should</strong> study.'], sampleWords: ['open, should, must'] },
-    { id: 10, type: 'Common Mistakes', icon: '❗', color: 'pink', definition: 'Errors with tense choice, agreement, and gerund/infinitive selection.', examples: ['She <strong>have</strong> → She <strong>has</strong>.', 'I enjoy <strong>to read</strong> → I enjoy <strong>reading</strong>.'], sampleWords: ['have/has', 'reading vs to read'] }
+    // Removed Common Mistakes card
   ];
 
   const sections = [
@@ -121,49 +121,40 @@ const VerbsDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-rose-50">
-      {/* Compact Sticky Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
-        <div className="container mx-auto max-w-6xl px-4 py-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="mb-2 flex items-center space-x-1 text-white hover:text-teal-100 transition-colors text-sm"
-          >
-            <span className="text-base">←</span>
-            <span className="font-medium">Back</span>
-          </button>
-
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl md:text-3xl">🔤</span>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold">Verbs</h1>
-                <p className="text-xs md:text-sm text-teal-100">Comprehensive verb guide and practice</p>
-              </div>
-            </div>
-
-            {/* Navigation Pills */}
-            <div className="flex flex-wrap gap-2">
-              {sections.map(section => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${
-                    activeSection === section.id
-                      ? 'bg-white text-teal-600 shadow-md'
-                      : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'
-                  }`}
-                >
-                  <span className="mr-1">{section.icon}</span>
-                  {section.name}
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Compact Sticky Header (Noun/Pronoun/Adjective-style) */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-2xl md:text-3xl">🔤</span>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Verbs</h1>
+            <span className="text-base text-teal-600 ml-2">Comprehensive verb guide and practice</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
+                    : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
+                }`}
+              >
+                <span className="mr-1">{section.icon}</span>
+                {section.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 mt-4">
+      <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
         {/* OVERVIEW */}
         <section id="overview" className="mb-12 scroll-mt-32">
           <div className="bg-gradient-to-r from-slate-50 to-teal-50 rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 mb-6 hover:shadow-md transition-all">
@@ -200,18 +191,18 @@ const VerbsDetail = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
               {apiData?.types && apiData.types.length > 0 ? (
                 apiData.types.map((type) => (
-                  <div key={type.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${type.color || 'purple'}-200 hover:border-${type.color || 'purple'}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${type.color || 'purple'}-300`} style={{ borderTop: `6px solid var(--tw-color-${type.color || 'purple'}-400)` }}>
-                    <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{type.icon}</div>
+                  <div key={type.id} className={`relative rounded-2xl shadow-lg transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${type.color || 'purple'}-200 hover:border-${type.color || 'purple'}-400 hover:shadow-xl hover:ring-2 hover:ring-${type.color || 'purple'}-300`} style={{ borderTop: `6px solid var(--tw-color-${type.color || 'purple'}-400)` }}>
+                    <div className="absolute top-4 right-4 opacity-10 text-6xl pointer-events-none select-none">{type.icon}</div>
                     <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
-                      <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${type.color || 'purple'}-500)` }}>{type.icon}</span>
-                      <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{type.name}</h3>
+                      <span className={`text-3xl drop-shadow-lg`} style={{ color: `var(--tw-color-${type.color || 'purple'}-500)` }}>{type.icon}</span>
+                      <h3 className="text-xl font-extrabold text-gray-800 tracking-tight drop-shadow">{type.name}</h3>
                     </div>
                     <div className="px-7 pb-8 flex-1 flex flex-col z-10">
                       <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{type.description}</p>
                       {type.examples && type.examples.length > 0 && (
                         <div className="space-y-4 mb-5">
                           {type.examples.slice(0, 2).map((ex, idx) => (
-                            <div key={idx} className="bg-gradient-to-r from-${type.color || 'purple'}-50 to-blue-50 px-5 py-3 rounded-xl border border-${type.color || 'purple'}-100 shadow group-hover:scale-[1.03] group-hover:border-${type.color || 'purple'}-300 transition-all">
+                            <div key={idx} className={`bg-gradient-to-r from-${type.color || 'purple'}-50 to-blue-50 px-5 py-3 rounded-xl border border-${type.color || 'purple'}-100 shadow group-hover:scale-[1.03] group-hover:border-${type.color || 'purple'}-300 transition-all`}>
                               <p className="text-base text-gray-700 font-medium">{ex}</p>
                             </div>
                           ))}
@@ -230,11 +221,11 @@ const VerbsDetail = () => {
                 ))
               ) : (
                 verbTopics.map(topic => (
-                  <div key={topic.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${topic.color}-200 hover:border-${topic.color}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${topic.color}-300`} style={{ borderTop: `6px solid var(--tw-color-${topic.color}-400)` }}>
-                    <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{topic.icon}</div>
+                  <div key={topic.id} className={`relative rounded-2xl shadow-lg transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${topic.color}-200 hover:border-${topic.color}-400 hover:shadow-xl hover:ring-2 hover:ring-${topic.color}-300`} style={{ borderTop: `6px solid var(--tw-color-${topic.color}-400)` }}>
+                    <div className="absolute top-4 right-4 opacity-10 text-6xl pointer-events-none select-none">{topic.icon}</div>
                     <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
-                      <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${topic.color}-500)` }}>{topic.icon}</span>
-                      <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{topic.type}</h3>
+                      <span className={`text-3xl drop-shadow-lg`} style={{ color: `var(--tw-color-${topic.color}-500)` }}>{topic.icon}</span>
+                      <h3 className="text-xl font-extrabold text-gray-800 tracking-tight drop-shadow">{topic.type}</h3>
                     </div>
                     <div className="px-7 pb-8 flex-1 flex flex-col z-10">
                       <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{topic.definition}</p>
@@ -259,35 +250,36 @@ const VerbsDetail = () => {
           </div>
 
           {/* Pro Tips */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl shadow-md p-5 md:p-6 border border-yellow-300">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🌟</span>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-5 md:p-6 mb-2">
+            <h3 className="text-2xl font-bold text-teal-700 mb-4 flex items-center gap-2 drop-shadow">
+              <span className="inline-block text-2xl bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 bg-clip-text text-transparent">💡</span>
               Pro Tips & Common Mistakes
             </h3>
-
-            <div className="grid sm:grid-cols-2 gap-3 mb-4">
+            <div className="grid sm:grid-cols-2 gap-4 mb-5">
               {tips.map((tip, index) => (
-                <div key={index} className={`bg-${tip.color}-50 border-l-4 border-${tip.color}-500 p-3 rounded-r-lg`}>
-                  <div className="flex items-start gap-2">
-                    <span className="text-xl flex-shrink-0">{tip.icon}</span>
-                    <div>
-                      <span className={`font-semibold text-${tip.color}-700 block mb-0.5 text-sm`}>{tip.type}</span>
-                      <p className="text-gray-700 text-sm">{tip.text}</p>
-                    </div>
+                <div
+                  key={index}
+                  className={`rounded-lg shadow border border-${tip.color}-100 p-4 flex items-center min-h-[80px] bg-gradient-to-r from-${tip.color === 'green' ? 'green-50' : 'red-50'} to-white`}
+                >
+                  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow border border-${tip.color}-100 mr-3">
+                    <span className={`text-2xl text-${tip.color}-500`}>{tip.icon}</span>
+                  </div>
+                  <div>
+                    <span className={`font-semibold text-${tip.color}-700 block mb-1 text-base tracking-wide`}>{tip.type}</span>
+                    <p className="text-gray-700 text-base font-normal leading-normal">{tip.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h4 className="font-semibold text-base text-gray-800 mb-3 flex items-center">
-                <span className="text-lg mr-1.5">💎</span>
+            <div className="bg-gradient-to-r from-yellow-50 via-white to-teal-50 border border-yellow-100 rounded-lg p-4 shadow-sm">
+              <h4 className="font-bold text-teal-700 mb-2 text-base flex items-center gap-2">
+                <span className="text-lg">🔤</span>
                 Advanced Tips
               </h4>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-start gap-2"><span className="text-teal-600 font-bold mt-0.5">•</span><p className="text-gray-700"><strong>Tense sequence:</strong> keep time references consistent across clauses.</p></li>
-                <li className="flex items-start gap-2"><span className="text-teal-600 font-bold mt-0.5">•</span><p className="text-gray-700"><strong>Modal subtlety:</strong> may/can/should have different meanings—learn common collocations.</p></li>
-                <li className="flex items-start gap-2"><span className="text-teal-600 font-bold mt-0.5">•</span><p className="text-gray-700"><strong>Gerund vs. infinitive:</strong> some verbs change meaning (stop doing vs stop to do).</p></li>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 text-base">
+                <li><strong>Irregular verbs:</strong> Practice a few daily <span className="text-teal-600 font-bold">(go → went, see → saw)</span></li>
+                <li><strong>Subject-verb agreement:</strong> Watch for singular/plural <span className="text-gray-500">(he runs, they run)</span></li>
+                <li><strong>Gerunds/infinitives:</strong> Learn which verbs take which form <span className="text-gray-500">(enjoy reading, want to go)</span></li>
               </ul>
             </div>
           </div>
@@ -295,16 +287,19 @@ const VerbsDetail = () => {
 
         {/* VIDEO LESSONS */}
         <section id="videos" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">🎥</span>Video Lessons</h2>
-            <p className="text-gray-600 text-sm mb-5">Helpful short lessons</p>
+          <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-2xl shadow-lg p-8 border border-teal-100">
+            <h2 className="text-3xl font-bold text-teal-800 mb-2 flex items-center">
+              <span className="text-2xl mr-2">🎥</span>
+              Video Lessons
+            </h2>
+            <p className="text-gray-600 text-base mb-6">Watch these helpful videos.</p>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               {videos.map(video => (
-                <div key={video.id} className="bg-gradient-to-br from-rose-50 to-teal-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
-                  <div className="aspect-video bg-gray-900">
+                <div key={video.id} className="bg-gradient-to-br from-cyan-50 to-rose-50 rounded-2xl shadow-md p-6 flex flex-col items-center">
+                  <div className="w-full aspect-video bg-gray-100 rounded-xl flex items-center justify-center mb-4 overflow-hidden">
                     <iframe
-                      className="w-full h-full"
+                      className="w-full h-full rounded-xl"
                       src={`https://www.youtube.com/embed/${video.embedId}`}
                       title={video.title}
                       frameBorder="0"
@@ -312,9 +307,11 @@ const VerbsDetail = () => {
                       allowFullScreen
                     />
                   </div>
-                  <div className="p-3">
-                    <h3 className="font-semibold text-base text-gray-800 mb-1">{video.title}</h3>
-                    <p className="text-sm text-gray-600">{video.description}</p>
+                  <div className="w-full text-center">
+                    <h3 className="font-bold text-lg text-teal-700 mb-2 flex items-center justify-center gap-2">
+                      <span className="text-xl">🎬</span> {video.title}
+                    </h3>
+                    <p className="text-base text-gray-700 mb-1">{video.description}</p>
                   </div>
                 </div>
               ))}
@@ -324,29 +321,35 @@ const VerbsDetail = () => {
 
         {/* WRITING EXERCISE */}
         <section id="writing" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl shadow-md p-5 md:p-6 border border-yellow-300">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">✍️</span>Writing Exercise</h2>
-            <p className="text-gray-600 text-sm mb-4">Practice verb forms and tenses in sentences</p>
+          <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-3xl shadow-2xl p-8 md:p-10 border-l-4 border-teal-500 card-hover">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="text-3xl bg-gradient-to-r from-teal-500 to-cyan-500 p-2 rounded-2xl shadow-md">✍️</span>
+              <span className="gradient-text">Writing Exercise</span>
+            </h2>
+            <p className="text-base text-gray-700 mb-4">Practice verb forms and tenses in your own sentences.</p>
 
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded-r-lg mb-4">
-                <h3 className="font-semibold text-gray-800 mb-1 text-sm">📝 Your Task:</h3>
-                <p className="text-gray-700 text-sm">Write five sentences using different tenses and verb forms (base, past, participle, gerund, infinitive).</p>
+            <div className="bg-white rounded-2xl p-4 shadow-xl">
+              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl p-3 mb-3 flex items-center gap-2">
+                <span className="text-lg">💡</span>
+                <div>
+                  <span className="font-semibold text-gray-800 block mb-1 text-sm">Your Task</span>
+                  <span className="text-gray-700 text-sm">Write five sentences using different tenses and verb forms (base, past, participle, gerund, infinitive).</span>
+                </div>
               </div>
 
-              <textarea className="w-full border-2 border-gray-300 rounded-lg p-4 mb-4 focus:border-yellow-500 focus:outline-none min-h-[200px]" placeholder={"Type your sentences here...\n\nExample:\n1. I walk to school. (present simple)"} />
+              <textarea className="w-full border-2 border-gray-300 rounded-xl p-3 mb-3 focus:border-teal-500 focus:outline-none min-h-[120px] text-sm" placeholder={"Type your sentences here...\n\nExample:\n1. I walk to school. (present simple)"} />
 
-              <div className="flex gap-3 flex-wrap">
-                <button onClick={() => setWritingRevealed(!writingRevealed)} className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">{writingRevealed ? 'Hide' : 'Show'} Sample Answer</button>
-                <button onClick={() => setWritingSubmitted(true)} className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">Submit for Review</button>
+              <div className="flex gap-2">
+                <button onClick={() => setWritingRevealed(!writingRevealed)} className="bg-green-500 text-white font-bold px-4 py-1 rounded-full shadow hover:bg-green-600 transition text-sm">Show Sample Answer</button>
+                <button onClick={() => setWritingSubmitted(true)} className="bg-blue-500 text-white font-bold px-4 py-1 rounded-full shadow hover:bg-blue-600 transition text-sm">Submit for Review</button>
               </div>
 
-              {writingSubmitted && (<div className="mt-4 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg animate-fade-in"><p className="text-teal-800 font-semibold">✓ Submitted! A teacher will review your work soon.</p></div>)}
+              {writingSubmitted && (<div className="mt-3 bg-teal-50 border-l-4 border-teal-500 p-3 rounded-xl animate-fade-in"><p className="text-teal-800 font-semibold text-sm">✓ Submitted! A teacher will review your work soon.</p></div>)}
 
               {writingRevealed && (
-                <div className="mt-6 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 animate-fade-in">
-                  <h4 className="font-bold text-gray-800 mb-4">📋 Sample Answer:</h4>
-                  <ol className="space-y-3 list-decimal list-inside text-gray-700">
+                <div className="mt-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 animate-fade-in">
+                  <h4 className="font-bold text-gray-800 mb-3 text-sm">📋 Sample Answer:</h4>
+                  <ol className="space-y-2 list-decimal list-inside text-gray-700 text-sm">
                     <li>I <span className="font-semibold">walk</span> to school every day. (present simple)</li>
                     <li>She <span className="font-semibold">was reading</span> when I called. (past continuous)</li>
                     <li>They have <span className="font-semibold">eaten</span> already. (present perfect)</li>
@@ -359,68 +362,122 @@ const VerbsDetail = () => {
           </div>
         </section>
 
-        {/* READING EXERCISE */}
+
+        {/* READING EXERCISE - Modern Nouns Style */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl shadow-md p-5 md:p-6 border border-teal-300">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">📚</span>Reading Exercise</h2>
-            <p className="text-gray-600 text-sm mb-4">Read the passage and identify verb forms and tenses</p>
-
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="bg-teal-100 border-l-4 border-teal-500 p-3 rounded-r-lg mb-4">
-                <h3 className="font-semibold text-gray-800 mb-2 text-sm">📖 Read this short passage:</h3>
-                <p className="text-gray-700 text-base leading-relaxed">
-                  <strong className="text-teal-600">Alex</strong> <strong className="text-teal-600">woke</strong> early and <strong className="text-teal-600">decided</strong> to go for a run. He <strong className="text-teal-600">is training</strong> for a marathon and <strong className="text-rose-600">has been running</strong> every morning. After the run, he <strong className="text-rose-600">felt</strong> energized and <strong className="text-rose-600">plans</strong> to eat a healthy breakfast.
-                </p>
-              </div>
-
-              <button onClick={() => setReadingRevealed(!readingRevealed)} className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-medium hover:bg-blue-700 transition-colors mb-3">{readingRevealed ? 'Hide' : 'Show'} Verb Highlights</button>
-
-              {readingRevealed && (
-                <div className="bg-teal-50 border border-teal-300 rounded-lg p-4 animate-fade-in">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-sm">✓ Verbs Identified:</h4>
-                  <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                    <div className="bg-teal-100 p-2 rounded"><span className="font-semibold text-teal-700">Past Simple:</span><p className="text-gray-700">woke, decided, felt</p></div>
-                    <div className="bg-rose-100 p-2 rounded"><span className="font-semibold text-rose-700">Present Continuous / Perfect:</span><p className="text-gray-700">is training, has been running</p></div>
-                    <div className="bg-rose-100 p-2 rounded"><span className="font-semibold text-rose-700">Present Simple:</span><p className="text-gray-700">plans</p></div>
+          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover max-w-6xl mx-auto" style={{marginLeft: '20px'}}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
+              <span className="text-xl mr-2">📚</span>
+              Reading Exercise
+            </h2>
+            <p className="text-gray-500 text-base mb-3">Read the passage and identify the verbs and their tenses.</p>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 shadow-sm mb-3">
+              <h3 className="font-semibold text-gray-800 mb-1 text-base flex items-center">
+                <span className="mr-2">💡</span> Read this short passage
+              </h3>
+              <p className="text-base text-gray-700 leading-relaxed">
+                <strong className="text-purple-600">Alex</strong> <strong className="text-blue-600">woke</strong> early and <strong className="text-blue-600">decided</strong> to go for a run. He <strong className="text-teal-600">is training</strong> for a marathon and <strong className="text-rose-600">has been running</strong> every morning. After the run, he <strong className="text-orange-600">felt</strong> energized and <strong className="text-orange-600">plans</strong> to eat a healthy breakfast.
+              </p>
+            </div>
+            <button
+              onClick={() => setReadingRevealed(!readingRevealed)}
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow mb-3"
+            >
+              {readingRevealed ? 'Hide' : 'Show'} All Verbs
+            </button>
+            {readingRevealed && (
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 animate-fade-in">
+                <h4 className="font-semibold text-gray-800 mb-3 text-base">✓ Verbs Identified:</h4>
+                <div className="grid sm:grid-cols-2 gap-3 text-base">
+                  <div className="bg-blue-100 p-3 rounded">
+                    <span className="font-semibold text-blue-700">Past Simple:</span>
+                    <p className="text-gray-700">woke, decided, felt</p>
+                  </div>
+                  <div className="bg-teal-100 p-3 rounded">
+                    <span className="font-semibold text-teal-700">Present Continuous / Perfect:</span>
+                    <p className="text-gray-700">is training, has been running</p>
+                  </div>
+                  <div className="bg-orange-100 p-3 rounded">
+                    <span className="font-semibold text-orange-700">Present Simple:</span>
+                    <p className="text-gray-700">plans</p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </section>
 
-        {/* QUIZ */}
+
+        {/* QUIZ PRACTICE - Modern Nouns Style */}
         <section id="quiz" className="mb-16 scroll-mt-32">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center justify-center mb-3"><span className="text-3xl mr-3">🎯</span>Quiz Practice</h2>
-            <p className="text-sm text-gray-600 mb-4">Take the full quiz or try individual practice questions below</p>
-
-            <button onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(0); setModalQuizAnswers({}); setSingleQuestionMode(false); }} className="inline-block bg-gradient-to-r from-teal-600 to-rose-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">▶️ Start Full Quiz ({quizQuestions.length > 0 ? quizQuestions.length : interactiveQuiz.length} questions)</button>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 flex items-center justify-center mb-3 gradient-text drop-shadow">
+              <span className="text-3xl mr-3 bg-gradient-to-r from-blue-500 via-cyan-500 to-rose-400 bg-clip-text text-transparent">🎯</span>
+              Quiz Practice
+            </h2>
+            <p className="text-gray-500 text-base mb-6">Review questions or take the full quiz.</p>
+            <button
+              onClick={() => {
+                setShowQuizModal(true);
+                setCurrentQuestionIndex(0);
+                setModalQuizAnswers({});
+                setSingleQuestionMode(false);
+              }}
+              className="inline-block bg-gradient-to-r from-blue-500 via-cyan-500 to-rose-400 hover:from-blue-600 hover:to-rose-500 text-white font-bold py-3 px-8 rounded-3xl shadow-xl transition-all duration-200 transform hover:scale-105"
+            >
+              ▶️ Start Full Quiz
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Quiz Questions Grid - Review Mode */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {(quizQuestions.length > 0 ? quizQuestions : interactiveQuiz).map((question, qIndex) => {
               const answered = quizAnswers[question.id];
               const isApiQuestion = quizQuestions.length > 0;
               return (
-                <div key={question.id} onClick={() => { setShowQuizModal(true); setCurrentQuestionIndex(qIndex); setModalQuizAnswers({}); setSingleQuestionMode(true); }} className="bg-white rounded-lg p-3 shadow-md border border-gray-200 hover:shadow-lg hover:border-teal-400 cursor-pointer transition-all duration-200 transform hover:scale-105">
+                <div
+                  key={question.id}
+                  onClick={() => {
+                    setShowQuizModal(true);
+                    setCurrentQuestionIndex(qIndex);
+                    setModalQuizAnswers({});
+                    setSingleQuestionMode(true);
+                  }}
+                  className="bg-gradient-to-br from-blue-100 via-indigo-50 to-white rounded-3xl p-5 shadow-xl border-l-4 border-blue-400 card-hover cursor-pointer transition-all duration-300"
+                >
+                  {/* Status Badge */}
                   <div className="flex justify-between items-start mb-2">
-                    <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full">Q{qIndex + 1}</span>
-                    {answered && (<span className={`text-lg ${answered.correct ? 'text-green-600' : 'text-orange-600'}`}>{answered.correct ? '✅' : '❌'}</span>)}
-                  </div>
-
-                  <div className="flex items-start gap-2 mb-2">
-                    {isApiQuestion && question.question_type === 'multiple-choice' ? (
-                      <span className="text-lg">🎯</span>
-                    ) : isApiQuestion && question.question_type === 'fill-blank' ? (
-                      <span className="text-lg">✏️</span>
-                    ) : (
-                      <span className="text-lg">{question.emoji}</span>
+                    <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-2 py-0.5 rounded-full">
+                      Q{qIndex + 1}
+                    </span>
+                    {answered && (
+                      <span className={`text-lg ${answered.correct ? '✓' : ''}`}></span>
                     )}
-                    <p className="text-xs font-semibold text-gray-700 line-clamp-2">{question.question}</p>
                   </div>
 
-                  {answered ? (<div className={`text-xs font-medium p-1.5 rounded ${answered.correct ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>{answered.correct ? 'Correct!' : 'Try again'}</div>) : (<div className="text-xs text-teal-600 font-medium">Click to attempt</div>)}
+                  {/* Question Text */}
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="text-lg">{question.emoji}</span>
+                    <p className="text-xs font-semibold text-gray-700 line-clamp-2">
+                      {question.question}
+                    </p>
+                  </div>
+
+                  {/* Answer Status */}
+                  {answered && (
+                    <div className={`text-xs font-medium p-1.5 rounded ${
+                      answered.correct 
+                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                        : 'bg-orange-50 text-orange-700 border border-orange-200'
+                    }`}>
+                      {answered.correct ? 'Correct!' : 'Try again'}
+                    </div>
+                  )}
+                  {!answered && (
+                    <div className="text-xs text-blue-600 font-medium">
+                      Click to attempt
+                    </div>
+                  )}
                 </div>
               );
             })}

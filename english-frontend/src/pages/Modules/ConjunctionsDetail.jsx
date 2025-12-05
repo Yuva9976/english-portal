@@ -67,29 +67,35 @@ export default function ConjunctionsDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white sticky top-[128px] z-40">
-        <div className="container mx-auto max-w-6xl px-4 py-3">
-          <button onClick={() => navigate(-1)} className="mb-2 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm">
-            <span className="text-base">←</span>
-            <span className="font-medium">Back</span>
-          </button>
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl md:text-3xl">🔗</span>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold">Conjunctions</h1>
-                <p className="text-xs md:text-sm text-blue-100">The joining words of English</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {sections.map(section => (
-                <button key={section.id} onClick={() => scrollToSection(section.id)} className={`px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all ${activeSection === section.id ? 'bg-white text-teal-600 shadow-md' : 'bg-white bg-opacity-30 text-white hover:bg-opacity-50 backdrop-blur-sm'}`}>
-                  <span className="mr-1">{section.icon}</span>
-                  {section.name}
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Compact Sticky Header (Noun/Pronoun/Adjective/Verb-style) */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-2xl md:text-3xl">🔗</span>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Conjunctions</h1>
+            <span className="text-base text-teal-600 ml-2">The joining words of English</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
+                    : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
+                }`}
+              >
+                <span className="mr-1">{section.icon}</span>
+                {section.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -126,28 +132,27 @@ export default function ConjunctionsDetail() {
           </h2>
           <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
             {conjunctionTypes.map((conj) => (
-              <div key={conj.id} className={`bg-gradient-to-br from-${conj.color}-50 to-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-${conj.color}-200 overflow-hidden flex flex-col h-full`}>
-                <div className={`bg-gradient-to-r from-${conj.color}-100 to-${conj.color}-50 px-4 py-3 border-b-2 border-${conj.color}-200`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-2xl">{conj.icon}</span>
-                    <h3 className={`text-base font-bold text-${conj.color}-800`}>{conj.type} Conjunctions</h3>
-                  </div>
+              <div key={conj.id} className={`relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-${conj.color}-200 hover:border-${conj.color}-400 hover:shadow-[0_8px_32px_0_rgba(168,139,250,0.15)] hover:ring-2 hover:ring-${conj.color}-300`} style={{ borderTop: `6px solid var(--tw-color-${conj.color}-400)` }}>
+                <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">{conj.icon}</div>
+                <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
+                  <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${conj.color}-500)` }}>{conj.icon}</span>
+                  <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{conj.type} Conjunctions</h3>
                 </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <p className="text-sm text-gray-700 leading-relaxed mb-3">{conj.definition}</p>
-                  <div className="space-y-1.5 mb-3">
+                <div className="px-7 pb-8 flex-1 flex flex-col z-10">
+                  <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{conj.definition}</p>
+                  <div className="space-y-4 mb-5">
                     {conj.examples.slice(0, 2).map((example, index) => (
-                      <div key={index} className="bg-gray-50 px-2 py-1.5 rounded border-l-2 border-gray-300">
-                        <p className="text-sm text-gray-700" dangerouslySetInnerHTML={{ __html: example }} />
+                      <div key={index} className={`bg-gradient-to-r from-${conj.color}-50 to-blue-50 px-5 py-3 rounded-xl border border-${conj.color}-100 shadow group-hover:scale-[1.03] group-hover:border-${conj.color}-300 transition-all`}>
+                        <p className="text-base text-gray-700 font-medium" dangerouslySetInnerHTML={{ __html: example }} />
                       </div>
                     ))}
                   </div>
-                  <div className="flex flex-wrap gap-1 mt-auto mb-3">
-                    {conj.sampleWords.slice(0, 4).map((word, index) => (
-                      <span key={index} className={`bg-${conj.color}-100 text-${conj.color}-700 px-2 py-0.5 rounded-full text-sm font-medium`}>{word}</span>
+                  <div className="flex flex-wrap gap-3 mb-5">
+                    {conj.sampleWords.slice(0, 4).map((word, idx) => (
+                      <span key={idx} className={`bg-gradient-to-r from-${conj.color}-200 to-blue-200 text-${conj.color}-700 px-5 py-2 rounded-full text-base font-bold border border-${conj.color}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}>{word}</span>
                     ))}
                   </div>
-                  <button onClick={() => { setSelectedItem(conj); setShowLearnMoreModal(true); }} className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-rose-400 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"><span>📚</span> Learn More <span>→</span></button>
+                  <button onClick={() => { setSelectedItem(conj); setShowLearnMoreModal(true); }} className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.04] group-hover:ring-2 group-hover:ring-teal-400">Learn More</button>
                 </div>
               </div>
             ))}

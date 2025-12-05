@@ -456,7 +456,7 @@ const NounsDetail = () => {
             </button>
             <span className="text-2xl md:text-3xl">🎭</span>
             <h1 className="text-xl md:text-2xl font-extrabold text-gray-800">Nouns</h1>
-            <span className="text-sm text-teal-600 ml-2">Master the building blocks of English</span>
+            <span className="text-base text-teal-600 ml-2">Master the building blocks of English</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {sections.map(section => (
@@ -481,7 +481,7 @@ const NounsDetail = () => {
         {/* OVERVIEW SECTION */}
         <section id="overview" className="mb-12 scroll-mt-32">
           {/* What are Nouns - Super Compact Header Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6" style={{marginLeft: '50px', marginRight: '50px'}}>
             <div className="flex items-start gap-2 md:gap-3 mb-2">
               <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">🎭</span>
               <div className="flex-1 min-w-0">
@@ -494,43 +494,42 @@ const NounsDetail = () => {
             <div className="grid grid-cols-2 gap-2 pl-0">
               <div className="bg-white border border-teal-200 rounded-lg p-2">
                 <p className="text-sm font-semibold text-teal-600">🎭 Why Learn?</p>
-                <p className="text-sm text-gray-700 leading-tight mt-0.5">Clear, effective communication</p>
+                <p className="text-base text-gray-700 leading-tight mt-0.5">Clear, effective communication</p>
               </div>
               <div className="bg-white border border-rose-200 rounded-lg p-2">
                 <p className="text-sm font-semibold text-rose-400">🎭 Quick Fact</p>
-                <p className="text-sm text-gray-700 leading-tight mt-0.5">25% of English words!</p>
+                <p className="text-base text-gray-700 leading-tight mt-0.5">25% of English words!</p>
               </div>
             </div>
           </div>
 
-          {/* 10 Types of Nouns - Compact Design */}
+          {/* 10 Types of Nouns - Verb Page UI Style */}
           <div className="mb-10">
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center flex items-center justify-center tracking-tight">
-              <span className="text-2xl mr-2">🎭</span>
-              <span className="text-lg md:text-xl font-bold text-gray-800">10 Types of Nouns</span>
+              <span className="text-lg mr-2">🎭</span>
+              <span className="text-xl font-bold text-gray-800">10 Types of Nouns</span>
             </h2>
-            {/* Modern Cards Grid - 2-3 per row, aesthetic design */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
               {nounTypes.map((noun) => (
                 <div
                   key={noun.id}
-                  className="relative rounded-3xl shadow-2xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/60 backdrop-blur-lg border border-teal-200 hover:border-teal-400 hover:shadow-[0_8px_32px_0_rgba(20,184,166,0.15)] hover:ring-2 hover:ring-teal-300"
-                  style={{ borderTop: `6px solid ${noun.color ? `var(--tw-color-${noun.color}-400)` : '#14b8a6'}` }}
+                  className={`relative rounded-2xl shadow-xl transition-all duration-300 flex flex-col h-full p-0 group bg-white/70 border border-${noun.color || 'teal'}-200 hover:border-${noun.color || 'teal'}-400 hover:shadow-2xl hover:ring-2 hover:ring-${noun.color || 'teal'}-300`}
+                  style={{ borderTop: `4px solid var(--tw-color-${noun.color || 'teal'}-400)` }}
                 >
-                  <div className="absolute top-4 right-4 opacity-10 text-7xl pointer-events-none select-none">
+                  <div className="absolute top-3 right-3 opacity-10 text-4xl pointer-events-none select-none">
                     {noun.icon}
                   </div>
-                  <div className="flex items-center gap-3 px-7 pt-8 pb-4 z-10">
-                    <span className={`text-4xl drop-shadow-lg`} style={{ color: `var(--tw-color-${noun.color}-500)` }}>{noun.icon}</span>
-                    <h3 className="text-2xl font-extrabold text-gray-800 tracking-tight drop-shadow">{noun.type}</h3>
+                  <div className="flex items-center gap-2 px-4 pt-5 pb-2 z-10">
+                    <span className={`text-2xl drop-shadow-lg`} style={{ color: `var(--tw-color-${noun.color || 'teal'}-500)` }}>{noun.icon}</span>
+                    <h3 className="text-lg font-bold text-gray-800 tracking-tight drop-shadow">{noun.type}</h3>
                   </div>
-                  <div className="px-7 pb-8 flex-1 flex flex-col z-10">
-                    <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{noun.definition}</p>
-                    <div className="space-y-4 mb-5">
+                  <div className="px-4 pb-5 flex-1 flex flex-col z-10">
+                    <p className="text-base text-gray-700 leading-relaxed mb-3 font-medium bg-white/80 rounded-lg px-2 py-1 shadow-sm">{noun.definition}</p>
+                    <div className="space-y-2 mb-3">
                       {noun.examples.slice(0, 2).map((example, index) => (
                         <div
                           key={index}
-                          className="bg-gradient-to-r from-teal-50 to-blue-50 px-5 py-3 rounded-xl border border-teal-100 shadow group-hover:scale-[1.03] group-hover:border-teal-300 transition-all"
+                          className={`bg-gradient-to-r from-${noun.color || 'teal'}-50 to-blue-50 px-3 py-2 rounded-lg border border-${noun.color || 'teal'}-100 shadow group-hover:scale-[1.02] group-hover:border-${noun.color || 'teal'}-300 transition-all`}
                         >
                           <p
                             className="text-base text-gray-700 font-medium"
@@ -539,11 +538,11 @@ const NounsDetail = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex flex-wrap gap-3 mb-5">
+                    <div className="flex flex-wrap gap-2 mb-3">
                       {noun.sampleWords.slice(0, 4).map((word, index) => (
                         <span
                           key={index}
-                          className="bg-gradient-to-r from-teal-200 to-blue-200 text-teal-700 px-5 py-2 rounded-full text-base font-bold border border-teal-300 shadow group-hover:ring-2 group-hover:ring-blue-200"
+                          className={`bg-gradient-to-r from-${noun.color || 'teal'}-200 to-blue-200 text-${noun.color || 'teal'}-700 px-3 py-1 rounded-full text-sm font-bold border border-${noun.color || 'teal'}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}
                         >
                           {word}
                         </span>
@@ -551,7 +550,7 @@ const NounsDetail = () => {
                     </div>
                     <button
                       onClick={() => handleLearnMore(noun)}
-                      className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.04] group-hover:ring-2 group-hover:ring-teal-400"
+                      className="w-full bg-gradient-to-r from-teal-500 to-rose-400 text-white py-2 rounded-xl font-bold text-base shadow hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-auto group-hover:scale-[1.03] group-hover:ring-2 group-hover:ring-teal-400"
                     >
                       Learn More
                     </button>
@@ -562,38 +561,36 @@ const NounsDetail = () => {
           </div>
 
           {/* Pro Tips - Compact */}
-          <div className="bg-white rounded-2xl shadow-lg border border-yellow-200 p-6 md:p-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-              <span className="text-2xl mr-2">💡</span>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-rose-50 rounded-xl shadow-lg border border-teal-100 p-4 md:p-6 mb-2" style={{marginLeft: '50px'}}>
+            <h3 className="text-xl md:text-2xl font-bold text-teal-700 mb-4 flex items-center gap-2 drop-shadow">
+              <span className="inline-block text-2xl md:text-3xl bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 bg-clip-text text-transparent">💡</span>
               Pro Tips & Common Confusions
             </h3>
-            <div className="grid sm:grid-cols-2 gap-6 mb-8">
+            <div className="grid sm:grid-cols-2 gap-3 mb-5">
               {tips.map((tip, index) => (
                 <div
                   key={index}
-                  className={`bg-${tip.color}-50 border border-${tip.color}-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow`}
+                  className={`relative rounded-lg shadow border border-${tip.color}-100 p-3 transition-all duration-200 group bg-gradient-to-br from-white to-${tip.color}-50 hover:scale-[1.02] flex items-center min-h-[80px]`}
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl flex-shrink-0">{tip.icon}</span>
-                    <div>
-                      <span className={`font-semibold text-${tip.color}-700 block mb-1 text-base`}>
-                        {tip.type}
-                      </span>
-                      <p className="text-gray-700 text-sm">{tip.text}</p>
-                    </div>
+                  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow border border-${tip.color}-100 mr-3">
+                    <span className={`text-xl text-${tip.color}-500`}>{tip.icon}</span>
+                  </div>
+                  <div>
+                    <span className={`font-semibold text-${tip.color}-700 block mb-1 text-base tracking-wide`}>{tip.type}</span>
+                    <p className="text-gray-700 text-base font-normal leading-normal">{tip.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-              <h4 className="font-bold text-yellow-700 mb-4 text-lg flex items-center">
-                <span className="text-xl mr-2">🎭</span>
+            <div className="bg-gradient-to-r from-teal-50 via-white to-yellow-50 border border-teal-100 rounded-lg p-4 shadow-sm">
+              <h4 className="font-bold text-teal-700 mb-2 text-base flex items-center gap-2">
+                <span className="text-lg">🎭</span>
                 Advanced Tips
               </h4>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 text-base">
-                <li><strong>Plural forms:</strong> Add "-s" or "-es" (cat → cats, box → boxes)</li>
-                <li><strong>Irregular plurals:</strong> Some change completely (child → children)</li>
-                <li><strong>Possessive:</strong> Add apostrophe + s (John's book)</li>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 text-base">
+                <li><strong>Plural forms:</strong> Add <span className="text-teal-600 font-bold">"-s"</span> or <span className="text-teal-600 font-bold">"-es"</span> <span className="text-gray-500">(cat → cats, box → boxes)</span></li>
+                <li><strong>Irregular plurals:</strong> Some change completely <span className="text-gray-500">(child → children)</span></li>
+                <li><strong>Possessive:</strong> Add apostrophe + s <span className="text-gray-500">(John's book)</span></li>
               </ul>
             </div>
           </div>
@@ -601,28 +598,26 @@ const NounsDetail = () => {
 
         {/* VIDEO LESSONS - Compact */}
         <section id="videos" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-              <span className="text-2xl mr-2">🎬</span>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-6 md:p-10" style={{marginLeft: '50px'}}>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-teal-700 mb-3 flex items-center gap-2 drop-shadow">
+              <span className="text-3xl bg-gradient-to-r from-blue-400 via-teal-400 to-rose-400 bg-clip-text text-transparent">🎬</span>
               Video Lessons
             </h2>
-            <p className="text-gray-500 text-base mb-6">Watch these helpful videos.</p>
-            <div className="grid md:grid-cols-2 gap-8">
+            <p className="text-gray-500 text-base mb-7">Watch these helpful videos.</p>
+            <div className="grid md:grid-cols-2 gap-6">
               {videos.map(video => (
-                <div key={video.id} className="bg-blue-50 border border-blue-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden">
-                    <iframe
-                      className="w-full h-full rounded-t-xl border border-blue-200"
-                      src={`https://www.youtube.com/embed/${video.embedId}`}
-                      title={video.title}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+                <div key={video.id} className="bg-white border border-blue-100 rounded-xl shadow-md hover:shadow-xl transition-shadow flex flex-col overflow-hidden">
+                  <div className="aspect-video bg-gradient-to-br from-teal-100 via-blue-50 to-rose-100 flex items-center justify-center relative">
+                    {/* If video unavailable, show attractive placeholder */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span className="text-5xl text-blue-300 mb-2">🎬</span>
+                      <span className="text-lg font-semibold text-gray-400">Video unavailable</span>
+                      <span className="text-sm text-gray-400">This video is unavailable</span>
+                    </div>
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-base text-gray-800 mb-2 flex items-center">
-                      <span className="text-lg mr-2">🎬</span>
+                  <div className="p-4 bg-gradient-to-r from-blue-50 via-white to-teal-50">
+                    <h3 className="font-semibold text-base text-teal-700 mb-1 flex items-center gap-2">
+                      <span className="text-lg">🎬</span>
                       {video.title}
                     </h3>
                     <p className="text-sm text-gray-700">{video.description}</p>
@@ -635,32 +630,32 @@ const NounsDetail = () => {
 
         {/* WRITING EXERCISE - Compact */}
         <section id="writing" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-2xl shadow-lg border border-green-200 p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-              <span className="text-2xl mr-2">✍️</span>
+          <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-rose-50 rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-teal-500 card-hover" style={{marginLeft: '50px'}}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
+              <span className="text-xl mr-2">✍️</span>
               Writing Exercise
             </h2>
-            <p className="text-gray-500 text-base mb-6">Practice using different types of nouns in your own sentences.</p>
-            <div className="bg-green-50 border border-green-100 rounded-xl p-5 shadow-sm mb-6">
-              <h3 className="font-semibold text-gray-800 mb-2 text-base flex items-center">
+            <p className="text-gray-500 text-base mb-3">Practice using different types of nouns in your own sentences.</p>
+            <div className="bg-green-50 border border-green-100 rounded-xl p-3 shadow-sm mb-3">
+              <h3 className="font-semibold text-gray-800 mb-1 text-base flex items-center">
                 <span className="mr-2">💡</span> Your Task
               </h3>
-              <p className="text-gray-700 text-sm">Write five sentences, each using a different type of noun (Common, Proper, Abstract, Collective, Compound).</p>
+              <p className="text-gray-700 text-base">Write five sentences, each using a different type of noun (Common, Proper, Abstract, Collective, Compound).</p>
             </div>
             <textarea
-              className="w-full border-2 border-gray-300 rounded-xl p-5 mb-4 focus:border-green-500 focus:outline-none min-h-[180px] text-base"
+              className="w-full border-2 border-gray-300 rounded-xl p-3 mb-3 focus:border-green-500 focus:outline-none min-h-[120px] text-base"
               placeholder="Type your sentences here...\n\nExample:\n1. The dog (common noun) ran quickly."
             />
-            <div className="flex gap-4 flex-wrap mb-2">
+            <div className="flex gap-3 flex-wrap mb-1">
               <button
                 onClick={() => setWritingRevealed(!writingRevealed)}
-                className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors shadow"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow text-base"
               >
                 {writingRevealed ? 'Hide' : 'Show'} Sample Answer
               </button>
               <button
                 onClick={() => setWritingSubmitted(true)}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow text-base"
               >
                 Submit for Review
               </button>
@@ -671,9 +666,9 @@ const NounsDetail = () => {
               </div>
             )}
             {writingRevealed && (
-              <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-6 animate-fade-in">
-                <h4 className="font-bold text-gray-800 mb-4">💡 Sample Answer:</h4>
-                <ol className="space-y-3 list-decimal list-inside text-gray-700 text-base">
+              <div className="mt-4 bg-green-50 border border-green-200 rounded-xl p-3 animate-fade-in">
+                <h4 className="font-bold text-gray-800 mb-2">💡 Sample Answer:</h4>
+                <ol className="space-y-2 list-decimal list-inside text-gray-700 text-base">
                   <li>The <span className="bg-blue-100 px-2 py-1 rounded font-semibold">teacher</span> (common) explained the lesson.</li>
                   <li><span className="bg-purple-100 px-2 py-1 rounded font-semibold">London</span> (proper) is a beautiful city.</li>
                   <li>Her <span className="bg-pink-100 px-2 py-1 rounded font-semibold">honesty</span> (abstract) earned respect.</li>
@@ -687,17 +682,17 @@ const NounsDetail = () => {
 
         {/* READING EXERCISE - Compact */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-200 p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-              <span className="text-2xl mr-2">📖</span>
+          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover" style={{marginLeft: '50px'}}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
+              <span className="text-xl mr-2">📖</span>
               Reading Exercise
             </h2>
-            <p className="text-gray-500 text-base mb-6">Read the passage and identify the nouns.</p>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 shadow-sm mb-6">
-              <h3 className="font-semibold text-gray-800 mb-2 text-base flex items-center">
+            <p className="text-gray-500 text-base mb-3">Read the passage and identify the nouns.</p>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 shadow-sm mb-3">
+              <h3 className="font-semibold text-gray-800 mb-1 text-base flex items-center">
                 <span className="mr-2">💡</span> Read this short story
               </h3>
-              <p className="text-gray-700 text-base leading-relaxed">
+              <p className="text-base text-gray-700 leading-relaxed">
                 <strong className="text-purple-600">Sarah</strong> woke up early on <strong className="text-purple-600">Monday</strong> morning. 
                 She needed to catch the <strong className="text-blue-600">train</strong> to <strong className="text-purple-600">London</strong>. 
                 Her <strong className="text-pink-600">excitement</strong> was obvious as she packed her <strong className="text-rose-600">suitcase</strong>. 
@@ -745,8 +740,8 @@ const NounsDetail = () => {
         <section id="quiz" className="mb-16 scroll-mt-32">
           {/* Quiz Header */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center justify-center mb-3">
-              <span className="text-3xl mr-3">🧩</span>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 flex items-center justify-center mb-3 gradient-text drop-shadow">
+              <span className="text-3xl mr-3 bg-gradient-to-r from-blue-500 via-cyan-500 to-rose-400 bg-clip-text text-transparent">🧩</span>
               Quiz Practice
             </h2>
             <p className="text-gray-500 text-base mb-6">Review questions or take the full quiz.</p>
@@ -757,7 +752,7 @@ const NounsDetail = () => {
                 setModalQuizAnswers({});
                 setSingleQuestionMode(false);
               }}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="inline-block bg-gradient-to-r from-blue-500 via-cyan-500 to-rose-400 hover:from-blue-600 hover:to-rose-500 text-white font-bold py-3 px-8 rounded-3xl shadow-xl transition-all duration-200 transform hover:scale-105"
             >
               ▶️ Start Full Quiz
             </button>
@@ -776,7 +771,7 @@ const NounsDetail = () => {
                     setModalQuizAnswers({});
                     setSingleQuestionMode(true);
                   }}
-                  className="bg-blue-50 rounded-xl p-5 shadow-md border border-blue-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition-all duration-200 transform hover:scale-105"
+                  className="bg-gradient-to-br from-blue-100 via-indigo-50 to-white rounded-3xl p-5 shadow-xl border-l-4 border-blue-400 card-hover cursor-pointer transition-all duration-300"
                 >
                   {/* Status Badge */}
                   <div className="flex justify-between items-start mb-2">
@@ -1092,13 +1087,13 @@ const NounsDetail = () => {
 
         {/* RESOURCES - Compact */}
         <section id="resources" className="mb-12 scroll-mt-32">
-          <div className="bg-white rounded-2xl shadow-lg border border-indigo-200 p-6 md:p-8">
+          <div className="bg-gradient-to-br from-blue-50 via-white to-teal-50 rounded-2xl shadow-2xl p-8 md:p-12 max-w-6xl w-full mx-auto border border-teal-100">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-              <span className="text-2xl mr-2">📚</span>
+              <span className="text-lg mr-2">📚</span>
               Additional Resources
             </h2>
-            <p className="text-gray-500 text-base mb-6">Explore more materials to master nouns.</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p className="text-gray-500 text-sm mb-3">Explore more materials to master nouns.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
               {[
                 { title: 'Grammar Guide', url: 'https://www.englishclub.com/grammar/nouns.htm', color: 'blue', icon: '📘' },
                 { title: 'Noun Games', url: 'https://www.eslgamesplus.com/nouns/', color: 'green', icon: '🎮' },
@@ -1112,9 +1107,9 @@ const NounsDetail = () => {
                   href={resource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`bg-${resource.color}-50 border border-${resource.color}-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start`}
+                  className={`bg-white border border-${resource.color}-200 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all flex flex-col items-start card-hover`}
                 >
-                  <span className="text-3xl mb-3">{resource.icon}</span>
+                  <span className="text-2xl mb-3">{resource.icon}</span>
                   <h3 className={`font-semibold text-${resource.color}-700 text-lg mb-2`}>{resource.title}</h3>
                   <p className="text-sm text-gray-600">Explore →</p>
                 </a>
@@ -1124,24 +1119,15 @@ const NounsDetail = () => {
         </section>
 
         {/* Call to Action - Compact */}
-        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 rounded-xl shadow-md p-6 text-white text-center">
-          <h3 className="text-xl font-bold mb-2">🎓 Ready for More?</h3>
-          <p className="text-sm mb-4 text-blue-100">
-            Continue your grammar journey!
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <button
-              onClick={() => navigate('/modules/grammar-hub')}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-lg"
-            >
-              Grammar Hub
-            </button>
-            <button
-              onClick={() => navigate('/modules/learn-english')}
-              className="bg-yellow-400 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition-colors shadow-lg"
-            >
-              All Lessons
-            </button>
+          <div className="bg-white rounded-2xl shadow-lg p-4 mt-10 flex flex-col items-center card-hover">
+          <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-1 flex items-center gap-2 gradient-text">
+            <span className="text-xl">🎓</span>
+            <span className="bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 bg-clip-text text-transparent">Ready for More?</span>
+          </h3>
+          <p className="text-gray-700 text-sm mb-3">Continue your grammar journey!</p>
+          <div className="flex gap-2">
+            <button className="bg-white text-teal-700 font-bold px-4 py-1.5 rounded-full shadow hover:bg-teal-50 transition">Grammar Hub</button>
+            <button className="bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 text-white font-bold px-4 py-1.5 rounded-full shadow hover:scale-105 transition">All Lessons</button>
           </div>
         </div>
       </div>
