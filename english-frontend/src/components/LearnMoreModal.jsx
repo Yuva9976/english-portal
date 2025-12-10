@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
   const [learnMoreData, setLearnMoreData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    try {
+      if (onClose) onClose();
+      // Prefer native history backward when available, otherwise navigate to nouns list
+      if (window && window.history && window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/modules/grammar-hub/nouns');
+      }
+    } catch (e) {
+      if (onClose) onClose();
+      navigate('/modules/grammar-hub/nouns');
+    }
+  };
 
   useEffect(() => {
     if (isOpen && selectedItem) {
@@ -175,6 +192,15 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
         <div className="bg-white text-gray-800 shadow-2xl border-b border-gray-200">
           <div className="container mx-auto px-4 md:px-6 py-5 flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <button
+                onClick={handleBack}
+                className="text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-all"
+                title="Back"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
               <div className="bg-white p-3 rounded-2xl border border-gray-200">
                 <span className="text-3xl md:text-4xl">{selectedItem?.icon}</span>
               </div>
@@ -201,17 +227,33 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
           {/* Quick Navigation Links */}
           <div className="bg-white border-t border-gray-100 shadow-sm">
             <div className="container mx-auto px-4 md:px-6 py-3">
-              <div className="flex items-center justify-center gap-3 bg-white rounded-2xl shadow text-teal-700 text-base font-semibold">
+              <div className="flex items-center justify-center gap-3 bg-white rounded-2xl shadow text-teal-700 text-base font-semibold flex-wrap">
                 <span className="text-base">🧭 Quick Navigation:</span>
-                <a href="#overview" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Overview</a>
+                <a href="#overview" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Overview</a>
                 <span className="text-gray-400 text-base">•</span>
-                <a href="#examples" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Examples</a>
+                <a href="#detailed" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Detailed</a>
                 <span className="text-gray-400 text-base">•</span>
-                <a href="#grammar" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Grammar</a>
+                <a href="#videos" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Videos</a>
                 <span className="text-gray-400 text-base">•</span>
-                <a href="#practice" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Practice</a>
+                <a href="#examples" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Examples</a>
                 <span className="text-gray-400 text-base">•</span>
-                <a href="#resources" className="hover:bg-teal-100 px-4 py-2 rounded-full transition-all text-gray-800 text-base">Resources</a>
+                <a href="#grammar" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Grammar</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#mistakes" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Mistakes</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#practice" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Practice</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#quiz" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Quiz</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#pronunciation" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Pronunciation</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#vocabulary" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Vocabulary</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#listening" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Listening</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#reading" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Reading</a>
+                <span className="text-gray-400 text-base">•</span>
+                <a href="#resources" className="hover:bg-teal-100 px-3 py-2 rounded-full transition-all text-gray-800 text-sm">Resources</a>
               </div>
             </div>
           </div>
@@ -339,6 +381,97 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
                 </section>
               )}
 
+                  {/* 🔊 PRONUNCIATION SECTION */}
+                  {learnMoreData?.pronunciation && (
+                    <section id="pronunciation" className="space-y-6 animate-slideUp">
+                      <div className="bg-white rounded-2xl shadow p-4 border-l-4 border-indigo-300">
+                        <h3 className="text-base font-bold text-gray-800 mb-2">Pronunciation Guide</h3>
+                        <p className="text-gray-600 text-base">{learnMoreData.pronunciation.guide}</p>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {learnMoreData.pronunciation.words?.map((w, idx) => (
+                          <div key={idx} className="bg-white rounded-xl p-3 border border-gray-100 shadow-sm flex items-center gap-3">
+                            <div className="text-teal-600 font-bold text-xl">{w.word}</div>
+                            <div className="flex-1">
+                              <div className="text-sm text-gray-700">{w.phonetic}</div>
+                              {w.audio && <div className="text-xs text-gray-500 mt-1">{w.audio}</div>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 🗂️ VOCABULARY SECTION */}
+                  {learnMoreData?.vocabulary && (
+                    <section id="vocabulary" className="space-y-6 animate-slideUp">
+                      <div className="bg-white rounded-2xl shadow p-4 border-l-4 border-yellow-300">
+                        <h3 className="text-base font-bold text-gray-800 mb-2">Vocabulary</h3>
+                        <p className="text-gray-600 text-base">Key words and definitions</p>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {learnMoreData.vocabulary.words?.map((w, idx) => (
+                          <div key={idx} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                            <h4 className="text-base font-bold text-gray-800 mb-1">{w.word}</h4>
+                            <p className="text-sm text-gray-700 mb-2">{w.definition}</p>
+                            {w.example && <p className="text-sm italic text-gray-600">Example: {w.example}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 🎧 LISTENING SECTION */}
+                  {learnMoreData?.listening && (
+                    <section id="listening" className="space-y-6 animate-slideUp">
+                      <div className="bg-white rounded-2xl shadow p-4 border-l-4 border-blue-300">
+                        <h3 className="text-base font-bold text-gray-800 mb-2">Listening Exercises</h3>
+                        <p className="text-gray-600 text-base">{learnMoreData.listening[0]?.instruction}</p>
+                      </div>
+                      <div className="space-y-4">
+                        {learnMoreData.listening.map((item, idx) => (
+                          <div key={idx} className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="text-sm font-semibold text-gray-800">{item.title || `Audio ${idx + 1}`}</div>
+                              <div className="text-xs text-gray-500">{item.duration}</div>
+                            </div>
+                            <p className="text-sm text-gray-700 mb-2">{item.instruction}</p>
+                            {item.url && (
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-sm text-teal-600 font-semibold">Listen →</a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 📖 READING SECTION */}
+                  {learnMoreData?.reading && (
+                    <section id="reading" className="space-y-6 animate-slideUp">
+                      <div className="bg-white rounded-2xl shadow p-4 border-l-4 border-emerald-300">
+                        <h3 className="text-base font-bold text-gray-800 mb-2">Reading Passages</h3>
+                        <p className="text-gray-600 text-base">Practice reading and identifying examples in context.</p>
+                      </div>
+                      <div className="space-y-4">
+                        {learnMoreData.reading.passages?.map((p, idx) => (
+                          <div key={idx} className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+                            <h4 className="text-sm font-semibold text-gray-800 mb-2">{p.title}</h4>
+                            <p className="text-sm text-gray-700 mb-2">{p.text}</p>
+                            {p.questions && (
+                              <div className="text-sm text-gray-600">
+                                <strong>Questions:</strong>
+                                <ul className="list-disc ml-5">
+                                  {p.questions.map((q, i) => (
+                                    <li key={i}>{q}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
               {/* 🎥 VIDEO RESOURCES SECTION */}
               {learnMoreData?.video_resources && (
                 <section id="videos" className="space-y-6">

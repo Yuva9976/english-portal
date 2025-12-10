@@ -62,8 +62,8 @@ export default function LearnEnglish() {
           {defaultSkills.map((skill) => (
             <div
               key={skill.slug}
-              className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105 max-w-xs mx-auto"
-              style={{ width: '330px' }}
+              className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105 mx-auto"
+              style={{ width: '380px' }}
             >
               {/* Gradient top accent */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400"></div>
