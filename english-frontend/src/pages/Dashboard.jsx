@@ -17,7 +17,8 @@ export default function Dashboard(){
   useEffect(()=>{
     async function load(){
       try {
-        const res = await apiClient.get('/dashboard')
+        // request the learner dashboard (authenticated)
+        const res = await apiClient.get('/dashboard/learner')
         setData(res.data)
       } catch (err) {
         console.error(err)

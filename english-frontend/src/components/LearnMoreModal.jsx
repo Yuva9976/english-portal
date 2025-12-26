@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
   const [learnMoreData, setLearnMoreData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const contentRef = useRef(null);
 
   const handleBack = () => {
     try {
@@ -26,6 +27,18 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
       loadLearnMoreData();
     }
   }, [isOpen, selectedItem]);
+
+  // When modal opens or content changes, ensure internal scroll is at top
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      try {
+        contentRef.current.scrollTop = 0;
+      } catch (e) {
+        // fallback: scroll window as a safety net
+        try { window.scrollTo(0, 0); } catch (err) { /* ignore */ }
+      }
+    }
+  }, [isOpen, selectedItem, learnMoreData]);
 
   const loadLearnMoreData = async () => {
     setLoading(true);
@@ -260,7 +273,7 @@ const LearnMoreModal = ({ isOpen, onClose, selectedItem, title }) => {
         </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" ref={contentRef}>
         <div className="container mx-auto px-4 md:px-6 py-6 md:py-8 max-w-6xl">
           {loading ? (
             <div className="flex items-center justify-center min-h-[60vh]">

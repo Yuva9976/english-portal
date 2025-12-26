@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TwentyGrammarRules = ({ onClose }) => {
   const [completedRules, setCompletedRules] = useState([]);
@@ -176,37 +176,49 @@ const TwentyGrammarRules = ({ onClose }) => {
 
   const progress = (completedRules.length / rules.length) * 100;
 
+  // Lock body scroll while this modal is open to avoid double scrollbars
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-white to-rose-50 z-50 overflow-hidden">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col" style={{ backgroundColor: '#ffffff' }}>
       <div className="w-full h-full flex flex-col">
-        {/* Compact Header */}
-        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-3 shadow-xl">
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
-          >
-            <span className="text-lg font-bold">✕</span>
-          </button>
-          <div className="text-center mb-2">
-            <span className="text-3xl block mb-1">📚</span>
-            <h2 className="text-2xl font-bold">Grammar Mastery: 20 Core Rules</h2>
-            <p className="text-white/90 text-sm mt-1">Your Essential Guide to Perfect English</p>
-          </div>
-          
-          {/* Compact Progress Bar */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span>Your Progress</span>
-              <span>{completedRules.length} / {rules.length} completed</span>
+        {/* White Header */}
+        <header className="bg-white border-b shadow-sm" style={{ backgroundColor: '#ffffff' }}>
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
+            <button
+              onClick={onClose}
+              className="p-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+              aria-label="Back"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div className="flex-1 text-center">
+              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400">Grammar Mastery: 20 Core Rules</h2>
+              <p className="text-sm text-gray-500 mt-1">Your Essential Guide to Perfect English</p>
             </div>
-            <div className="bg-white/30 rounded-full h-2 overflow-hidden shadow-inner">
-              <div
-                className="bg-gradient-to-r from-yellow-300 to-yellow-400 h-full transition-all duration-500 shadow-lg"
-                style={{ width: `${progress}%` }}
-              ></div>
+
+            <div className="w-40 text-right text-sm text-gray-600">{completedRules.length} / {rules.length} completed</div>
+          </div>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-teal-400 to-rose-400" style={{ width: `${progress}%` }} />
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Content - Scrollable */}
         <div className="flex-1 overflow-y-auto px-4 py-3">

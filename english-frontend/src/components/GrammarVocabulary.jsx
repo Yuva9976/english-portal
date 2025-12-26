@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 const GrammarVocabulary = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -75,38 +75,56 @@ const GrammarVocabulary = ({ onClose }) => {
     return grouped;
   }, [filteredVocabulary]);
 
+  useEffect(() => {
+    // lock body scroll while this modal is open and add padding to avoid layout shift
+    const prevOverflow = document.body.style.overflow || '';
+    const prevPaddingRight = document.body.style.paddingRight || '';
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth) document.body.style.paddingRight = `${scrollbarWidth}px`;
+    console.log('GrammarVocabulary (white-header) mounted');
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-teal-50 via-rose-50 to-amber-50 z-50 overflow-hidden">
-      <div className="w-full h-full flex flex-col">
-        {/* Compact Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white p-3 shadow-xl">
+    <div className="fixed inset-0 z-50" data-component="GrammarVocabulary-white">
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-rose-50 to-amber-50 opacity-90" />
+      <div className="relative inset-0 w-full h-full flex flex-col bg-white overflow-hidden">
+        {/* Premium White Header (glass) */}
+        <div className="bg-white/80 backdrop-blur-md px-5 py-4 border-b border-gray-100 relative" style={{backgroundColor: 'rgba(255,255,255,0.92)'}}>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
+            aria-label="Back"
+            className="absolute left-4 top-4 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700 hover:scale-105 transition-transform"
           >
-            <span className="text-lg font-bold">✕</span>
+            <span className="text-lg font-bold">←</span>
           </button>
-          <div className="text-center mb-2">
-            <span className="text-3xl block mb-1">📚</span>
-            <h2 className="text-2xl font-bold">Grammar Vocabulary</h2>
-            <p className="text-white/90 text-sm mt-1">Essential grammar terms explained</p>
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent">Grammar Vocabulary</h2>
+            <p className="text-sm text-gray-600 mt-1">Essential grammar terms explained • Browse & practice</p>
           </div>
+          <div className="absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-teal-300 via-purple-200 to-rose-300 opacity-90" />
+        </div>
 
-          {/* Compact Search Bar */}
-          <div className="relative">
+        {/* Search + Filter */}
+        <div className="px-5 py-4 bg-transparent">
+          <div className="relative max-w-full mx-auto" style={{maxWidth: 980}}>
             <input
               type="text"
               placeholder="Search terms or definitions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300"
+              className="w-full px-4 py-3 rounded-xl text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 border border-gray-100 bg-white/70 backdrop-blur-sm shadow-sm"
             />
-            <span className="absolute right-3 top-2 text-xl">🔍</span>
+            <span className="absolute right-4 top-3 text-xl">🔍</span>
           </div>
         </div>
 
-        {/* Compact Alphabet Filter */}
-        <div className="bg-white/80 backdrop-blur-sm border-b border-teal-200 px-4 py-2 shadow-sm">
+        {/* Alphabet Filter */}
+        <div className="bg-white/80 px-4 py-2 border-b border-gray-100">
           <div className="flex flex-wrap gap-1 justify-center">
             <button
               onClick={() => setSelectedLetter('All')}
@@ -134,8 +152,8 @@ const GrammarVocabulary = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Content - Scrollable Area */}
-        <div className="flex-1 overflow-y-auto px-4 py-3">
+        {/* Content - Scrollable Area (fills remaining space) */}
+        <div className="flex-1 overflow-y-auto px-6 py-5 hide-scrollbar bg-transparent">
           {filteredVocabulary.length === 0 ? (
             <div className="text-center py-8">
               <span className="text-4xl block mb-3">🔍</span>
@@ -151,29 +169,29 @@ const GrammarVocabulary = ({ onClose }) => {
               </button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6 max-w-4xl mx-auto">
               {Object.keys(groupedByLetter).sort().map(letter => (
                 <div key={letter}>
-                  <div className="flex items-center mb-2">
-                    <div className="bg-gradient-to-r from-teal-600 to-rose-400 text-white w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold mr-3 shadow-md">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-gradient-to-r from-teal-600 to-rose-400 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold mr-3 shadow-lg">
                       {letter}
                     </div>
                     <div className="flex-1 h-0.5 bg-gradient-to-r from-teal-300 via-purple-200 to-rose-300 rounded"></div>
                   </div>
-                  
-                  <div className="space-y-2">
+
+                  <div className="space-y-4">
                     {groupedByLetter[letter].map((item, index) => (
                       <div
                         key={index}
-                        className="bg-white border-2 border-teal-200 rounded-lg p-3 hover:border-rose-400 hover:shadow-lg transition-all duration-300"
+                        className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl p-4 hover:shadow-2xl transition-all duration-300"
                       >
-                        <div className="flex items-start">
-                          <span className="text-xl mr-2 flex-shrink-0">📖</span>
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white text-xl shadow-md flex-shrink-0">📖</div>
                           <div className="flex-1">
-                            <h3 className="text-base font-bold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-1">{item.term}</h3>
-                            <p className="text-gray-700 text-sm mb-2">{item.definition}</p>
-                            <div className="bg-gradient-to-r from-teal-50 to-rose-50 border-l-4 border-teal-400 p-2 rounded-r">
-                              <p className="text-xs text-gray-700">
+                            <h3 className="text-lg font-extrabold bg-gradient-to-r from-teal-600 to-rose-600 bg-clip-text text-transparent mb-1">{item.term}</h3>
+                            <p className="text-gray-700 text-sm mb-3">{item.definition}</p>
+                            <div className="bg-white/50 border-l-4 border-teal-400 p-3 rounded-r">
+                              <p className="text-sm text-gray-700">
                                 <span className="font-semibold text-teal-700">Example:</span> {item.example}
                               </p>
                             </div>
@@ -186,7 +204,7 @@ const GrammarVocabulary = ({ onClose }) => {
               ))}
 
               {/* Inline Tip */}
-              <div className="mt-4 bg-gradient-to-r from-teal-100 via-purple-50 to-rose-100 rounded-lg p-3 border-2 border-teal-300">
+              <div className="mt-4 bg-white/80 rounded-xl p-4 border border-gray-100 shadow-sm">
                 <div className="flex items-start gap-2">
                   <span className="text-xl flex-shrink-0">💡</span>
                   <div>
@@ -201,19 +219,19 @@ const GrammarVocabulary = ({ onClose }) => {
           )}
         </div>
 
-        {/* Compact Footer Stats */}
-        <div className="bg-white/80 backdrop-blur-sm border-t-2 border-teal-200 px-4 py-2 shadow-lg">
-          <div className="flex justify-center items-center space-x-6 text-center">
+        {/* Footer Stats */}
+        <div className="bg-transparent px-6 py-4 border-t border-gray-100">
+          <div className="flex justify-center items-center space-x-8 text-center max-w-4xl mx-auto">
             <div>
-              <div className="text-xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">{vocabulary.length}</div>
+              <div className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-teal-700">{vocabulary.length}</div>
               <div className="text-xs text-gray-600">Total Terms</div>
             </div>
             <div>
-              <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">{filteredVocabulary.length}</div>
+              <div className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-700">{filteredVocabulary.length}</div>
               <div className="text-xs text-gray-600">Showing</div>
             </div>
             <div>
-              <div className="text-xl font-bold bg-gradient-to-r from-rose-600 to-rose-700 bg-clip-text text-transparent">{Object.keys(groupedByLetter).length}</div>
+              <div className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-rose-700">{Object.keys(groupedByLetter).length}</div>
               <div className="text-xs text-gray-600">Letters</div>
             </div>
           </div>

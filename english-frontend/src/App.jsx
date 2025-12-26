@@ -9,6 +9,9 @@ import Lessons from './pages/Lessons'
 import LessonDetails from './pages/LessonDetails'
 import Quiz from './pages/Quiz'
 import Dashboard from './pages/Dashboard'
+import LearnerDashboard from './pages/LearnerDashboard'
+import ClassPage from './pages/ClassPage'
+import ClassRoom from './pages/ClassRoom'
 import AdminDashboard from './pages/AdminDashboard'
 import TeacherTools from './pages/TeacherTools'
 import LearnEnglish from './pages/Modules/LearnEnglish';
@@ -75,6 +78,16 @@ export default function App() {
           <Route path='/modules/grammar-hub/interjections-quiz' element={<GrammarQuizGame quizType="interjections" />} />
           <Route path='/dashboard' element={
             <ProtectedRoute><Dashboard /></ProtectedRoute>
+          } />
+          <Route path='/learner' element={
+            <ProtectedRoute><LearnerDashboard /></ProtectedRoute>
+          } />
+
+          <Route path='/class' element={
+            <ProtectedRoute><ClassPage /></ProtectedRoute>
+          } />
+          <Route path='/class/:classId' element={
+            <ProtectedRoute><ClassRoom /></ProtectedRoute>
           } />
           <Route path='/admin-dashboard' element={
             <ProtectedRoute><AdminDashboard /></ProtectedRoute>

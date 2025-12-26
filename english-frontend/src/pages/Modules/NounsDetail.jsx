@@ -129,13 +129,13 @@ const NounsDetail = () => {
     {
       id: 1,
       title: 'English Nouns - Types and Examples',
-      embedId: 'BFSj4JHzyto',
+      embedId: '6h3V-Tm_tNs',
       description: 'A comprehensive introduction to nouns for beginners'
     },
     {
       id: 2,
       title: 'Common vs Proper Nouns Explained',
-      embedId: 'Fm8tF5VGe8k',
+      embedId: 'gQsZr8yrsno',
       description: 'Learn the difference between common and proper nouns'
     }
   ];
@@ -618,12 +618,22 @@ const NounsDetail = () => {
               {videos.map(video => (
                 <div key={video.id} className="bg-white border border-blue-100 rounded-xl shadow-md hover:shadow-xl transition-shadow flex flex-col overflow-hidden">
                   <div className="aspect-video bg-gradient-to-br from-teal-100 via-blue-50 to-rose-100 flex items-center justify-center relative">
-                    {/* If video unavailable, show attractive placeholder */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="text-5xl text-blue-300 mb-2">🎬</span>
-                      <span className="text-lg font-semibold text-gray-400">Video unavailable</span>
-                      <span className="text-sm text-gray-400">This video is unavailable</span>
-                    </div>
+                    {video.embedId ? (
+                      <iframe
+                        className="w-full h-full"
+                        src={`https://www.youtube.com/embed/${video.embedId}`}
+                        title={video.title}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                        <span className="text-5xl text-blue-300 mb-2">🎬</span>
+                        <span className="text-lg font-semibold text-gray-400">Video unavailable</span>
+                        <span className="text-sm text-gray-400">This video is unavailable</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-4 bg-gradient-to-r from-blue-50 via-white to-teal-50">
                     <h3 className="font-semibold text-base text-teal-700 mb-1 flex items-center gap-2">
@@ -631,6 +641,18 @@ const NounsDetail = () => {
                       {video.title}
                     </h3>
                     <p className="text-sm text-gray-700">{video.description}</p>
+                    {video.embedId && (
+                      <div className="mt-3">
+                        <a
+                          href={`https://www.youtube.com/watch?v=${video.embedId}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-block px-4 py-2 mt-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition"
+                        >
+                          Watch on YouTube
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

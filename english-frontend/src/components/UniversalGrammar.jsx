@@ -1,25 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const UniversalGrammar = ({ onClose }) => {
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow || '';
+      document.body.style.paddingRight = prevPaddingRight || '';
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
       <div className="w-full h-full relative">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-rose-400 text-white p-3 sticky top-0 z-10 shadow-2xl">
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20 shadow-lg"
-          >
-            <span className="text-lg font-bold">✕</span>
-          </button>
-          <div className="text-center mb-2">
-            <span className="text-3xl block mb-1 animate-pulse">🌐</span>
-            <h2 className="text-xl font-bold drop-shadow-lg">Universal Grammar</h2>
-            <p className="text-white/90 text-xs mt-1">Basic principles that apply to all languages</p>
+        {/* Header - compact white with left back chevron and centered gradient title */}
+        <div className="bg-white sticky top-0 z-10 border-b">
+          <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+            <button
+              onClick={() => window.history.back()}
+              aria-label="Go back"
+              className="p-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div className="flex-1 text-center">
+              <h2 className="text-2xl font-extrabold bg-gradient-to-r from-teal-500 to-rose-400 bg-clip-text text-transparent">
+                Universal Grammar
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">Basic principles that apply to all languages</p>
+            </div>
+
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="p-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+            >
+              <span className="text-lg font-bold">✕</span>
+            </button>
           </div>
         </div>
 
-        <div className="p-8 max-w-6xl mx-auto">
+        <div className="p-8 max-w-6xl mx-auto text-lg text-gray-800">
           {/* Introduction */}
           <div className="mb-8">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-rose-400 bg-clip-text text-transparent mb-4">What is Universal Grammar?</h3>

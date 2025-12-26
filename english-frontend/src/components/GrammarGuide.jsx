@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const GrammarGuide = ({ onClose }) => {
   const [activeSection, setActiveSection] = useState('intro');
+
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    // prevent body scroll while modal is open
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow || '';
+      document.body.style.paddingRight = prevPaddingRight || '';
+    };
+  }, []);
 
   const sections = [
     { id: 'intro', name: 'Introduction', icon: '📖' },
@@ -198,19 +211,33 @@ const GrammarGuide = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-white z-50 overflow-hidden">
       <div className="w-full h-full flex flex-col">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-rose-600 text-white p-3 shadow-xl flex-shrink-0">
+        {/* Compact white header with centered gradient title */}
+        <div className="bg-white border-b border-gray-200 relative px-6 py-3 flex-shrink-0">
+          <button
+            onClick={() => window.history.back()}
+            aria-label="Back"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 transition-all duration-200"
+            title="Back"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <h2 className="text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400">Grammar Guide</h2>
+              <p className="text-sm text-gray-500 mt-1">Your comprehensive English grammar reference</p>
+            </div>
+          </div>
+
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 hover:scale-110 transition-all duration-300 z-20"
+            aria-label="Close"
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 transition-all duration-200"
           >
             <span className="text-lg font-bold">✕</span>
           </button>
-          <div className="text-center mb-2">
-            <span className="text-3xl block mb-1">📖</span>
-            <h2 className="text-2xl font-bold">Grammar Guide</h2>
-            <p className="text-white/90 text-sm mt-1">Your comprehensive English grammar reference</p>
-          </div>
         </div>
 
         <div className="flex flex-1 overflow-hidden">
@@ -236,12 +263,12 @@ const GrammarGuide = ({ onClose }) => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 p-6 overflow-y-auto">
+          <div className="flex-1 p-6 overflow-y-auto text-base">
             {/* Introduction */}
             {activeSection === 'intro' && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">What is Grammar?</h3>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3">What is Grammar?</h3>
                   <p className="text-gray-700 leading-relaxed mb-3">
                     Grammar is the set of rules that governs how words are combined to form meaningful sentences in a language. It includes the structure, syntax, and organization of language elements.
                   </p>
@@ -253,7 +280,7 @@ const GrammarGuide = ({ onClose }) => {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">Why is Grammar Important?</h3>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3">Why is Grammar Important?</h3>
                   <div className="grid md:grid-cols-2 gap-3">
                     <div className="bg-green-50 rounded-lg p-3 border border-green-200">
                       <div className="flex items-start space-x-2">

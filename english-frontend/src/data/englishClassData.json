@@ -1,0 +1,55 @@
+{
+  "currentClass": {
+    "id": "eng-101",
+    "title": "Grammar Essentials — Live Class",
+    "instructor": "Jane Doe",
+    "sessionsCount": 8,
+    "attendance": "96.2%",
+    "attendanceAsOf": "as of January, 1970",
+    "startDate": "2025-12-12",
+    "sessions": [
+      { "id": 1, "title": "1. Introduction", "date": "2025-12-12", "time": "10:00 AM", "status": "Upcoming", "recordingUrl": "" },
+      { "id": 2, "title": "2. Nouns & Pronouns", "date": "2025-12-14", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 3, "title": "3. Verbs & Tenses", "date": "2025-12-16", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 4, "title": "4. Adjectives & Adverbs", "date": "2025-12-18", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 5, "title": "5. Prepositions", "date": "2025-12-20", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 6, "title": "6. Conjunctions & Linking", "date": "2025-12-22", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 7, "title": "7. Sentence Structure", "date": "2025-12-24", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" },
+      { "id": 8, "title": "8. Revision & Quiz", "date": "2025-12-26", "time": "10:00 AM", "status": "Scheduled", "recordingUrl": "" }
+    ],
+    "modules": [
+      {
+        "title": "Module 1: Grammar Basics",
+        "completed": "8/8",
+        "lessons": [
+          "Introduction",
+          "Parts of Speech",
+          "Basic Sentence Rules",
+          "Punctuation"
+        ]
+      },
+      {
+        "title": "Module 2: Vocabulary",
+        "completed": "0/6",
+        "lessons": [
+          "Common Words",
+          "Synonyms & Antonyms",
+          "Phrasal Verbs"
+        ]
+      }
+    ],
+    "classContents": [
+      "Sentence structure",
+      "Parts of speech",
+      "Punctuation",
+      "Common pitfalls and practice"
+    ],
+    "tasks": [
+      { "id": "t1", "title": "Worksheet: Nouns", "due": "2025-12-20", "status": "Assigned" }
+    ],
+    "resources": [
+      { "id": "r1", "title": "Lesson slides — Introduction", "url": "/resources/intro.pdf" },
+      { "id": "r2", "title": "Practice set — Parts of speech", "url": "/resources/practice1.pdf" }
+    ]
+  }
+}

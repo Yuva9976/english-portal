@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LearnMoreModal from '../../components/LearnMoreModal';
 
@@ -39,6 +39,15 @@ const AdverbsDetail = () => {
     setActiveSection(id);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Ensure page is at top when this detail view mounts (fixes browser scroll retention)
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    } catch (e) {
+      window.scrollTo(0, 0);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">

@@ -52,3 +52,20 @@ coverage/
 # Database
 *.sqlite
 *.db
+
+# Dev tools and logs (local dev artifacts)
+dev-tools/
+english-backend/dev-tools/
+test-signaling/collected-logs/
+collected-logs/
+**/collected-logs/
+screenshots/
+
+# Temporary helper files and outputs
+.temp*
+*.temp
+*.tmp
+
+# Keep local dev-only outputs out of git
+*.out.json
+*.log.txt

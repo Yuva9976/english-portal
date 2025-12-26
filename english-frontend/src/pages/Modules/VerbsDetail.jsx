@@ -57,6 +57,15 @@ const VerbsDetail = () => {
     fetchVerbData();
   }, []);
 
+  // Ensure page is at top when this detail view mounts (fixes browser scroll retention)
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    } catch (e) {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   // Use API data or fallback to hardcoded data
 
   // Use API data or fallback to hardcoded data
