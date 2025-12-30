@@ -55,6 +55,10 @@ export default function ClassRoom(){
         socketRef.current.on('participants', (list)=>{
           try{ setParticipants(list || []) }catch(e){/* ignore */}
         })
+        // resources real-time updates
+        socketRef.current.on('resource-added', (r) => setResources(prev => [r, ...prev]))
+        socketRef.current.on('resource-updated', (r) => setResources(prev => prev.map(x=> x.id === r.id ? r : x)))
+        socketRef.current.on('resource-deleted', ({ id }) => setResources(prev => prev.filter(x=> x.id !== id)))
       }catch(err){ console.error('init class', err) }
     }
     init()
@@ -133,6 +137,27 @@ export default function ClassRoom(){
     }catch(err){ console.error('create resource', err); alert('Failed') }
   }
 
+  async function deleteResource(id){
+    if(!window.confirm('Delete this resource?')) return
+    try{
+      await apiClient.delete(`/classroom/${classId}/resources/${id}`)
+      setResources(prev => prev.filter(r=> r.id !== id))
+    }catch(e){ console.error('delete resource', e); alert('Failed to delete') }
+  }
+
+  async function updateResource(id, patch){
+    try{
+      const res = await apiClient.put(`/classroom/${classId}/resources/${id}`, patch)
+      const updated = res.data.resource
+      setResources(prev => prev.map(r=> r.id === updated.id ? updated : r))
+    }catch(e){ console.error('update resource', e); alert('Failed to update') }
+  }
+
+  async function openResource(r){
+    try{ await apiClient.post(`/classroom/${classId}/resources/${r.id}/view`) }catch(e){/* ignore */}
+    window.open(r.url, '_blank', 'noopener')
+  }
+
   return (
     <div className="flex h-screen">
       <div className="flex-1 bg-black flex items-stretch justify-center relative">
@@ -183,9 +208,20 @@ export default function ClassRoom(){
           <div className="font-semibold mb-2">Resources</div>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {resources.map(r=> (
-              <div key={r.id} className="p-2 border rounded">
-                <a href={r.url} target="_blank" rel="noreferrer" className="font-semibold">{r.title}</a>
-                <div className="text-xs text-slate-500">{r.type} • added by {r.created_by || '—'}</div>
+              <div key={r.id} className="p-2 border rounded flex items-start justify-between">
+                <div>
+                  <div className="font-semibold">{r.title}</div>
+                  <div className="text-xs text-slate-500">{r.type} • added by {r.createdBy || r.created_by || '—'}</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={()=>openResource(r)} className="px-2 py-1 bg-teal-600 text-white rounded text-xs">Open</button>
+                  { currentUser && ['teacher','admin'].includes(currentUser.role) && (
+                    <>
+                      <button onClick={()=>{ const t = window.prompt('Edit title', r.title); if(t!=null) updateResource(r.id,{ title: t }) }} className="px-2 py-1 bg-yellow-400 text-black rounded text-xs">Edit</button>
+                      <button onClick={()=>deleteResource(r.id)} className="px-2 py-1 bg-rose-500 text-white rounded text-xs">Delete</button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -195,6 +231,14 @@ export default function ClassRoom(){
             <div className="mt-3">
               <input placeholder="Title" value={newResource.title} onChange={e=>setNewResource({...newResource,title:e.target.value})} className="w-full mb-2 px-2 py-1 border rounded" />
               <input placeholder="URL" value={newResource.url} onChange={e=>setNewResource({...newResource,url:e.target.value})} className="w-full mb-2 px-2 py-1 border rounded" />
+              <select value={newResource.type} onChange={e=>setNewResource({...newResource,type:e.target.value})} className="w-full mb-2 px-2 py-1 border rounded">
+                <option value="link">Link</option>
+                <option value="pdf">PDF</option>
+                <option value="video">Video</option>
+                <option value="doc">Document</option>
+                <option value="slides">Slides</option>
+              </select>
+              <textarea placeholder="Description (optional)" value={newResource.description} onChange={e=>setNewResource({...newResource,description:e.target.value})} className="w-full mb-2 px-2 py-1 border rounded" />
               <div className="flex gap-2">
                 <button onClick={createResource} className="flex-1 px-3 py-1 bg-slate-800 text-white rounded">Add Resource</button>
               </div>

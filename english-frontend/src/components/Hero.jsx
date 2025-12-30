@@ -127,7 +127,7 @@ export default function Hero(){
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 0.4; }
           50% { opacity: 1; }

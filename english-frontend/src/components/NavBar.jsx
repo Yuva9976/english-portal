@@ -4,10 +4,15 @@ import { Link, useNavigate } from 'react-router-dom'
 export default function NavBar(){
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
+  const userStr = localStorage.getItem('user')
+  const user = userStr ? JSON.parse(userStr) : null
+  const userRole = user?.roleAlias || user?.role
+  
   const [searchQuery, setSearchQuery] = useState('')
 
   function handleLogout(){
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
     navigate('/login')
   }
 
@@ -17,6 +22,10 @@ export default function NavBar(){
       navigate(`/lessons?search=${encodeURIComponent(searchQuery)}`)
     }
   }
+
+  // Determine if user is tutor/teacher
+  const isTutor = userRole === 'tutor' || userRole === 'teacher'
+  const isAdmin = userRole === 'admin'
 
   return (
     <header className='sticky top-0 z-50 bg-white shadow-md'>
@@ -61,13 +70,34 @@ export default function NavBar(){
         <div className='container mx-auto px-4 flex items-center justify-center gap-8 py-3'>
           <Link to='/' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Home</Link>
           
-          {/* Only show learning content if user is logged in */}
+          {/* Role-based navigation */}
           {token && (
             <>
-              <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
-              <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
-              <Link to='/modules/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar Hub</Link>
-              <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teach</Link>
+              {/* Tutor/Teacher Dashboard */}
+              {isTutor && (
+                <Link to='/tutor/dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Tutor Dashboard</Link>
+              )}
+              
+              {/* Admin Dashboard */}
+              {isAdmin && (
+                <Link to='/admin-dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Admin Dashboard</Link>
+              )}
+              
+              {/* Learner links - show ONLY for learners (not tutors, not admin) */}
+              {!isAdmin && !isTutor && (
+                <>
+                  <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
+                  <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
+                  <Link to='/modules/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar Hub</Link>
+                </>
+              )}
+              
+              {/* Teaching tools - only for tutors */}
+              {isTutor && (
+                <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teaching Tools</Link>
+              )}
+              
+              {/* Lesson categories - for all logged in users */}
               <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
               <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
               <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
@@ -14,6 +14,8 @@ import ClassPage from './pages/ClassPage'
 import ClassRoom from './pages/ClassRoom'
 import AdminDashboard from './pages/AdminDashboard'
 import TeacherTools from './pages/TeacherTools'
+import TutorDashboardHome from './pages/TutorDashboardHome'
+import TutorDashboardTest from './pages/TutorDashboardTest'
 import LearnEnglish from './pages/Modules/LearnEnglish';
 import LessonView from './components/Module2/LessonView';
 import GrammarHub from './pages/Modules/GrammarHub';
@@ -33,10 +35,16 @@ import SiteFooter from './components/SiteFooter'
 import ProtectedRoute from './components/ProtectedRoute'
 
 export default function App() {
+  const location = useLocation()
+  
+  // Hide NavBar on admin and tutor dashboards (they have their own layouts)
+  const hideNavBar = location.pathname.startsWith('/admin-dashboard') || 
+                     location.pathname.startsWith('/tutor/')
+  
   return (
     <div className='min-h-screen flex flex-col'>
-  <NavBar />
-      <main className='flex-1 container mx-auto px-4 py-8'>
+      {!hideNavBar && <NavBar />}
+      <main className={hideNavBar ? 'flex-1' : 'flex-1 container mx-auto px-4 py-8'}>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
@@ -77,10 +85,10 @@ export default function App() {
           <Route path='/modules/grammar-hub/interjections' element={<InterjectionsDetail />} />
           <Route path='/modules/grammar-hub/interjections-quiz' element={<GrammarQuizGame quizType="interjections" />} />
           <Route path='/dashboard' element={
-            <ProtectedRoute><Dashboard /></ProtectedRoute>
+            <ProtectedRoute allowedRoles={['learner']}><Dashboard /></ProtectedRoute>
           } />
           <Route path='/learner' element={
-            <ProtectedRoute><LearnerDashboard /></ProtectedRoute>
+            <ProtectedRoute allowedRoles={['learner']}><LearnerDashboard /></ProtectedRoute>
           } />
 
           <Route path='/class' element={
@@ -90,8 +98,12 @@ export default function App() {
             <ProtectedRoute><ClassRoom /></ProtectedRoute>
           } />
           <Route path='/admin-dashboard' element={
-            <ProtectedRoute><AdminDashboard /></ProtectedRoute>
+            <ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>
           } />
+          <Route path='/tutor/dashboard' element={
+            <ProtectedRoute allowedRoles={['tutor', 'teacher']}><TutorDashboardHome /></ProtectedRoute>
+          } />
+          <Route path='/tutor/dashboard-test' element={<TutorDashboardTest />} />
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
       </main>

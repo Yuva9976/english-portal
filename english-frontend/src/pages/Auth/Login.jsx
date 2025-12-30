@@ -33,7 +33,9 @@ export default function Login() {
         }
       }
 
-      navigate(isAdmin ? '/admin-dashboard' : '/dashboard');
+      // Redirect to home page after successful login
+      // Users can navigate to their dashboards from the home page navbar
+      navigate('/')
     } catch (err) {
       console.error('Login error:', err);
       setError(

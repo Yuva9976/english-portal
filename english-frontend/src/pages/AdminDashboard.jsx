@@ -59,7 +59,7 @@ export default function AdminDashboard(){
         </div>
       </div>
 
-      {/* Admin Features */}
+      {/* Admin Features - Primary */}
       <div className='grid md:grid-cols-3 gap-6'>
         <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
           <div className='text-3xl mb-3'>👥</div>
@@ -85,6 +85,66 @@ export default function AdminDashboard(){
           <p className='text-sm text-gray-600'>View system statistics and user progress reports</p>
           <button className='mt-4 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition text-sm'>
             View Analytics
+          </button>
+        </div>
+      </div>
+
+      {/* Admin Features - Secondary */}
+      <div className='grid md:grid-cols-3 gap-6'>
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>🔍</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>Content Approval</h4>
+          <p className='text-sm text-gray-600'>Review and approve user-submitted content</p>
+          <button className='mt-4 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition text-sm'>
+            Review Content
+          </button>
+        </div>
+
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>🚨</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>System Logs</h4>
+          <p className='text-sm text-gray-600'>Monitor activity and system events</p>
+          <button className='mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm'>
+            View Logs
+          </button>
+        </div>
+
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>⚙️</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>System Settings</h4>
+          <p className='text-sm text-gray-600'>Configure system parameters and features</p>
+          <button className='mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition text-sm'>
+            Settings
+          </button>
+        </div>
+      </div>
+
+      {/* Admin Features - Tertiary */}
+      <div className='grid md:grid-cols-3 gap-6'>
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>📋</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>Reports</h4>
+          <p className='text-sm text-gray-600'>Generate detailed system and performance reports</p>
+          <button className='mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition text-sm'>
+            Generate Reports
+          </button>
+        </div>
+
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>🎓</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>Class Management</h4>
+          <p className='text-sm text-gray-600'>Manage classes, enrollments, and schedules</p>
+          <button className='mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm'>
+            Manage Classes
+          </button>
+        </div>
+
+        <div className='bg-white p-6 rounded-lg shadow hover:shadow-lg transition'>
+          <div className='text-3xl mb-3'>💰</div>
+          <h4 className='text-lg font-semibold text-gray-800 mb-2'>Subscriptions</h4>
+          <p className='text-sm text-gray-600'>Manage user subscriptions and payments</p>
+          <button className='mt-4 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 transition text-sm'>
+            Manage Subscriptions
           </button>
         </div>
       </div>
