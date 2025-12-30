@@ -26,6 +26,7 @@ export default function NavBar(){
   // Determine if user is tutor/teacher
   const isTutor = userRole === 'tutor' || userRole === 'teacher'
   const isAdmin = userRole === 'admin'
+  const isContentProvider = userRole === 'content_provider'
 
   return (
     <header className='sticky top-0 z-50 bg-white shadow-md'>
@@ -73,6 +74,11 @@ export default function NavBar(){
           {/* Role-based navigation */}
           {token && (
             <>
+              {/* Content Provider Dashboard */}
+              {isContentProvider && (
+                <Link to='/content-provider' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-purple-700'>Content Provider</Link>
+              )}
+              
               {/* Tutor/Teacher Dashboard */}
               {isTutor && (
                 <Link to='/tutor/dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Tutor Dashboard</Link>
@@ -83,8 +89,8 @@ export default function NavBar(){
                 <Link to='/admin-dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Admin Dashboard</Link>
               )}
               
-              {/* Learner links - show ONLY for learners (not tutors, not admin) */}
-              {!isAdmin && !isTutor && (
+              {/* Learner links - show ONLY for learners (not tutors, not admin, not content provider) */}
+              {!isAdmin && !isTutor && !isContentProvider && (
                 <>
                   <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
                   <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
@@ -97,14 +103,18 @@ export default function NavBar(){
                 <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teaching Tools</Link>
               )}
               
-              {/* Lesson categories - for all logged in users */}
-              <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
-              <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
-              <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>
-              <Link to='/lessons?category=listening' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Listening</Link>
-              <Link to='/lessons?category=speaking' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Speaking</Link>
-              <Link to='/lessons?category=reading' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Reading</Link>
-              <Link to='/lessons?category=writing' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Writing</Link>
+              {/* Lesson categories - for all logged in users except content provider */}
+              {!isContentProvider && (
+                <>
+                  <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
+                  <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
+                  <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>
+                  <Link to='/lessons?category=listening' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Listening</Link>
+                  <Link to='/lessons?category=speaking' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Speaking</Link>
+                  <Link to='/lessons?category=reading' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Reading</Link>
+                  <Link to='/lessons?category=writing' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Writing</Link>
+                </>
+              )}
             </>
           )}
         </div>

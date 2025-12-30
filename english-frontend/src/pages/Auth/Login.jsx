@@ -35,7 +35,12 @@ export default function Login() {
 
       // Redirect to home page after successful login
       // Users can navigate to their dashboards from the home page navbar
-      navigate('/')
+      const user = res.data?.user
+      if (user?.role === 'content_provider') {
+        navigate('/content-provider')
+      } else {
+        navigate('/')
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError(

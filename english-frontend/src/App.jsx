@@ -16,6 +16,11 @@ import AdminDashboard from './pages/AdminDashboard'
 import TeacherTools from './pages/TeacherTools'
 import TutorDashboardHome from './pages/TutorDashboardHome'
 import TutorDashboardTest from './pages/TutorDashboardTest'
+import ContentProviderDashboard from './pages/ContentProviderDashboard'
+import CreateCourse from './pages/CreateCourse'
+import CourseLessons from './pages/CourseLessons'
+import LessonEditor from './pages/LessonEditor'
+import QuizBuilder from './pages/QuizBuilder'
 import LearnEnglish from './pages/Modules/LearnEnglish';
 import LessonView from './components/Module2/LessonView';
 import GrammarHub from './pages/Modules/GrammarHub';
@@ -104,6 +109,27 @@ export default function App() {
             <ProtectedRoute allowedRoles={['tutor', 'teacher']}><TutorDashboardHome /></ProtectedRoute>
           } />
           <Route path='/tutor/dashboard-test' element={<TutorDashboardTest />} />
+          
+          {/* Content Provider Routes */}
+          <Route path='/content-provider' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><ContentProviderDashboard /></div></ProtectedRoute>
+          } />
+          <Route path='/content-provider/create-course' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><CreateCourse /></div></ProtectedRoute>
+          } />
+          <Route path='/content-provider/courses/:courseId/lessons' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><CourseLessons /></div></ProtectedRoute>
+          } />
+          <Route path='/content-provider/lessons/:lessonId/edit' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><LessonEditor /></div></ProtectedRoute>
+          } />
+          <Route path='/content-provider/lessons/:courseId/create' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><LessonEditor /></div></ProtectedRoute>
+          } />
+          <Route path='/content-provider/quizzes/:lessonId/create' element={
+            <ProtectedRoute allowedRoles={['content_provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><QuizBuilder /></div></ProtectedRoute>
+          } />
+          
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
       </main>
