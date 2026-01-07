@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
+import SiteFooter from './SiteFooter'
 
 const sidebarItems = [
   { label: 'Dashboard', icon: '📊', to: '/tutor/dashboard', description: 'Overview & stats' },
@@ -194,6 +195,9 @@ export default function TutorDashboardLayout({ children }) {
           <main className='flex-1 py-6 lg:py-8 lg:pl-8'>{children}</main>
         </div>
       </div>
+
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   )
 }

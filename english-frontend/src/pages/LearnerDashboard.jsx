@@ -1,377 +1,511 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import LearnerSidebar from '../components/LearnerSidebar'
+import LearnerLayout from '../layouts/LearnerLayout'
 import apiClient from '../apiClient'
 
-function Donut({ value = 54, size = 96 }){
-  const radius = 40
-  const stroke = 10
-  const normalizedRadius = radius - stroke * 0.5
-  const circumference = normalizedRadius * 2 * Math.PI
+// Animated Progress Ring Component
+function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d4' }) {
+  const radius = (size - strokeWidth) / 2
+  const circumference = radius * 2 * Math.PI
   const percent = Math.max(0, Math.min(100, value))
-  const strokeDashoffset = circumference - (percent / 100) * circumference
+  const offset = circumference - (percent / 100) * circumference
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${radius*2} ${radius*2}`}>
-      <g transform={`translate(${radius},${radius})`}>
-        <circle r={normalizedRadius} fill="#fff" stroke="#eef2ff" strokeWidth={stroke} />
-        <circle r={normalizedRadius} fill="transparent" stroke="#3b82f6" strokeWidth={stroke} strokeDasharray={`${circumference} ${circumference}`} strokeDashoffset={strokeDashoffset} strokeLinecap="round" transform="rotate(-90)" />
-        <text x="0" y="4" textAnchor="middle" fontSize="14" fill="#0f172a" fontWeight="700">{value}</text>
-      </g>
-    </svg>
-  )
-}
-
-function MiniCalendar(){
-  const days = Array.from({length: 31}, (_,i)=>i+1)
-  return (
-    <div className="w-full">
-      <div className="grid grid-cols-7 gap-1">
-        {days.map(d=> (
-          <div key={d} className='w-8 h-8 flex items-center justify-center rounded bg-slate-50 text-slate-600'>{d}</div>
-        ))}
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#e5e7eb"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold text-slate-800">{percent}%</span>
       </div>
     </div>
   )
 }
 
-function SmallLineChart({ width = 320, height = 120 }){
-  // responsive SVG chart using viewBox so it scales to container
-  const points = [78,80,79,81,80,81,80]
-  const max = 100
-  const w = width
-  const h = height
-  const pad = 36
-  const innerW = w - pad * 2
-  const innerH = h - pad * 2
-  const stepX = innerW / (points.length - 1)
-  const coords = points.map((v,i)=> ({ x: pad + i*stepX, y: pad + innerH - (v/max)*innerH }))
+// Stat Card Component
+function StatCard({ icon, label, value, subtitle, color = 'cyan', trend }) {
+  const colorClasses = {
+    cyan: 'from-cyan-500 to-teal-500',
+    violet: 'from-violet-500 to-purple-500',
+    amber: 'from-amber-500 to-orange-500',
+    emerald: 'from-emerald-500 to-green-500',
+    rose: 'from-rose-500 to-pink-500',
+    blue: 'from-blue-500 to-indigo-500'
+  }
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} preserveAspectRatio="xMinYMin meet" className="block">
-      {[0,0.25,0.5,0.75,1].map((t,i)=> (
-        <line key={i} x1={pad} x2={w-pad} y1={pad + innerH*t} y2={pad + innerH*t} stroke="#eef2f6" strokeWidth={1} />
-      ))}
-      <polyline points={coords.map(p=>`${p.x},${p.y}`).join(' ')} fill="none" stroke="#06b6d4" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-      {coords.map((p,i)=> (
-        <circle key={i} cx={p.x} cy={p.y} r={3} fill="#06b6d4" stroke="#fff" strokeWidth={1} />
-      ))}
-      {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((lab,i)=> (
-        <text key={i} x={pad + i*(innerW/(points.length-1)) - 12} y={h - 6} fontSize={10} fill="#94a3b8">{lab}</text>
-      ))}
-      {[0,20,40,60,80,100].map((val,i)=> (
-        <text key={i} x={6} y={pad + innerH - (val/max)*innerH + 4} fontSize={10} fill="#94a3b8">{val}</text>
-      ))}
-    </svg>
+    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100">
+      <div className="flex items-start justify-between">
+        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white text-xl shadow-lg`}>
+          {icon}
+        </div>
+        {trend && (
+          <span className={`text-xs font-medium px-2 py-1 rounded-full ${trend > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+            {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
+          </span>
+        )}
+      </div>
+      <div className="mt-4">
+        <p className="text-sm font-medium text-slate-500">{label}</p>
+        <p className="text-3xl font-bold text-slate-800 mt-1">{value}</p>
+        {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+      </div>
+    </div>
   )
 }
 
-export default function LearnerDashboard(){
-  const [collapsed, setCollapsed] = useState(false)
+// Course Card Component
+function CourseCard({ title, progress = 0, instructor, lessons, duration }) {
+  return (
+    <div className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 group">
+      <div className="flex items-start gap-4">
+        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-2xl shadow-lg group-hover:scale-110 transition-transform">
+          📚
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-semibold text-slate-800 truncate">{title || 'No Course'}</h4>
+          {instructor && <p className="text-sm text-slate-500">by {instructor}</p>}
+          <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
+            {lessons && <span>📖 {lessons} lessons</span>}
+            {duration && <span>⏱️ {duration}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="mt-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-medium text-slate-500">Progress</span>
+          <span className="text-xs font-bold text-cyan-600">{progress}%</span>
+        </div>
+        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Empty State Component
+function EmptyState({ icon, title, description, action, actionLink }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+      <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-3xl mb-4">
+        {icon}
+      </div>
+      <h3 className="font-semibold text-slate-700 mb-2">{title}</h3>
+      <p className="text-sm text-slate-500 mb-4 max-w-xs">{description}</p>
+      {action && actionLink && (
+        <Link to={actionLink} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all">
+          {action}
+        </Link>
+      )}
+    </div>
+  )
+}
+
+// Activity Item Component
+function ActivityItem({ icon, title, time, type }) {
+  const typeColors = {
+    success: 'bg-emerald-100 text-emerald-600',
+    warning: 'bg-amber-100 text-amber-600',
+    info: 'bg-blue-100 text-blue-600',
+    default: 'bg-slate-100 text-slate-600'
+  }
+
+  return (
+    <div className="flex items-center gap-4 py-3 border-b border-slate-50 last:border-0">
+      <div className={`w-10 h-10 rounded-full ${typeColors[type] || typeColors.default} flex items-center justify-center text-lg`}>
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-slate-700 truncate">{title}</p>
+        <p className="text-xs text-slate-400">{time}</p>
+      </div>
+    </div>
+  )
+}
+
+export default function LearnerDashboard() {
   const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [currentTime, setCurrentTime] = useState(new Date())
 
-  const [currentUser, setCurrentUser] = useState(null)
-  const [attendanceRecords, setAttendanceRecords] = useState([])
-  const [showBulkModal, setShowBulkModal] = useState(false)
-  const [learners, setLearners] = useState([])
-  const [bulkDate, setBulkDate] = useState(new Date().toISOString().slice(0,10))
-  const [bulkSession, setBulkSession] = useState('')
-  const [bulkSelections, setBulkSelections] = useState({})
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000)
+    return () => clearInterval(timer)
+  }, [])
 
-  useEffect(()=>{
-    /*
-      Fetch consolidated learner dashboard from backend.
-      Endpoint: GET /api/dashboard/learner
-      The `apiClient` includes the Authorization header (token) so this
-      will return data for the logged-in learner.
-
-      How to verify in browser (Network + React DevTools):
-      1) Open DevTools -> Network. Reload the dashboard page.
-      2) Find the GET request to `/api/dashboard/learner` and inspect Response.
-         It should be a single JSON object with keys: profile, courses,
-         attendance, tasks, quizzes, upcoming, weeklyTests.
-      3) In React DevTools, inspect `LearnerDashboard` component props/state
-         and confirm `data` matches the Network response.
-      4) To test first-time login: open Application -> Cookies, clear session/token,
-         then log in as a learner; on first visit the Network response should still
-         reflect actual backend rows (may be empty arrays/zeros for new learners).
-    */
+  useEffect(() => {
     let mounted = true
-    async function load(){
+    async function load() {
       try {
+        setLoading(true)
         const res = await apiClient.get('/dashboard/learner')
         if (!mounted) return
-        // apiClient wraps axios: response data is in res.data
         setData(res.data)
-      } catch (e){
+      } catch (e) {
         console.error('Failed to load learner dashboard', e)
+      } finally {
+        if (mounted) setLoading(false)
       }
     }
     load()
-    return ()=>{ mounted = false }
-  },[])
+    return () => { mounted = false }
+  }, [])
 
-  // load current user and attendance (for learners)
-  useEffect(()=>{
-    let mounted = true
-    async function loadUserAndAttendance(){
-      try{
-        const me = await apiClient.get('/auth/me')
-        if(!mounted) return
-        setCurrentUser(me.data?.user || null)
+  const greeting = () => {
+    const hour = currentTime.getHours()
+    if (hour < 12) return 'Good Morning'
+    if (hour < 17) return 'Good Afternoon'
+    return 'Good Evening'
+  }
 
-        if(me.data?.user && me.data.user.role === 'learner'){
-          const to = new Date().toISOString().slice(0,10)
-          const from = new Date(Date.now() - 30*24*60*60*1000).toISOString().slice(0,10)
-          const att = await apiClient.get(`/attendance/user/${me.data.user.id}?from=${from}&to=${to}`)
-          if(mounted) setAttendanceRecords(att.data?.records || [])
-        }
-      }catch(e){ /* ignore */ }
-    }
-    loadUserAndAttendance()
-    return ()=>{ mounted = false }
-  },[])
+  const formatDate = () => {
+    return currentTime.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })
+  }
 
-  const stats = data ? [
-    { label: '📈 Attendance', value: data.attendance?.percent ? `${data.attendance.percent}%` : '0%', subtitle: `Present ${data.attendance?.present || 0}` },
-    { label: '✅ Tasks Submitted', value: data.tasks?.completion ? `${data.tasks.completion}%` : '0%', subtitle: `${data.tasks?.submitted || 0} / ${data.tasks?.assigned || 0}` },
-    { label: '🎯 Quiz Avg', value: data.quizzes?.averageScore ? `${Math.round(data.quizzes.averageScore)}%` : '--', subtitle: `${data.quizzes?.totalAttempts || 0} attempts` },
-  ] : [
-    {label: '📈 Attendance', value: '—', subtitle: ''},
-    {label: '✅ Tasks Submitted', value: '—', subtitle: ''},
-    {label: '🎯 Quiz Avg', value: '—', subtitle: ''},
-  ]
+  if (loading) {
+    return (
+      <LearnerLayout>
+        <div className="flex items-center justify-center min-h-96">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-slate-500 font-medium">Loading your dashboard...</p>
+          </div>
+        </div>
+      </LearnerLayout>
+    )
+  }
 
   return (
-    <div className="flex bg-slate-50 min-h-screen">
-      <LearnerSidebar collapsed={collapsed} onToggle={() => setCollapsed(v => !v)} />
-
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-sm text-slate-600">Welcome, Learner</p>
-          </div>
-
-          {/* Top metric cards moved below 'Your Courses' */}
-
-            <div className="mb-6">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="inline-block w-4 h-3 bg-gradient-to-r from-teal-500 to-cyan-400 rounded-sm"></span>
-              <h2 className="font-semibold text-lg">Class and Tasks</h2>
+    <LearnerLayout>
+      <div>
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-800">
+                {greeting()}, <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">{data?.profile?.name || 'Learner'}</span>! 👋
+              </h1>
+              <p className="text-slate-500 mt-1">{formatDate()}</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link to="/learner/classes" className="bg-white rounded-xl p-4 shadow-sm flex flex-col hover:shadow-md transition-shadow group">
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold">My Classes</div>
-                  <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                    🎓
-                  </div>
-                </div>
-                <div className="text-sm text-slate-500 mt-2">{data?.upcoming ? `Next: ${data.upcoming.title}` : 'View your enrolled classes'}</div>
-                <div className="mt-3 text-teal-600 text-sm font-medium group-hover:underline">View Classes →</div>
+            <div className="flex items-center gap-3">
+              <Link to="/learner/browse" className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-teal-400 hover:shadow transition-all flex items-center gap-2">
+                <span>🔍</span> Browse
               </Link>
-
-              <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col">
-                <div className="font-semibold">Tasks</div>
-                <div className="text-sm text-slate-500 mt-2">Assigned Soon!</div>
-              </div>
+              <Link to="/learner/classes" className="px-4 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all flex items-center gap-2">
+                <span>📚</span> My Classes
+              </Link>
             </div>
           </div>
-
-          {/* Your Courses moved up - show courses and right sidebar immediately after header */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-6">
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow p-6">
-                <h3 className="font-semibold mb-3">Your Courses</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-50 rounded-lg p-4 flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{data?.courses?.[0]?.title || '—'}</div>
-                      <div className="text-xs text-slate-500">Progress: {data?.courses?.[0]?.progress ?? 0}%</div>
-                    </div>
-                    <div className="w-40">
-                      <div className="h-3 bg-white rounded-full border overflow-hidden">
-                        <div className="h-3 bg-gradient-to-r from-teal-500 to-cyan-400" style={{width: `${data?.courses?.[0]?.progress ?? 0}%`}} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-slate-50 rounded-lg p-4 flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{data?.courses?.[1]?.title || '—'}</div>
-                      <div className="text-xs text-slate-500">Progress: {data?.courses?.[1]?.progress ?? 0}%</div>
-                    </div>
-                    <div className="w-40">
-                      <div className="h-3 bg-white rounded-full border overflow-hidden">
-                        <div className="h-3 bg-gradient-to-r from-teal-500 to-cyan-400" style={{width: `${data?.courses?.[1]?.progress ?? 0}%`}} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                  {/* Metric cards placed inside the Your Courses container — separated and evenly spaced */}
-                  <div className="mt-6">
-                    <div className="flex flex-col md:flex-row md:items-stretch md:justify-between gap-4">
-                      {stats.map((s,i)=> (
-                        <div key={i} className="bg-white rounded-xl p-4 shadow-sm flex-1 min-h-[92px] flex flex-col justify-center">
-                          <div className="text-sm text-slate-500 mb-1">{s.label}</div>
-                          <div className="text-2xl font-extrabold">{s.value}</div>
-                          <div className="text-xs text-slate-400 mt-1">{s.subtitle}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Courses list ends here */}
-              </div>
-            </div>
-
-            <aside>
-              <div className="bg-white rounded-2xl shadow p-4 mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-300 to-rose-300 flex items-center justify-center font-bold">👤</div>
-                  <div>
-                    <div className="font-semibold">{data?.profile?.name || 'Learner'}</div>
-                    <div className="text-xs text-slate-500">Level: {data?.profile?.level || '—'}</div>
-                  </div>
-                </div>
-                <div className="mt-4 text-sm">
-                  <div className="text-xs text-slate-500">XP</div>
-                  <div className="text-lg font-bold text-teal-600">{data?.profile?.xp ?? 0}</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl shadow p-4 mb-4">
-                <h3 className="font-semibold mb-2">Upcoming Lesson</h3>
-                <div className="text-sm text-slate-600">{data?.upcoming?.title || 'No upcoming lesson'}</div>
-                <div className="mt-3 flex gap-2">
-                  <button disabled={!data?.upcoming} className="flex-1 px-3 py-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-400 text-white disabled:opacity-50">Start</button>
-                  <button className="px-3 py-2 rounded-lg border">Later</button>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl shadow p-4">
-                <h3 className="font-semibold mb-2">Quick Actions</h3>
-                <div className="flex flex-col gap-2">
-                  <Link to="/modules/grammar-hub" className="text-sm px-3 py-2 rounded-lg bg-slate-50">Open Grammar Hub</Link>
-                  <Link to="/modules/learn-english" className="text-sm px-3 py-2 rounded-lg bg-slate-50">Browse Courses</Link>
-                  <Link to="/dashboard" className="text-sm px-3 py-2 rounded-lg bg-slate-50">Full Dashboard</Link>
-                </div>
-              </div>
-              {/* Teacher-only bulk attendance */}
-              {currentUser && ['teacher','admin'].includes(currentUser.role) && (
-                <div className="bg-white rounded-2xl shadow p-4 mt-4">
-                  <h3 className="font-semibold mb-2">Bulk Attendance</h3>
-                  <div className="text-sm text-slate-600 mb-3">Mark attendance for multiple learners for a specific date/session.</div>
-                  <div className="flex gap-2">
-                    <input type="date" value={bulkDate} onChange={e=>setBulkDate(e.target.value)} className="px-2 py-1 border rounded" />
-                    <input placeholder="Session ID (optional)" value={bulkSession} onChange={e=>setBulkSession(e.target.value)} className="px-2 py-1 border rounded" />
-                  </div>
-                  <div className="mt-3 flex justify-between">
-                    <button onClick={async ()=>{
-                      try{
-                        const res = await apiClient.get('/users?role=learner')
-                        setLearners(res.data.users || [])
-                        // initialize selections as present by default
-                        const sel = {}
-                        (res.data.users || []).forEach(u=> sel[u.id] = 'present')
-                        setBulkSelections(sel)
-                        setShowBulkModal(true)
-                      }catch(err){
-                        console.error('Failed to load learners', err)
-                        alert('Failed to load learners')
-                      }
-                    }} className="px-3 py-2 bg-teal-600 text-white rounded">Open Bulk List</button>
-                    <div className="text-xs text-slate-500">Opens a modal to mark learners.</div>
-                  </div>
-                </div>
-              )}
-            </aside>
-          </div>
-
-          
-          
-
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="font-semibold text-slate-700 mb-4">📚 Classes</div>
-              <div className="flex items-center gap-4">
-                <div className="w-24 h-24 flex items-center justify-center">
-                  <Donut value={54} size={112} />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold">Total</div>
-                  <div className="text-xs text-slate-500 mt-1">54 Completed</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <MiniCalendar />
-              <div className="text-xs text-slate-500 mt-3">Present {data?.attendance?.present || 0} • Absent {data?.attendance?.absent || 0}</div>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="font-semibold text-slate-700 mb-4">📊 Overview</div>
-              <div className="flex items-center gap-4">
-                <div className="w-28 h-28"><Donut value={75} size={128} /></div>
-                <div>
-                  <div className="text-sm text-slate-500">Type</div>
-                  <div className="mt-2 text-sm">
-                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-blue-500"></span> Task — 11/11 — 93%</div>
-                    <div className="flex items-center gap-2 mt-2"><span className="w-3 h-3 rounded-full bg-amber-400"></span> Quiz — 0/0 — 0%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="font-semibold text-slate-700">📝 Weekly Test</div>
-                  <div className="text-xs text-slate-500">Avg --</div>
-                </div>
-                <SmallLineChart width={640} height={220} />
-                <div className="text-xs text-slate-500 mt-3">Recent: test 1 • test 2 • test 3 • test 4</div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col justify-between">
-                <div>
-                  <div className="font-semibold text-slate-700 mb-3">🧾 Assessments</div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-28 h-28 flex items-center justify-center"><Donut value={0} size={112} /></div>
-                    <div>
-                      <div className="text-sm text-slate-500">Total</div>
-                      <div className="text-xl font-bold">--</div>
-                      <div className="mt-3 flex items-center gap-2 text-sm text-slate-600">🔵 Submitted</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 border-t pt-3 text-sm text-slate-600">
-                  <div className="flex justify-between"><div>Completion</div><div>--</div></div>
-                  <div className="flex justify-between mt-2"><div>Total Score</div><div>--/--</div></div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="font-semibold text-slate-700">🎤 Sessions & Mock</div>
-                  <div className="flex items-center gap-4 text-xs">
-                    <div className="flex items-center gap-2">🟢 Present</div>
-                    <div className="flex items-center gap-2">🔴 Absent</div>
-                  </div>
-                </div>
-                <SmallLineChart width={360} height={180} />
-                <div className="text-xs text-slate-500 mt-3 text-right">Session • Mock Interview</div>
-              </div>
-            </div>
-          </div>
-
-          
         </div>
-      </main>
-    </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            icon="📊"
+            label="Attendance Rate"
+            value={`${data?.attendance?.percent || 0}%`}
+            subtitle={`${data?.attendance?.present || 0} days present`}
+            color="cyan"
+          />
+          <StatCard
+            icon="✅"
+            label="Tasks Completed"
+            value={`${data?.tasks?.submitted || 0}/${data?.tasks?.assigned || 0}`}
+            subtitle={`${data?.tasks?.completion || 0}% completion rate`}
+            color="emerald"
+          />
+          <StatCard
+            icon="🎯"
+            label="Quiz Average"
+            value={data?.quizzes?.averageScore ? `${Math.round(data.quizzes.averageScore)}%` : '—'}
+            subtitle={`${data?.quizzes?.totalAttempts || 0} quizzes taken`}
+            color="violet"
+          />
+          <StatCard
+            icon="⭐"
+            label="Experience Points"
+            value={data?.profile?.xp || 0}
+            subtitle={`Level: ${data?.profile?.level || 'Beginner'}`}
+            color="amber"
+          />
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - 2/3 width */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Courses Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">My Courses</h2>
+                    <p className="text-sm text-slate-500 mt-1">Continue where you left off</p>
+                  </div>
+                  <Link to="/modules/learn-english" className="text-sm font-medium text-cyan-600 hover:text-cyan-700 flex items-center gap-1">
+                    View All <span>→</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="p-6">
+                {data?.courses && data.courses.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {data.courses.slice(0, 4).map((course, i) => (
+                      <CourseCard
+                        key={i}
+                        title={course.title}
+                        progress={course.progress || 0}
+                        instructor={course.instructor}
+                        lessons={course.totalLessons}
+                        duration={course.duration}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState
+                    icon="📚"
+                    title="No Courses Yet"
+                    description="Explore our course catalog and start your learning journey"
+                    action="Browse Courses"
+                    actionLink="/modules/learn-english"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Live Classes */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">Upcoming Classes</h2>
+                    <p className="text-sm text-slate-500 mt-1">Your scheduled live sessions</p>
+                  </div>
+                  <Link to="/learner/classes" className="text-sm font-medium text-cyan-600 hover:text-cyan-700 flex items-center gap-1">
+                    View All <span>→</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="p-6">
+                {data?.classes && data.classes.length > 0 ? (
+                  <div className="space-y-4">
+                    {data.classes.slice(0, 3).map((cls, i) => (
+                      <div key={i} className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg ${
+                          cls.status === 'live' ? 'bg-gradient-to-br from-red-500 to-pink-500 animate-pulse' : 'bg-gradient-to-br from-teal-500 to-cyan-500'
+                        }`}>
+                          {cls.status === 'live' ? '🔴' : '📅'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-slate-800">{cls.title}</h4>
+                          <p className="text-sm text-slate-500">{cls.teacher?.name || 'Instructor'}</p>
+                          <p className="text-xs text-slate-400 mt-1">
+                            {cls.status === 'live' ? '🔴 Live Now' : cls.nextSession?.startTime ? new Date(cls.nextSession.startTime).toLocaleString() : 'TBD'}
+                          </p>
+                        </div>
+                        <Link 
+                          to={`/class/${cls.id}`}
+                          className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                            cls.status === 'live' 
+                              ? 'bg-red-500 text-white hover:bg-red-600' 
+                              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          {cls.status === 'live' ? 'Join Now' : 'Details'}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState
+                    icon="📅"
+                    title="No Upcoming Classes"
+                    description="Browse available classes and enroll to see your schedule"
+                    action="Browse Classes"
+                    actionLink="/learner/browse"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Tasks Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">Recent Tasks</h2>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {data?.tasks?.pending > 0 ? `${data.tasks.pending} tasks pending` : 'All caught up!'}
+                    </p>
+                  </div>
+                  <Link to="/learner/tasks" className="text-sm font-medium text-cyan-600 hover:text-cyan-700 flex items-center gap-1">
+                    View All <span>→</span>
+                  </Link>
+                </div>
+              </div>
+              <div className="p-6">
+                {data?.recentTasks && data.recentTasks.length > 0 ? (
+                  <div className="space-y-3">
+                    {data.recentTasks.slice(0, 5).map((task, i) => (
+                      <Link key={i} to={`/learner/tasks/${task.id}`} className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors group">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg ${
+                          task.status === 'submitted' ? 'bg-emerald-100 text-emerald-600' :
+                          task.status === 'overdue' ? 'bg-red-100 text-red-600' :
+                          'bg-amber-100 text-amber-600'
+                        }`}>
+                          {task.status === 'submitted' ? '✅' : task.status === 'overdue' ? '⚠️' : '📋'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-slate-800 group-hover:text-cyan-600 transition-colors truncate">{task.title}</h4>
+                          <p className="text-xs text-slate-400">
+                            Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}
+                          </p>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          task.status === 'submitted' ? 'bg-emerald-100 text-emerald-700' :
+                          task.status === 'overdue' ? 'bg-red-100 text-red-700' :
+                          task.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                          'bg-amber-100 text-amber-700'
+                        }`}>
+                          {task.status?.replace('_', ' ') || 'Pending'}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState
+                    icon="📋"
+                    title="No Tasks"
+                    description="Tasks assigned by your tutors will appear here"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - 1/3 width */}
+          <div className="space-y-8">
+            {/* Progress Overview */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <h2 className="text-lg font-bold text-slate-800">Progress Overview</h2>
+              </div>
+              <div className="p-6 flex flex-col items-center">
+                <ProgressRing value={data?.attendance?.percent || 0} size={140} strokeWidth={12} color="#06b6d4" />
+                <p className="text-sm font-medium text-slate-600 mt-4">Overall Progress</p>
+                <p className="text-xs text-slate-400">Based on attendance & tasks</p>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <h2 className="text-lg font-bold text-slate-800">Quick Actions</h2>
+              </div>
+              <div className="p-4 space-y-2">
+                <Link to="/learner/browse" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">🔍</div>
+                  <div>
+                    <p className="font-medium text-slate-700">Browse Classes</p>
+                    <p className="text-xs text-slate-400">Find new courses</p>
+                  </div>
+                </Link>
+                <Link to="/learner/tasks" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">📋</div>
+                  <div>
+                    <p className="font-medium text-slate-700">My Tasks</p>
+                    <p className="text-xs text-slate-400">{data?.tasks?.pending || 0} pending</p>
+                  </div>
+                </Link>
+                <Link to="/modules/learn-english" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-10 h-10 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">📖</div>
+                  <div>
+                    <p className="font-medium text-slate-700">Learn English</p>
+                    <p className="text-xs text-slate-400">Grammar & vocabulary</p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <h2 className="text-lg font-bold text-slate-800">Recent Activity</h2>
+              </div>
+              <div className="p-6">
+                {data?.recentActivity && data.recentActivity.length > 0 ? (
+                  <div>
+                    {data.recentActivity.slice(0, 5).map((activity, i) => (
+                      <ActivityItem
+                        key={i}
+                        icon={activity.icon || '📌'}
+                        title={activity.title}
+                        time={activity.time}
+                        type={activity.type}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-400">
+                    <span className="text-4xl mb-3 block">📝</span>
+                    <p className="text-sm">No recent activity</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Achievements */}
+            <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg overflow-hidden">
+              <div className="p-6 text-white">
+                <h2 className="text-lg font-bold mb-4">Your Achievements</h2>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                    <span className="text-2xl mb-1 block">🏆</span>
+                    <p className="text-xs font-medium">{data?.achievements?.trophies || 0}</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                    <span className="text-2xl mb-1 block">🔥</span>
+                    <p className="text-xs font-medium">{data?.achievements?.streak || 0} day</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                    <span className="text-2xl mb-1 block">⭐</span>
+                    <p className="text-xs font-medium">{data?.profile?.xp || 0} XP</p>
+                  </div>
+                </div>
+                <p className="text-teal-100 text-xs mt-4 text-center">Keep learning to unlock more achievements!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </LearnerLayout>
   )
 }

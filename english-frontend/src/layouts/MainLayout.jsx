@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import NavBar from '../components/NavBar'
+import SiteFooter from '../components/SiteFooter'
 
 export default function MainLayout() {
   return (
@@ -12,6 +13,9 @@ export default function MainLayout() {
       <main style={{ flex: 1 }}>
         <Outlet />
       </main>
+
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   )
 }

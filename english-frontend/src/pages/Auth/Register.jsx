@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // correct relative path from src/pages/Auth -> src/apiClient.js
 import apiClient from '../../apiClient';
+import SiteFooter from '../../components/SiteFooter';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -33,7 +34,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Simple Navbar - No navigation links */}
       <header className='sticky top-0 z-50 bg-white shadow-md'>
         <div className='container mx-auto px-4 py-3 flex items-center justify-between'>
@@ -116,10 +117,15 @@ export default function Register() {
             onChange={(e) => setRole(e.target.value)}
             className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
           >
-            <option value="learner">Learner (student)</option>
-            <option value="teacher">Teacher (instructor)</option>
+            <option value="learner">🎓 Student (Learner)</option>
+            <option value="teacher">👨‍🏫 Tutor (Instructor)</option>
+            <option value="content_provider">📚 Content Provider</option>
           </select>
-          <p className="text-xs text-slate-500 mt-1">Admin accounts are created by the system administrator only.</p>
+          <p className="text-xs text-slate-500 mt-1">
+            {role === 'learner' && '📖 Access courses, take quizzes, and track your progress.'}
+            {role === 'teacher' && '🎯 Create classes, manage students, and assign tasks.'}
+            {role === 'content_provider' && '✏️ Create and manage learning content, lessons, and quizzes.'}
+          </p>
         </div>
 
         <button
@@ -137,6 +143,12 @@ export default function Register() {
         </a>
       </div>
     </div>
+
+      {/* Spacer to push footer down */}
+      <div className="flex-1"></div>
+
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   );
 }

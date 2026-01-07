@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard'
 import LearnerDashboard from './pages/LearnerDashboard'
 import ClassPage from './pages/ClassPage'
 import ClassRoom from './pages/ClassRoom'
+import BrowseClasses from './pages/BrowseClasses'
 import AdminDashboard from './pages/AdminDashboard'
 import TeacherTools from './pages/TeacherTools'
 import TutorDashboardHome from './pages/TutorDashboardHome'
@@ -21,6 +22,8 @@ import TutorClasses from './pages/TutorClasses'
 import TutorStudents from './pages/TutorStudents'
 import LearnerClasses from './pages/LearnerClasses'
 import LearnerClassDetail from './pages/LearnerClassDetail'
+import LearnerTasks from './pages/LearnerTasks'
+import TaskDetail from './pages/TaskDetail'
 import ContentProviderDashboard from './pages/ContentProviderDashboard'
 import CreateCourse from './pages/CreateCourse'
 import CourseLessons from './pages/CourseLessons'
@@ -121,15 +124,6 @@ export default function App() {
         <Route path='/dashboard' element={
           <ProtectedRoute allowedRoles={['learner']}><Dashboard /></ProtectedRoute>
         } />
-        <Route path='/learner' element={
-          <ProtectedRoute allowedRoles={['learner']}><LearnerDashboard /></ProtectedRoute>
-        } />
-        <Route path='/learner/classes' element={
-          <ProtectedRoute allowedRoles={['learner']}><LearnerClasses /></ProtectedRoute>
-        } />
-        <Route path='/learner/class/:classId' element={
-          <ProtectedRoute allowedRoles={['learner']}><LearnerClassDetail /></ProtectedRoute>
-        } />
         <Route path='/class' element={
           <ProtectedRoute><ClassPage /></ProtectedRoute>
         } />
@@ -147,6 +141,26 @@ export default function App() {
           <Route path='pronunciation' element={<PronunciationHub />} />
         </Route>
       </Route>
+
+      {/* Learner Routes (no MainLayout - has custom header+sidebar) */}
+      <Route path='/learner' element={
+        <ProtectedRoute allowedRoles={['learner']}><LearnerDashboard /></ProtectedRoute>
+      } />
+      <Route path='/learner/classes' element={
+        <ProtectedRoute allowedRoles={['learner']}><LearnerClasses /></ProtectedRoute>
+      } />
+      <Route path='/learner/class/:classId' element={
+        <ProtectedRoute allowedRoles={['learner']}><LearnerClassDetail /></ProtectedRoute>
+      } />
+      <Route path='/learner/browse' element={
+        <ProtectedRoute allowedRoles={['learner']}><BrowseClasses /></ProtectedRoute>
+      } />
+      <Route path='/learner/tasks' element={
+        <ProtectedRoute allowedRoles={['learner']}><LearnerTasks /></ProtectedRoute>
+      } />
+      <Route path='/learner/tasks/:taskId' element={
+        <ProtectedRoute allowedRoles={['learner']}><TaskDetail /></ProtectedRoute>
+      } />
 
       {/* Tutor Routes (with TutorDashboardLayout that includes sidebar) */}
       <Route path='/tutor/dashboard' element={

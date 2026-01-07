@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
+import SiteFooter from '../../components/SiteFooter';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -38,6 +39,7 @@ export default function ForgotPassword() {
   }
 
   return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
       <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">Reset Password</h2>
       
@@ -104,6 +106,13 @@ export default function ForgotPassword() {
           Don't have an account? <a href="/register" className="text-teal-600 hover:underline">Register</a>
         </div>
       </div>
+    </div>
+
+    {/* Spacer to push footer down */}
+    <div className="flex-1"></div>
+
+    {/* Site Footer */}
+    <SiteFooter />
     </div>
   );
 }

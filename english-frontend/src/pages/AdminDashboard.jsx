@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import apiClient from '../apiClient'
+import SiteFooter from '../components/SiteFooter'
 
 export default function AdminDashboard(){
   const [user, setUser] = useState(null)
@@ -168,6 +169,9 @@ export default function AdminDashboard(){
           <div className='text-sm text-gray-600 mt-2'>Quiz Attempts</div>
         </div>
       </div>
+
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   )
 }

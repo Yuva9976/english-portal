@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
+import SiteFooter from '../../components/SiteFooter';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -59,6 +60,7 @@ export default function ResetPassword() {
 
   if (!token) {
     return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
         <h2 className="text-2xl font-semibold mb-4 text-center text-red-600">Invalid Link</h2>
         <p className="text-sm text-gray-600 mb-4 text-center">
@@ -68,10 +70,14 @@ export default function ResetPassword() {
           Request New Reset Link
         </a>
       </div>
+      <div className="flex-1"></div>
+      <SiteFooter />
+      </div>
     );
   }
 
   return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
       <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">Set New Password</h2>
 
@@ -121,6 +127,13 @@ export default function ResetPassword() {
       <div className="text-sm text-center mt-4">
         <a href="/login" className="text-teal-600 hover:underline">Back to Login</a>
       </div>
+    </div>
+
+    {/* Spacer to push footer down */}
+    <div className="flex-1"></div>
+
+    {/* Site Footer */}
+    <SiteFooter />
     </div>
   );
 }

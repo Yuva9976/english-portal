@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import LearnerSidebar from '../components/LearnerSidebar';
+import LearnerLayout from '../layouts/LearnerLayout';
 import apiClient from '../apiClient';
 
 export default function LearnerClasses() {
-  const [collapsed, setCollapsed] = useState(false);
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,16 +71,13 @@ export default function LearnerClasses() {
   };
 
   return (
-    <div className="flex bg-slate-50 min-h-screen">
-      <LearnerSidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
-
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-slate-800">My Classes</h1>
-            <p className="text-sm text-slate-600">View and join your enrolled classes</p>
-          </div>
+    <LearnerLayout>
+      <div>
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-800">My Classes</h1>
+          <p className="text-sm text-slate-600">View and join your enrolled classes</p>
+        </div>
 
           {/* Stats Row */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
@@ -264,8 +260,7 @@ export default function LearnerClasses() {
               ))}
             </div>
           )}
-        </div>
-      </main>
-    </div>
+      </div>
+    </LearnerLayout>
   );
 }

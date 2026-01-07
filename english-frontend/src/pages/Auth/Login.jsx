@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // correct relative path from src/pages/Auth -> src/apiClient.js
 import apiClient from '../../apiClient';
+import SiteFooter from '../../components/SiteFooter';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -59,7 +60,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Simple Navbar - No navigation links */}
       <header className='sticky top-0 z-50 bg-white shadow-md'>
         <div className='container mx-auto px-4 py-3 flex items-center justify-between'>
@@ -146,6 +147,12 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {/* Spacer to push footer down */}
+      <div className="flex-1"></div>
+
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   );
 }
