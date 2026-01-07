@@ -3,10 +3,11 @@ import { Navigate } from 'react-router-dom'
 
 const getRedirectForRole = (role) => {
   if (!role) return '/login'
-  if (role === 'admin') return '/admin-dashboard'
-  if (role === 'learner' || role === 'student') return '/dashboard'
+  if (role === 'admin') return '/'
+  if (role === 'learner' || role === 'student') return '/'
   if (role === 'tutor' || role === 'teacher') return '/tutor/dashboard'
-  return '/dashboard'
+  if (role === 'content_provider' || role === 'provider') return '/content-provider'
+  return '/'
 }
 
 const getStoredRole = () => {

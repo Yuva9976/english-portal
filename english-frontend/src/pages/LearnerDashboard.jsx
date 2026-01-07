@@ -162,10 +162,16 @@ export default function LearnerDashboard(){
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col">
-                <div className="font-semibold">Class</div>
-                <div className="text-sm text-slate-500 mt-2">{data?.upcoming ? `Next: ${data.upcoming.title}` : 'Scheduled Soon!'}</div>
-              </div>
+              <Link to="/learner/classes" className="bg-white rounded-xl p-4 shadow-sm flex flex-col hover:shadow-md transition-shadow group">
+                <div className="flex items-center justify-between">
+                  <div className="font-semibold">My Classes</div>
+                  <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                    🎓
+                  </div>
+                </div>
+                <div className="text-sm text-slate-500 mt-2">{data?.upcoming ? `Next: ${data.upcoming.title}` : 'View your enrolled classes'}</div>
+                <div className="mt-3 text-teal-600 text-sm font-medium group-hover:underline">View Classes →</div>
+              </Link>
 
               <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col">
                 <div className="font-semibold">Tasks</div>

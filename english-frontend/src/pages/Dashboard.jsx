@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import apiClient from '../apiClient'
 
 function ProgressBar({ value = 0, max = 100 }) {
@@ -11,13 +12,31 @@ function ProgressBar({ value = 0, max = 100 }) {
 }
 
 export default function Dashboard(){
+  const navigate = useNavigate()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [shouldRedirect, setShouldRedirect] = useState(false)
 
   useEffect(()=>{
     async function load(){
       try {
-        // For learners, load data
+        // Check if user is tutor - if so, redirect
+        const userStr = localStorage.getItem('user')
+        if (!userStr) {
+          navigate('/login')
+          return
+        }
+
+        const user = JSON.parse(userStr)
+        
+        // If user is teacher or tutor, redirect to tutor dashboard
+        if (user.role === 'teacher' || user.roleAlias === 'tutor') {
+          setShouldRedirect(true)
+          navigate('/tutor/dashboard')
+          return
+        }
+
+        // For learners, load learner dashboard
         const res = await apiClient.get('/dashboard/learner')
         setData(res.data)
       } catch (err) {
@@ -27,9 +46,9 @@ export default function Dashboard(){
       }
     }
     load()
-  }, [])
+  }, [navigate])
 
-  if (loading) return <div>Loading...</div>
+  if (shouldRedirect || loading) return <div>Loading...</div>
 
   // Fallback safe shapes
   const user = data?.user || { name: 'User', email: '' }

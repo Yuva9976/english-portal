@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import apiClient from '../apiClient'
+import NavBar from '../components/NavBar'
 
 export default function ContentProviderDashboard() {
   const navigate = useNavigate()
@@ -30,7 +31,9 @@ export default function ContentProviderDashboard() {
   if (error) return <div className="text-red-600 text-center py-8">{error}</div>
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8'>
+    <>
+      <NavBar />
+      <div className='p-8 text-white min-h-screen'>
       {/* Header */}
       <div className='mb-12'>
         <div className='flex items-center justify-between mb-2'>
@@ -155,6 +158,7 @@ export default function ContentProviderDashboard() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   )
 }

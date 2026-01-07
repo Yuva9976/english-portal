@@ -18,9 +18,12 @@ const formatDate = (value) => {
 
 const SectionSkeleton = ({ className }) => (
   <div
-    className={`rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm text-sm text-slate-500 animate-pulse flex items-center justify-center ${className ?? ''}`}
+    className={`rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-6 shadow-sm animate-pulse ${className ?? ''}`}
   >
-    Loading dashboard...
+    <div className="flex items-center gap-3">
+      <div className="w-8 h-8 bg-slate-200 rounded-lg"></div>
+      <div className="h-4 bg-slate-200 rounded w-32"></div>
+    </div>
   </div>
 )
 
@@ -63,11 +66,6 @@ export default function TutorDashboardHome() {
   const recentResources = overview?.recentResources ?? []
   const notifications = overview?.notifications ?? []
   const isInitialLoad = loading && !overview
-  const headerStatus = loading
-    ? 'Refreshing...'
-    : lastUpdated
-      ? `Last updated at ${formatTime(lastUpdated)}`
-      : 'Updated just now'
 
   const quizSubmissions = useMemo(
     () =>
@@ -87,193 +85,281 @@ export default function TutorDashboardHome() {
   )
 
   const statsCards = [
-    { label: 'Active classes', value: stats.activeClasses ?? 0 },
-    { label: 'Total students', value: stats.totalStudents ?? 0 },
-    { label: 'Avg quiz score this week', value: `${stats.avgQuizScoreThisWeek ?? 0}%` },
-    { label: 'Resources shared', value: stats.resourcesShared ?? 0 },
+    { label: 'Active Classes', value: stats.activeClasses ?? 0, icon: '🎓', color: 'from-teal-500 to-teal-600', bg: 'bg-teal-50', border: 'border-teal-200', trend: '+2' },
+    { label: 'Total Students', value: stats.totalStudents ?? 0, icon: '👥', color: 'from-rose-400 to-rose-500', bg: 'bg-rose-50', border: 'border-rose-200', trend: '+12%' },
+    { label: 'Avg Quiz Score', value: `${stats.avgQuizScoreThisWeek ?? 0}%`, icon: '📊', color: 'from-violet-500 to-violet-600', bg: 'bg-violet-50', border: 'border-violet-200', trend: '+5%' },
+    { label: 'Resources Shared', value: stats.resourcesShared ?? 0, icon: '📁', color: 'from-amber-400 to-amber-500', bg: 'bg-amber-50', border: 'border-amber-200', trend: '+3' },
   ]
+
+  // Get user name from localStorage
+  const userStr = localStorage.getItem('user')
+  const user = userStr ? JSON.parse(userStr) : null
+  const userName = user?.name || 'Teacher'
+  const firstName = userName.split(' ')[0]
 
   return (
     <TutorDashboardLayout>
       <div className='space-y-8'>
-        <section className='space-y-4'>
-          <div className='flex items-center justify-between gap-4'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Schedule</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Today’s Schedule</h2>
+        {/* Welcome Header Banner */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 rounded-3xl p-8 shadow-xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+          <div className="absolute top-1/2 right-1/4 w-20 h-20 bg-white/5 rounded-full"></div>
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <p className="text-teal-100 text-sm font-medium mb-1">Welcome back,</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Good Morning, {firstName}! 👋</h1>
+                <p className="text-teal-100">
+                  You have <span className="text-white font-semibold">{todayClasses.length} classes</span> scheduled for today
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button className="px-5 py-2.5 bg-white text-teal-700 rounded-xl font-semibold text-sm hover:bg-teal-50 transition-all shadow-lg hover:shadow-xl">
+                  📅 View Schedule
+                </button>
+                <button className="px-5 py-2.5 bg-white/20 text-white rounded-xl font-semibold text-sm hover:bg-white/30 transition-all backdrop-blur-sm border border-white/30">
+                  ➕ New Class
+                </button>
+              </div>
             </div>
-            <span className='text-sm text-slate-500'>{headerStatus}</span>
           </div>
-          {error && (
-            <div className='rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 flex items-center justify-between gap-4'>
-              <span>{error}</span>
-              <button
-                type='button'
-                onClick={fetchOverview}
-                className='text-rose-600 font-semibold hover:text-rose-700 focus:outline-none'
-              >
-                Retry
-              </button>
-            </div>
-          )}
-          {isInitialLoad ? (
-            <SectionSkeleton className='h-48' />
-          ) : todayClasses.length ? (
-            <div className='grid gap-4'>
-              {todayClasses.map((cls) => (
-                <div
-                  key={cls.id}
-                  className='bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4'
-                >
-                  <div>
-                    <p className='text-xs font-semibold uppercase tracking-wide text-slate-500'>
-                      {cls.level || 'Level TBD'}
-                    </p>
-                    <h3 className='text-lg font-semibold text-slate-900'>{cls.title}</h3>
-                    <p className='text-sm text-slate-500'>
-                      {formatTime(cls.startTime)} – {formatTime(cls.endTime)}
-                    </p>
-                  </div>
-                  <div className='flex items-center gap-3'>
-                    <span className='inline-flex px-3 py-1 rounded-full text-xs font-semibold text-slate-700 bg-slate-100'>
-                      {cls.status}
-                    </span>
-                    <button className='px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800'>
-                      Join class
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className='rounded-2xl border border-dashed border-slate-300 bg-white/60 p-6 text-sm text-slate-500'>
-              No classes scheduled for today.
-            </div>
-          )}
-        </section>
+        </div>
 
-        <section>
-          <div className='flex items-center justify-between gap-4'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Insights</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Key Stats</h2>
+        {/* Error Alert */}
+        {error && (
+          <div className='rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-white px-5 py-4 shadow-sm flex items-center justify-between gap-4'>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⚠️</span>
+              <span className="text-rose-700 font-medium">{error}</span>
             </div>
+            <button
+              type='button'
+              onClick={fetchOverview}
+              className='px-4 py-2 text-rose-600 font-semibold hover:text-rose-700 focus:outline-none bg-rose-100 rounded-lg hover:bg-rose-200 transition-colors'
+            >
+              Retry
+            </button>
           </div>
-          {isInitialLoad ? (
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-4'>
-              {Array.from({ length: 4 }).map((_, index) => (
-                <SectionSkeleton key={`stat-skel-${index}`} className='h-28' />
-              ))}
-            </div>
-          ) : (
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-4'>
-              {statsCards.map((card) => (
-                <div key={card.label} className='bg-white rounded-2xl border border-slate-200 p-5 shadow-sm'>
-                  <p className='text-sm text-slate-500'>{card.label}</p>
-                  <p className='mt-3 text-3xl font-bold text-slate-900'>{card.value}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        )}
 
-        <section className='space-y-4'>
-          <div className='flex items-center justify-between gap-4'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Activity</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Recent Activity</h2>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {isInitialLoad ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <SectionSkeleton key={`stat-skel-${index}`} className='h-32' />
+            ))
+          ) : (
+            statsCards.map((stat) => (
+              <div key={stat.label} className={`${stat.bg} ${stat.border} border rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group`}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform`}>
+                    {stat.icon}
+                  </div>
+                  <span className="text-xs font-semibold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">{stat.trend}</span>
+                </div>
+                <p className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</p>
+                <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Today's Schedule */}
+          <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <span className="text-2xl">📅</span> Today's Schedule
+                  </h2>
+                  <p className="text-sm text-slate-500">Your upcoming classes for today</p>
+                </div>
+                {loading && <span className="text-sm text-teal-600 animate-pulse">Refreshing...</span>}
+              </div>
             </div>
-          </div>
-          <div className='grid gap-4 lg:grid-cols-2'>
             {isInitialLoad ? (
-              <>
-                <SectionSkeleton className='min-h-[220px]' />
-                <SectionSkeleton className='min-h-[220px]' />
-              </>
+              <div className="p-6">
+                <SectionSkeleton className='h-32' />
+              </div>
+            ) : todayClasses.length ? (
+              <div className="divide-y divide-slate-100">
+                {todayClasses.map((cls) => (
+                  <div key={cls.id} className="px-6 py-4 hover:bg-teal-50/50 transition-colors">
+                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                      <div className="text-center min-w-[80px] px-3 py-2 bg-teal-50 rounded-xl border border-teal-100">
+                        <p className="text-sm font-bold text-teal-600">{formatTime(cls.startTime)}</p>
+                        <p className="text-xs text-teal-500">{formatTime(cls.endTime)}</p>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-teal-600 mb-0.5">
+                          {cls.level || 'Level TBD'}
+                        </p>
+                        <p className="font-semibold text-slate-800">{cls.title}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-3 py-1.5 text-xs font-semibold rounded-full ${
+                          cls.status === 'live' 
+                            ? 'bg-gradient-to-r from-red-500 to-rose-500 text-white animate-pulse' 
+                            : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {cls.status === 'live' ? '● LIVE' : cls.status}
+                        </span>
+                        <button className="px-4 py-2 text-sm font-medium text-teal-600 border border-teal-200 rounded-xl hover:bg-teal-50 transition-all">
+                          {cls.status === 'live' ? 'Join Now' : 'Details'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-              <>
-                <div className='bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4'>
-                  <div className='flex items-center justify-between'>
-                    <p className='font-semibold text-slate-800'>Recent resources</p>
-                    <span className='text-xs text-slate-500'>Updated now</span>
-                  </div>
-                  {recentResources.length ? (
-                    <div className='space-y-3'>
-                      {recentResources.map((resource) => {
-                        const resourceType = resource.type ? resource.type.toUpperCase() : 'RESOURCE'
-                        return (
-                          <div key={resource.id} className='flex items-center justify-between gap-4'>
-                            <div>
-                              <h3 className='text-base font-semibold text-slate-900'>{resource.title}</h3>
-                              <p className='text-xs text-slate-500'>Type: {resourceType}</p>
-                            </div>
-                            <div className='flex flex-col items-end text-xs text-slate-500'>
-                              <span>{resource.views ?? 0} views</span>
-                              <span>Last used {formatDate(resource.updatedAt)}</span>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  ) : (
-                    <p className='text-sm text-slate-500'>No recent activity yet.</p>
-                  )}
-                </div>
-                <div className='bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4'>
-                  <div className='flex items-center justify-between'>
-                    <p className='font-semibold text-slate-800'>Recent quiz submissions</p>
-                    <span className='text-xs text-slate-500'>Live feed</span>
-                  </div>
-                  {quizSubmissions.length ? (
-                    <div className='space-y-3'>
-                      {quizSubmissions.map((submission) => (
-                        <div key={submission.id} className='flex items-center justify-between gap-3'>
-                          <div>
-                            <p className='text-sm font-semibold text-slate-900'>{submission.studentName}</p>
-                            <p className='text-xs text-slate-500'>Quiz · {submission.quizName}</p>
-                          </div>
-                          <span className='text-xs font-semibold text-slate-900'>{submission.scoreLabel}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className='text-sm text-slate-500'>No recent activity yet.</p>
-                  )}
-                </div>
-              </>
+              <div className='p-8 text-center'>
+                <div className="text-5xl mb-3">📚</div>
+                <p className='text-slate-600 font-medium'>No classes scheduled for today</p>
+                <p className='text-sm text-slate-400'>Enjoy your free time!</p>
+              </div>
             )}
           </div>
-        </section>
 
-        <section className='space-y-3'>
-          <div className='flex items-center justify-between gap-4'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Updates</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Notifications</h2>
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-gradient-to-br from-teal-500 to-rose-400 rounded-2xl p-5 shadow-lg">
+              <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+                <span>⚡</span> Quick Actions
+              </h3>
+              <div className="space-y-2">
+                <button className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl text-sm font-medium hover:bg-white/30 transition-all text-left flex items-center gap-3 border border-white/20">
+                  <span>📝</span> Create New Quiz
+                </button>
+                <button className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl text-sm font-medium hover:bg-white/30 transition-all text-left flex items-center gap-3 border border-white/20">
+                  <span>📤</span> Upload Resource
+                </button>
+                <button className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl text-sm font-medium hover:bg-white/30 transition-all text-left flex items-center gap-3 border border-white/20">
+                  <span>💬</span> Message Students
+                </button>
+              </div>
+            </div>
+
+            {/* Notifications */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                  <span className="text-lg">🔔</span> Notifications
+                </h3>
+              </div>
+              {isInitialLoad ? (
+                <div className="p-4">
+                  <SectionSkeleton className='h-20' />
+                </div>
+              ) : notifications.length ? (
+                <div className="divide-y divide-slate-100">
+                  {notifications.slice(0, 4).map((note) => (
+                    <div key={note.id} className="px-5 py-3.5 hover:bg-teal-50/50 transition-colors">
+                      <p className="text-sm text-slate-700 font-medium">{note.message}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{formatDate(note.createdAt)}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-5 text-center text-slate-500 text-sm">
+                  ✅ You're all caught up!
+                </div>
+              )}
+              <div className="px-5 py-3 bg-slate-50 border-t border-slate-100">
+                <button className="text-sm font-medium text-teal-600 hover:text-teal-700 w-full text-center">View All Notifications</button>
+              </div>
             </div>
           </div>
-          {isInitialLoad ? (
-            <SectionSkeleton className='min-h-[220px]' />
-          ) : (
-            <div className='bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3'>
-              {notifications.length ? (
-                notifications.map((note) => (
-                  <div key={note.id} className='flex items-start justify-between gap-3'>
-                    <div>
-                      <p className='text-sm font-semibold text-slate-900'>{note.message}</p>
-                      <p className='text-xs text-slate-500'>{formatDate(note.createdAt)}</p>
-                    </div>
-                    <span className='text-xs font-semibold text-slate-500 uppercase tracking-wider'>
-                      {(note.type ? note.type.replace('_', ' ') : 'Update')}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p className='text-sm text-slate-500'>You are all caught up.</p>
-              )}
+        </div>
+
+        {/* Activity Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Resources */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <span>📁</span> Recent Resources
+              </h2>
             </div>
-          )}
-        </section>
+            {isInitialLoad ? (
+              <div className="p-5">
+                <SectionSkeleton className='h-24' />
+              </div>
+            ) : recentResources.length ? (
+              <div className="divide-y divide-slate-100">
+                {recentResources.map((resource) => {
+                  const resourceType = resource.type ? resource.type.toUpperCase() : 'RESOURCE'
+                  return (
+                    <div key={resource.id} className="px-6 py-4 hover:bg-teal-50/50 transition-colors">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-100 to-teal-50 flex items-center justify-center text-lg border border-teal-200">
+                            📄
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-slate-800">{resource.title}</h3>
+                            <p className="text-xs text-teal-600 font-medium">{resourceType}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-slate-500">{resource.views ?? 0} views</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="p-6 text-center">
+                <p className="text-slate-500 text-sm">No resources shared yet</p>
+              </div>
+            )}
+          </div>
+
+          {/* Quiz Submissions */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <span>📝</span> Quiz Submissions
+                </h2>
+                <span className="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded-full">Live</span>
+              </div>
+            </div>
+            {isInitialLoad ? (
+              <div className="p-5">
+                <SectionSkeleton className='h-24' />
+              </div>
+            ) : quizSubmissions.length ? (
+              <div className="divide-y divide-slate-100">
+                {quizSubmissions.map((submission) => (
+                  <div key={submission.id} className="px-6 py-4 hover:bg-teal-50/50 transition-colors">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center text-sm font-semibold text-rose-600 border border-rose-200">
+                          {submission.studentName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{submission.studentName}</p>
+                          <p className="text-xs text-slate-500">{submission.quizName}</p>
+                        </div>
+                      </div>
+                      <span className="text-lg font-bold text-teal-600">{submission.scoreLabel}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 text-center">
+                <p className="text-slate-500 text-sm">No recent quiz submissions</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </TutorDashboardLayout>
   )

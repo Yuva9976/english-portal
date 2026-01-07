@@ -31,15 +31,21 @@ export default function LearnerSidebar({collapsed, onToggle}){
         <nav className="px-2 py-4 flex-1 overflow-auto">
           <ul className="space-y-1">
             <li>
-              <NavLink to="/learner" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 ${isActive ? 'bg-slate-800 font-semibold' : ''}`}>
+              <NavLink to="/learner" end className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 ${isActive ? 'bg-slate-800 font-semibold' : ''}`}>
                 <span className="text-xl">📊</span>
                 {!current && <span className="text-slate-100">Dashboard</span>}
               </NavLink>
             </li>
             <li>
+              <NavLink to="/learner/classes" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 ${isActive ? 'bg-slate-800 font-semibold' : ''}`}>
+                <span className="text-xl">🎓</span>
+                {!current && <span className="text-slate-100">My Classes</span>}
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/class" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 ${isActive ? 'bg-slate-800 font-semibold' : ''}`}>
                 <span className="text-xl">🏫</span>
-                {!current && <span className="text-slate-100">Class</span>}
+                {!current && <span className="text-slate-100">Browse Classes</span>}
               </NavLink>
             </li>
             <li>

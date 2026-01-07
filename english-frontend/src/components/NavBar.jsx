@@ -23,10 +23,11 @@ export default function NavBar(){
     }
   }
 
-  // Determine if user is tutor/teacher
+  // Determine user roles
   const isTutor = userRole === 'tutor' || userRole === 'teacher'
   const isAdmin = userRole === 'admin'
-  const isContentProvider = userRole === 'content_provider'
+  const isContentProvider = userRole === 'content_provider' || userRole === 'provider'
+  const isLearner = userRole === 'learner' || (!isAdmin && !isTutor && !isContentProvider && token)
 
   return (
     <header className='sticky top-0 z-50 bg-white shadow-md'>
@@ -74,41 +75,38 @@ export default function NavBar(){
           {/* Role-based navigation */}
           {token && (
             <>
-              {/* Content Provider Dashboard */}
-              {isContentProvider && (
-                <Link to='/content-provider' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-purple-700'>Content Provider</Link>
-              )}
-              
-              {/* Tutor/Teacher Dashboard */}
-              {isTutor && (
-                <Link to='/tutor/dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Tutor Dashboard</Link>
-              )}
-              
-              {/* Admin Dashboard */}
+              {/* Admin: Show Content Provider and Admin Dashboard */}
               {isAdmin && (
-                <Link to='/admin-dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Admin Dashboard</Link>
-              )}
-              
-              {/* Learner links - show ONLY for learners (not tutors, not admin, not content provider) */}
-              {!isAdmin && !isTutor && !isContentProvider && (
                 <>
-                  <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
-                  <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
-                  <Link to='/modules/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar Hub</Link>
+                  <Link to='/content-provider' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-purple-700'>Content Provider</Link>
+                  <Link to='/admin-dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Admin Dashboard</Link>
                 </>
               )}
               
-              {/* Teaching tools - only for tutors */}
-              {isTutor && (
-                <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teaching Tools</Link>
+              {/* Content Provider: Show Content Provider Dashboard */}
+              {isContentProvider && !isAdmin && (
+                <>
+                  <Link to='/content-provider' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-purple-700'>Content Provider</Link>
+                </>
               )}
               
-              {/* Lesson categories - for all logged in users except content provider */}
-              {!isContentProvider && (
+              {/* Tutor/Teacher: Show simple navigation */}
+              {isTutor && (
                 <>
-                  <Link to='/lessons?category=grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
-                  <Link to='/lessons?category=vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
-                  <Link to='/lessons?category=pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>
+                  <Link to='/tutor/dashboard' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700'>Tutor Dashboard</Link>
+                  <Link to='/teacher-tools' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Teach</Link>
+                </>
+              )}
+              
+              {/* Learner: Show all learning links */}
+              {isLearner && (
+                <>
+                  <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
+                  <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
+                  <Link to='/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700 px-3 py-1 rounded-full bg-teal-50'>Grammar Hub</Link>
+                  <Link to='/grammar-hub/grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
+                  <Link to='/grammar-hub/vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
+                  <Link to='/grammar-hub/pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>
                   <Link to='/lessons?category=listening' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Listening</Link>
                   <Link to='/lessons?category=speaking' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Speaking</Link>
                   <Link to='/lessons?category=reading' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Reading</Link>
