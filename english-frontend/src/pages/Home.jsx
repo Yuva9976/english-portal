@@ -7,7 +7,7 @@ import Sidebar from '../components/Sidebar'
 
 export default function Home() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-8">
       <Hero />
 
       <div className="container mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-8">

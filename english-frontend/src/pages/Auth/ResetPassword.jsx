@@ -61,8 +61,8 @@ export default function ResetPassword() {
   if (!token) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-        <h2 className="text-2xl font-semibold mb-4 text-center text-red-600">Invalid Link</h2>
+      <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-red-600 italic font-serif">Invalid Link</h2>
         <p className="text-sm text-gray-600 mb-4 text-center">
           This password reset link is invalid or has expired. Please request a new one.
         </p>
@@ -78,8 +78,8 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">Set New Password</h2>
+    <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-teal-700 italic font-serif">Set New Password</h2>
 
       {error && (
         <div className="text-red-600 mb-3 p-2 bg-red-50 rounded text-center font-medium">{error}</div>

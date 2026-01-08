@@ -40,8 +40,8 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">Reset Password</h2>
+    <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-teal-700 italic font-serif">Reset Password</h2>
       
       <p className="text-sm text-gray-600 mb-4 text-center">
         Enter your email address and we'll send you a link to reset your password.

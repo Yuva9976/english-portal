@@ -36,7 +36,7 @@ export default function NavBar(){
         <div className='flex items-center gap-3'>
           <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center font-bold text-white text-sm'>EC</div>
           <div>
-            <Link to='/' className='font-bold text-lg text-blue-700'>EnglishClub</Link>
+            <Link to='/' className='font-bold text-lg text-teal-700'>EnglishClub</Link>
             <div className='text-xs text-slate-600'>Learn • Teach • Explore</div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function NavBar(){
               <Link to='/register' className='px-5 py-2 rounded-full bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 transition'>Join Free</Link>
             </>
           ) : (
-            <button onClick={handleLogout} className='px-4 py-2 rounded-md bg-blue-600 text-white font-medium hover:bg-blue-700 text-sm'>Logout</button>
+            <button onClick={handleLogout} className='px-4 py-2 rounded-md bg-teal-600 text-white font-medium hover:bg-teal-700 text-sm'>Logout</button>
           )}
           <button className='md:hidden text-slate-700 text-xl'>☰</button>
         </div>

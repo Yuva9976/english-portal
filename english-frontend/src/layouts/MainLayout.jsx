@@ -10,7 +10,7 @@ export default function MainLayout() {
       <NavBar />
 
       {/* Page Content */}
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1 }} className="pb-12">
         <Outlet />
       </main>
 

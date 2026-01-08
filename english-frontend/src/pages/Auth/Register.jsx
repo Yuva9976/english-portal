@@ -65,8 +65,8 @@ export default function Register() {
       </header>
 
       {/* Register Form */}
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+      <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
+      <h2 className="text-2xl font-semibold mb-6 text-center text-teal-700 italic font-serif">
         Create Account
       </h2>
       {error && (

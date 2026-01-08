@@ -91,31 +91,31 @@ export default function Login() {
       </header>
 
       {/* Login Form */}
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-10">
-        <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">{isAdmin ? 'Admin Login' : 'Welcome Back'}</h2>
+      <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-teal-700 italic font-serif">{isAdmin ? 'Admin Login' : 'Welcome Back'}</h2>
         {error && <div className="text-red-600 mb-3 text-center font-medium">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="w-full p-3 bg-slate-100 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-slate-700"
               placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="w-full p-3 bg-slate-100 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-slate-700"
               placeholder="Enter your password"
             />
           </div>
