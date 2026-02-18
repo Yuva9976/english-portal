@@ -67,22 +67,25 @@ export default function App() {
 
       {/* Content Provider Routes (no layout) */}
       <Route path='/content-provider' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><ContentProviderDashboard /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><ContentProviderDashboard /></ProtectedRoute>
       } />
       <Route path='/content-provider/create-course' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><CreateCourse /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><CreateCourse /></ProtectedRoute>
+      } />
+      <Route path='/content-provider/courses/:courseId/edit' element={
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><CreateCourse /></ProtectedRoute> // Reusing CreateCourse for now or placeholder
       } />
       <Route path='/content-provider/courses/:courseId/lessons' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><CourseLessons /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><CourseLessons /></ProtectedRoute>
       } />
       <Route path='/content-provider/lessons/:lessonId/edit' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><LessonEditor /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><LessonEditor /></ProtectedRoute>
       } />
       <Route path='/content-provider/lessons/:courseId/create' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><LessonEditor /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><LessonEditor /></ProtectedRoute>
       } />
       <Route path='/content-provider/quizzes/:lessonId/create' element={
-        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><div className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'><QuizBuilder /></div></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'content_provider', 'provider']}><QuizBuilder /></ProtectedRoute>
       } />
 
       {/* Main Layout Routes (with global navbar, no sidebar) */}

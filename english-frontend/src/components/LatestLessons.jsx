@@ -1,33 +1,43 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LoginRequiredModal from './LoginRequiredModal'
+import apiClient from '../apiClient'
 
-const lessons = [
-  { slug: 'grammar', title: 'Grammar Essentials', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop', description: 'Master English grammar rules and structures' },
-  { slug: 'vocabulary', title: 'Vocabulary Building', img: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=800&auto=format&fit=crop', description: 'Expand your English vocabulary effectively' },
-  { slug: 'pronunciation', title: 'Pronunciation Guide', img: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=800&auto=format&fit=crop', description: 'Perfect your English pronunciation' },
-  { slug: 'listening', title: 'Listening Skills', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop', description: 'Improve your English listening comprehension' },
-  { slug: 'reading', title: 'Reading Practice', img: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop', description: 'Enhance your English reading skills' },
-]
-
-export default function LatestLessons(){
+export default function LatestLessons() {
+  const [lessons, setLessons] = useState([])
+  const [loading, setLoading] = useState(true)
   const ref = useRef(null)
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
   const [showLoginModal, setShowLoginModal] = useState(false)
 
-  function scroll(dir = 'next'){
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        const res = await apiClient.get('/lessons')
+        // The /api/lessons returns { items: [...] }
+        setLessons(res.data?.items || [])
+      } catch (err) {
+        console.error('Failed to fetch lessons:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchLessons()
+  }, [])
+
+  function scroll(dir = 'next') {
     if (!ref.current) return
     const width = ref.current.clientWidth
     ref.current.scrollBy({ left: dir === 'next' ? width : -width, behavior: 'smooth' })
   }
 
-  const handleCardClick = (slug) => {
+  const handleCardClick = (id) => {
     if (!token) {
       setShowLoginModal(true)
       return
     }
-    navigate(`/modules/learn-english/${slug}`)
+    navigate(`/lessons/${id}`)
   }
 
   return (
@@ -44,19 +54,33 @@ export default function LatestLessons(){
         </div>
 
         <div ref={ref} className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
-          {lessons.map(l => (
-            <div 
-              key={l.slug}
-              onClick={() => handleCardClick(l.slug)}
-              className="min-w-[260px] bg-white rounded-lg shadow overflow-hidden shrink-0 transition transform hover:shadow-xl hover:scale-105 cursor-pointer"
-            >
-              <img src={l.img} alt={l.title} className="w-full h-40 object-cover" />
-              <div className="p-4">
-                <div className="font-semibold text-slate-800">{l.title}</div>
-                <div className="text-sm text-slate-600 mt-2">{l.description}</div>
-              </div>
+          {loading ? (
+            [1, 2, 3, 4].map(i => (
+              <div key={i} className="min-w-[260px] h-64 bg-slate-100 animate-pulse rounded-lg"></div>
+            ))
+          ) : lessons.length === 0 ? (
+            <div className="w-full py-12 text-center text-slate-500 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+              No lessons available yet.
             </div>
-          ))}
+          ) : (
+            lessons.map(l => (
+              <div
+                key={l.id}
+                onClick={() => handleCardClick(l.id)}
+                className="min-w-[260px] bg-white rounded-lg shadow overflow-hidden shrink-0 transition transform hover:shadow-xl hover:scale-105 cursor-pointer"
+              >
+                <img
+                  src={l.media_url || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop'}
+                  alt={l.title}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-4">
+                  <div className="font-semibold text-slate-800 line-clamp-1">{l.title}</div>
+                  <div className="text-sm text-slate-600 mt-2 line-clamp-2">{l.description}</div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
 

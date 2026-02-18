@@ -104,7 +104,7 @@ npm run dev
 ### API returns errors
 1. Check backend is running
 2. Check terminal output for errors
-3. See `FRONTEND_BACKEND_INTEGRATION.md` for troubleshooting
+3. See **[docs/guides/FRONTEND_BACKEND_INTEGRATION.md](docs/guides/FRONTEND_BACKEND_INTEGRATION.md)** for troubleshooting
 
 ---
 
@@ -112,7 +112,7 @@ npm run dev
 
 **Backend**: `c:\Users\indhu\OneDrive\Desktop\vishnu\english-backend\`
 **Frontend**: `c:\Users\indhu\OneDrive\Desktop\vishnu\english-frontend\`
-**Data**: `c:\Users\indhu\OneDrive\Desktop\vishnu\english-backend\data\`
+**Documentation**: `c:\Users\indhu\OneDrive\Desktop\vishnu\docs\`
 
 ---
 
@@ -120,9 +120,9 @@ npm run dev
 
 | File | Purpose |
 |------|---------|
-| `FRONTEND_BACKEND_INTEGRATION.md` | Complete integration guide |
-| `START_HERE.md` (backend) | Backend setup & API docs |
-| `QUICK_START.md` (backend) | Backend quick reference |
+| **[docs/guides/FRONTEND_BACKEND_INTEGRATION.md](docs/guides/FRONTEND_BACKEND_INTEGRATION.md)** | Complete integration guide |
+| **[docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)** | System design & architecture |
+| **[docs/guides/SETUP_GUIDE.md](docs/guides/SETUP_GUIDE.md)** | Detailed setup instructions |
 
 ---
 

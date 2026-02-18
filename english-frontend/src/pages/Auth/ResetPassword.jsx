@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import SiteFooter from '../../components/SiteFooter';
 
@@ -61,6 +61,24 @@ export default function ResetPassword() {
   if (!token) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Simple Navbar */}
+      <header className='sticky top-0 z-50 bg-white shadow-md'>
+        <div className='container mx-auto px-4 py-3 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center font-bold text-white text-sm'>EC</div>
+            <div>
+              <Link to='/' className='font-bold text-lg text-teal-700'>EnglishClub</Link>
+              <div className='text-xs text-slate-600'>Learn • Teach • Explore</div>
+            </div>
+          </div>
+
+          {/* Auth Buttons */}
+          <div className='flex items-center gap-3'>
+            <Link to='/login' className='px-5 py-2 rounded-full bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 transition'>Login</Link>
+          </div>
+        </div>
+      </header>
+
       <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
         <h2 className="text-2xl font-semibold mb-6 text-center text-red-600 italic font-serif">Invalid Link</h2>
         <p className="text-sm text-gray-600 mb-4 text-center">
@@ -78,6 +96,24 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Simple Navbar */}
+      <header className='sticky top-0 z-50 bg-white shadow-md'>
+        <div className='container mx-auto px-4 py-3 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <div className='w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center font-bold text-white text-sm'>EC</div>
+            <div>
+              <Link to='/' className='font-bold text-lg text-teal-700'>EnglishClub</Link>
+              <div className='text-xs text-slate-600'>Learn • Teach • Explore</div>
+            </div>
+          </div>
+
+          {/* Auth Buttons */}
+          <div className='flex items-center gap-3'>
+            <Link to='/login' className='px-5 py-2 rounded-full bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 transition'>Login</Link>
+          </div>
+        </div>
+      </header>
+
     <div className="w-[400px] max-w-full mx-auto bg-white px-6 py-6 rounded-xl shadow-lg mt-10 mb-16">
       <h2 className="text-2xl font-semibold mb-6 text-center text-teal-700 italic font-serif">Set New Password</h2>
 

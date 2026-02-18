@@ -250,48 +250,48 @@ function WordCard({ word }) {
       >
         {/* Front */}
         <div
-          className={`absolute w-full h-full bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg p-6 shadow-lg flex flex-col justify-between ${
+          className={`absolute w-full h-full bg-gradient-to-br from-teal-500 to-rose-400 rounded-xl p-6 shadow-lg flex flex-col justify-between text-white ${
             isFlipped ? 'hidden' : ''
           }`}
         >
           <div>
-            <div className='text-sm text-purple-100 mb-2'>WORD</div>
-            <div className='text-4xl font-bold mb-4'>{word.word}</div>
+            <div className='text-sm text-teal-100 font-semibold mb-2'>WORD</div>
+            <div className='text-4xl font-bold mb-4 text-white'>{word.word}</div>
           </div>
           <div className='flex items-center justify-between'>
-            <span className='px-3 py-1 bg-purple-800 rounded-full text-sm'>{word.partOfSpeech}</span>
-            <span className='px-3 py-1 bg-yellow-600 rounded-full text-sm font-semibold'>{word.cefrLevel}</span>
+            <span className='px-3 py-1 bg-white/25 backdrop-blur rounded-full text-sm text-white font-medium'>{word.partOfSpeech}</span>
+            <span className='px-3 py-1 bg-amber-500 rounded-full text-sm font-bold text-white'>{word.cefrLevel}</span>
           </div>
         </div>
 
         {/* Back */}
         <div
-          className={`absolute w-full h-full bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg p-6 shadow-lg flex flex-col justify-between ${
+          className={`absolute w-full h-full bg-gradient-to-br from-rose-400 to-teal-500 rounded-xl p-6 shadow-lg flex flex-col justify-between text-white ${
             isFlipped ? '' : 'hidden'
           }`}
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
           <div className='space-y-3'>
             <div>
-              <div className='text-xs text-blue-100 mb-1'>MEANING</div>
-              <div className='text-sm font-semibold'>{word.meaning}</div>
+              <div className='text-xs text-rose-100 font-semibold mb-1'>MEANING</div>
+              <div className='text-sm font-semibold text-white'>{word.meaning}</div>
             </div>
             <div>
-              <div className='text-xs text-blue-100 mb-1'>EXAMPLE</div>
-              <div className='text-sm italic'>{word.example}</div>
+              <div className='text-xs text-rose-100 font-semibold mb-1'>EXAMPLE</div>
+              <div className='text-sm italic text-white/90'>{word.example}</div>
             </div>
             <div>
-              <div className='text-xs text-blue-100 mb-1'>SYNONYMS</div>
+              <div className='text-xs text-rose-100 font-semibold mb-1'>SYNONYMS</div>
               <div className='flex flex-wrap gap-1'>
                 {word.synonyms.map((syn, idx) => (
-                  <span key={idx} className='text-xs bg-blue-700 px-2 py-1 rounded'>
+                  <span key={idx} className='text-xs bg-white/25 backdrop-blur px-2 py-1 rounded text-white'>
                     {syn}
                   </span>
                 ))}
               </div>
             </div>
           </div>
-          <div className='text-xs text-blue-100'>Click to see word →</div>
+          <div className='text-xs text-teal-100'>Click to see word →</div>
         </div>
       </div>
     </div>
@@ -331,20 +331,96 @@ function WordListItem({ word }) {
 function StudyMode({ words }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [studyMode, setStudyMode] = useState('flashcard') // flashcard, quiz, writing
+  const [selectedAnswer, setSelectedAnswer] = useState(null)
+  const [showResult, setShowResult] = useState(false)
+  const [userSentence, setUserSentence] = useState('')
+  const [sentenceSubmitted, setSentenceSubmitted] = useState(false)
+  const [quizOptions, setQuizOptions] = useState([])
 
   const currentWord = words[currentIndex]
+
+  // Generate quiz options - correct answer + 3 distractors
+  const generateQuizOptions = (word) => {
+    const distractors = [
+      'Something that happens regularly and predictably',
+      'A feeling of deep sadness or grief',
+      'The act of deliberately avoiding someone',
+      'A state of complete confusion or disorder',
+      'Moving very quickly without thinking',
+      'Something that is permanent and unchanging',
+      'Found only in one specific location',
+      'The process of making something smaller'
+    ]
+    
+    // Get the correct answer
+    const correctAnswer = word.meaning
+    
+    // Shuffle and pick 3 distractors that aren't similar to correct answer
+    const shuffledDistractors = distractors
+      .filter(d => d !== correctAnswer)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+    
+    // Combine correct answer with distractors and shuffle
+    const allOptions = [correctAnswer, ...shuffledDistractors]
+      .sort(() => Math.random() - 0.5)
+    
+    return allOptions
+  }
+
+  // Generate options when word changes
+  React.useEffect(() => {
+    setQuizOptions(generateQuizOptions(currentWord))
+  }, [currentIndex])
+
+  // Reset state when moving to next word
+  const handleNext = () => {
+    if (currentIndex < words.length - 1) {
+      setCurrentIndex(currentIndex + 1)
+      setSelectedAnswer(null)
+      setShowResult(false)
+      setUserSentence('')
+      setSentenceSubmitted(false)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1)
+      setSelectedAnswer(null)
+      setShowResult(false)
+      setUserSentence('')
+      setSentenceSubmitted(false)
+    }
+  }
+
+  const handleAnswerSelect = (option) => {
+    if (showResult) return // Prevent changing answer after submission
+    setSelectedAnswer(option)
+    setShowResult(true)
+  }
+
+  // Check if user's sentence contains the word (case insensitive)
+  const checkSentence = () => {
+    setSentenceSubmitted(true)
+  }
+
+  const sentenceContainsWord = userSentence.toLowerCase().includes(currentWord.word.toLowerCase())
+  const sentenceIsValid = userSentence.trim().length >= 10 && sentenceContainsWord
+
+  const isCorrect = selectedAnswer === currentWord.meaning
 
   return (
     <div className='max-w-2xl mx-auto'>
       {/* Progress */}
       <div className='mb-8'>
         <div className='flex justify-between items-center mb-2'>
-          <span className='text-sm text-slate-400'>Word {currentIndex + 1} of {words.length}</span>
-          <span className='text-sm font-bold text-teal-400'>
+          <span className='text-sm text-slate-600'>Word {currentIndex + 1} of {words.length}</span>
+          <span className='text-sm font-bold text-teal-600'>
             {Math.round(((currentIndex + 1) / words.length) * 100)}%
           </span>
         </div>
-        <div className='w-full bg-slate-700 rounded-full h-2'>
+        <div className='w-full bg-slate-200 rounded-full h-2'>
           <div
             className='bg-gradient-to-r from-teal-500 to-teal-400 h-2 rounded-full transition-all'
             style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
@@ -357,11 +433,17 @@ function StudyMode({ words }) {
         {['flashcard', 'quiz', 'writing'].map((mode) => (
           <button
             key={mode}
-            onClick={() => setStudyMode(mode)}
-            className={`px-4 py-2 rounded-lg transition ${
+            onClick={() => {
+              setStudyMode(mode)
+              setSelectedAnswer(null)
+              setShowResult(false)
+              setUserSentence('')
+              setSentenceSubmitted(false)
+            }}
+            className={`px-4 py-2 rounded-lg transition font-medium ${
               studyMode === mode
-                ? 'bg-teal-600 text-white'
-                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                ? 'bg-gradient-to-r from-teal-600 to-rose-400 text-white'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
             {mode === 'flashcard' && '🃏 Flashcard'}
@@ -372,41 +454,128 @@ function StudyMode({ words }) {
       </div>
 
       {/* Study Content */}
-      <div className='bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg p-12 shadow-2xl mb-8 text-center'>
-        <div className='text-sm text-purple-100 mb-4'>LEARNING MODE: {studyMode.toUpperCase()}</div>
+      <div className='bg-gradient-to-br from-teal-500 to-rose-400 rounded-xl p-8 md:p-12 shadow-2xl mb-8 text-center text-white'>
+        <div className='text-sm text-teal-100 font-semibold mb-4'>LEARNING MODE: {studyMode.toUpperCase()}</div>
         
         {studyMode === 'flashcard' && (
           <div>
-            <div className='text-5xl font-bold mb-6'>{currentWord.word}</div>
-            <div className='text-lg text-purple-100 mb-4'>{currentWord.partOfSpeech}</div>
-            <div className='inline-block px-4 py-2 bg-purple-800 rounded-full text-sm font-semibold'>
+            <div className='text-4xl md:text-5xl font-bold mb-6 text-white'>{currentWord.word}</div>
+            <div className='text-lg text-teal-100 mb-4'>{currentWord.partOfSpeech}</div>
+            <div className='inline-block px-4 py-2 bg-white/25 backdrop-blur rounded-full text-sm font-semibold text-white mb-6'>
               {currentWord.cefrLevel}
+            </div>
+            <div className='mt-4 p-4 bg-white/15 rounded-lg'>
+              <p className='text-white/90 text-sm mb-2'><strong>Meaning:</strong> {currentWord.meaning}</p>
+              <p className='text-white/80 text-sm italic'><strong>Example:</strong> {currentWord.example}</p>
             </div>
           </div>
         )}
 
         {studyMode === 'quiz' && (
           <div className='space-y-4'>
-            <div className='text-xl font-semibold mb-6'>What does "{currentWord.word}" mean?</div>
-            {['Option A', 'Option B', 'Option C', 'Option D'].map((opt, idx) => (
-              <button
-                key={idx}
-                className='w-full p-3 bg-purple-700 hover:bg-purple-800 rounded-lg transition text-left'
-              >
-                {opt}
-              </button>
-            ))}
+            <div className='text-xl font-semibold mb-6 text-white'>What does "{currentWord.word}" mean?</div>
+            {quizOptions.map((option, idx) => {
+              let buttonClass = 'w-full p-4 rounded-lg transition text-left text-white font-medium '
+              
+              if (showResult) {
+                if (option === currentWord.meaning) {
+                  buttonClass += 'bg-green-500 border-2 border-green-300'
+                } else if (option === selectedAnswer) {
+                  buttonClass += 'bg-red-500 border-2 border-red-300'
+                } else {
+                  buttonClass += 'bg-white/20 opacity-50'
+                }
+              } else {
+                buttonClass += 'bg-white/20 hover:bg-white/30 cursor-pointer'
+              }
+              
+              return (
+                <button
+                  key={idx}
+                  onClick={() => handleAnswerSelect(option)}
+                  className={buttonClass}
+                  disabled={showResult}
+                >
+                  <span className='mr-3 inline-block w-6 h-6 bg-white/20 rounded-full text-center text-sm leading-6'>
+                    {String.fromCharCode(65 + idx)}
+                  </span>
+                  {option}
+                </button>
+              )
+            })}
+            
+            {showResult && (
+              <div className={`mt-6 p-4 rounded-lg ${isCorrect ? 'bg-green-500/30' : 'bg-red-500/30'}`}>
+                <p className='text-white font-bold text-lg mb-2'>
+                  {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                </p>
+                {!isCorrect && (
+                  <p className='text-white/90 text-sm'>
+                    The correct answer is: <strong>{currentWord.meaning}</strong>
+                  </p>
+                )}
+                <p className='text-white/80 text-sm mt-2 italic'>
+                  Example: {currentWord.example}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
         {studyMode === 'writing' && (
           <div className='space-y-4'>
-            <div className='text-xl font-semibold mb-6'>Write a sentence using "{currentWord.word}"</div>
-            <input
-              type='text'
-              placeholder='Type your sentence...'
-              className='w-full p-4 rounded-lg bg-purple-700 text-white placeholder-purple-300 outline-none focus:bg-purple-800'
+            <div className='text-xl font-semibold mb-2 text-white'>Write a sentence using "{currentWord.word}"</div>
+            <p className='text-teal-100 text-sm mb-4'>Meaning: {currentWord.meaning}</p>
+            <textarea
+              value={userSentence}
+              onChange={(e) => setUserSentence(e.target.value)}
+              placeholder={`Type a sentence using "${currentWord.word}"...`}
+              className='w-full p-4 rounded-lg bg-white/20 text-white placeholder-teal-200 outline-none focus:bg-white/30 min-h-[100px] resize-none'
+              disabled={sentenceSubmitted}
             />
+            {!sentenceSubmitted ? (
+              <div className='space-y-2'>
+                <button
+                  onClick={checkSentence}
+                  disabled={!userSentence.trim()}
+                  className='px-6 py-3 bg-white/30 hover:bg-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-semibold text-white'
+                >
+                  Check My Sentence
+                </button>
+                <p className='text-teal-100 text-xs'>
+                  Tip: Make sure to use the word "{currentWord.word}" in your sentence
+                </p>
+              </div>
+            ) : (
+              <div className={`p-4 rounded-lg text-left ${sentenceIsValid ? 'bg-green-500/30' : 'bg-red-500/30'}`}>
+                <p className='text-white font-bold mb-2'>
+                  {sentenceIsValid ? '✅ Great job!' : '❌ Try again!'}
+                </p>
+                {!sentenceContainsWord && (
+                  <p className='text-white/90 text-sm mb-2'>
+                    ⚠️ Your sentence doesn't contain the word "<strong>{currentWord.word}</strong>"
+                  </p>
+                )}
+                {userSentence.trim().length < 10 && (
+                  <p className='text-white/90 text-sm mb-2'>
+                    ⚠️ Your sentence is too short. Try writing a complete sentence.
+                  </p>
+                )}
+                <p className='text-white/90 text-sm mb-2'><strong>Your sentence:</strong> {userSentence}</p>
+                <p className='text-white/80 text-sm'><strong>Example sentence:</strong> {currentWord.example}</p>
+                {!sentenceIsValid && (
+                  <button
+                    onClick={() => {
+                      setSentenceSubmitted(false)
+                      setUserSentence('')
+                    }}
+                    className='mt-3 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition text-white text-sm'
+                  >
+                    Try Again
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -414,22 +583,23 @@ function StudyMode({ words }) {
       {/* Navigation */}
       <div className='flex gap-4 justify-between'>
         <button
-          onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+          onClick={handlePrevious}
           disabled={currentIndex === 0}
-          className='flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition'
+          className='flex-1 px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-medium'
         >
           ← Previous
         </button>
         <div className='flex gap-2'>
           {[
-            { emoji: '😟', label: 'Again' },
-            { emoji: '🤔', label: 'Hard' },
-            { emoji: '👍', label: 'Good' },
-            { emoji: '🔥', label: 'Easy' }
+            { emoji: '😟', label: 'Again', color: 'bg-red-100 hover:bg-red-200 text-red-600' },
+            { emoji: '🤔', label: 'Hard', color: 'bg-orange-100 hover:bg-orange-200 text-orange-600' },
+            { emoji: '👍', label: 'Good', color: 'bg-blue-100 hover:bg-blue-200 text-blue-600' },
+            { emoji: '🔥', label: 'Easy', color: 'bg-green-100 hover:bg-green-200 text-green-600' }
           ].map((action, idx) => (
             <button
               key={idx}
-              className='px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition'
+              onClick={handleNext}
+              className={`px-4 py-3 ${action.color} rounded-lg transition`}
               title={action.label}
             >
               {action.emoji}
@@ -437,9 +607,9 @@ function StudyMode({ words }) {
           ))}
         </div>
         <button
-          onClick={() => setCurrentIndex(Math.min(words.length - 1, currentIndex + 1))}
+          onClick={handleNext}
           disabled={currentIndex === words.length - 1}
-          className='flex-1 px-6 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-semibold'
+          className='flex-1 px-6 py-3 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-lg text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-semibold'
         >
           Next →
         </button>

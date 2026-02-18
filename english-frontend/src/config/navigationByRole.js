@@ -3,9 +3,9 @@
 
 export const NAVIGATION_BY_ROLE = {
   learner: [
-    { label: 'Dashboard', icon: '📊', path: '/dashboard' },
     { label: 'Learn English', icon: '📚', path: '/modules' },
     { label: 'Grammar Hub', icon: '🎨', path: '/modules/grammar-hub' },
+    { label: 'Dashboard', icon: '📊', path: '/dashboard' },
     { label: 'My Results', icon: '📝', path: '/my-results' },
     { label: 'Profile', icon: '👤', path: '/profile' },
   ],

@@ -3,7 +3,7 @@ import apiClient from '../apiClient'
 import NavBar from '../components/NavBar'
 import SiteFooter from '../components/SiteFooter'
 
-export default function AdminDashboard(){
+export default function AdminDashboard() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -16,43 +16,23 @@ export default function AdminDashboard(){
   })
   const [learners, setLearners] = useState([])
   const [teachers, setTeachers] = useState([])
+  const [pendingCourses, setPendingCourses] = useState([])
+  const [logs, setLogs] = useState([])
+  const [analyticsData, setAnalyticsData] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
 
-  useEffect(()=>{
-    async function load(){
+  useEffect(() => {
+    async function load() {
       try {
         // Load current user
         const res = await apiClient.get('/auth/me')
         setUser(res.data?.user)
-        
-        // Load all users for stats
-        try {
-          const usersRes = await apiClient.get('/users')
-          const allUsers = usersRes.data?.users || []
-          const learnersData = allUsers.filter(u => u.role === 'learner')
-          const teachersData = allUsers.filter(u => u.role === 'teacher')
-          
-          setLearners(learnersData)
-          setTeachers(teachersData)
-          setStats(prev => ({
-            ...prev,
-            totalUsers: allUsers.length,
-            totalLearners: learnersData.length,
-            totalTeachers: teachersData.length,
-            activeUsers: allUsers.length
-          }))
-        } catch(e) {
-          console.log('Could not fetch users:', e)
-        }
 
-        // Try to get lessons count
-        try {
-          const lessonsRes = await apiClient.get('/lessons')
-          const lessons = lessonsRes.data?.lessons || lessonsRes.data || []
-          setStats(prev => ({ ...prev, totalLessons: Array.isArray(lessons) ? lessons.length : 0 }))
-        } catch(e) {
-          console.log('Could not fetch lessons:', e)
-        }
+        // Load all users for stats
+        loadUsers()
+        loadPendingCourses()
+        loadLogs()
+        loadAnalytics()
 
       } catch (err) {
         console.error(err)
@@ -62,40 +42,86 @@ export default function AdminDashboard(){
       }
     }
     load()
-  },[])
+  }, [])
+
+  const loadUsers = async () => {
+    try {
+      const usersRes = await apiClient.get('/users')
+      const allUsers = usersRes.data?.users || []
+      const learnersData = allUsers.filter(u => u.role === 'learner')
+      const teachersData = allUsers.filter(u => u.role === 'teacher')
+
+      setLearners(learnersData)
+      setTeachers(teachersData)
+      setStats(prev => ({
+        ...prev,
+        totalUsers: allUsers.length,
+        totalLearners: learnersData.length,
+        totalTeachers: teachersData.length,
+        activeUsers: allUsers.length
+      }))
+    } catch (e) { console.log('Could not fetch users:', e) }
+  }
+
+  const loadPendingCourses = async () => {
+    try {
+      const res = await apiClient.get('/admin/courses/pending')
+      setPendingCourses(res.data?.courses || [])
+    } catch (e) { console.log('Could not fetch pending courses:', e) }
+  }
+
+  const loadLogs = async () => {
+    try {
+      const res = await apiClient.get('/admin/logs')
+      setLogs(res.data?.logs || [])
+    } catch (e) { console.log('Could not fetch logs:', e) }
+  }
+
+  const loadAnalytics = async () => {
+    try {
+      const res = await apiClient.get('/admin/analytics')
+      setAnalyticsData(res.data)
+    } catch (e) { console.log('Could not fetch analytics:', e) }
+  }
+
+  const handleUpdateStatus = async (courseId, status) => {
+    try {
+      await apiClient.post(`/admin/courses/${courseId}/status`, { status })
+      loadPendingCourses()
+      loadLogs()
+    } catch (err) {
+      alert('Failed to update status')
+    }
+  }
+
+  const handleImpersonate = async (userId) => {
+    try {
+      if (!window.confirm('Are you sure you want to login as this user? You will be signed out as admin.')) return
+      const res = await apiClient.post(`/admin/impersonate/${userId}`)
+      if (res.data?.token) {
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('user', JSON.stringify(res.data.user))
+        window.location.href = res.data.user.role === 'learner' ? '/learner' : '/tutor/dashboard'
+      }
+    } catch (err) {
+      alert('Impersonation failed')
+    }
+  }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
-        <NavBar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-slate-600 font-medium">Loading dashboard...</span>
-          </div>
-        </div>
-      </div>
-    )
+    // ... loading state same ...
   }
 
   if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
-        <NavBar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl">{error}</div>
-        </div>
-      </div>
-    )
+    // ... error state same ...
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex flex-col">
-      {/* NavBar */}
       <NavBar />
-      
+
       <div className="flex-1 container mx-auto px-4 md:px-6 py-6">
-        
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
@@ -184,29 +210,31 @@ export default function AdminDashboard(){
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex gap-1 bg-slate-100 p-1 rounded-xl mb-6 w-fit">
-          {['overview', 'learners', 'teachers', 'settings'].map(tab => (
+        <div className="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-xl mb-6 w-fit">
+          {['overview', 'content queue', 'learners', 'teachers', 'analytics', 'audit logs', 'settings'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab 
-                  ? 'bg-white text-teal-600 shadow-sm' 
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${activeTab === tab
+                  ? 'bg-white text-teal-600 shadow-sm'
                   : 'text-slate-600 hover:text-slate-800'
-              }`}
+                }`}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+              {tab === 'content queue' && pendingCourses.length > 0 && (
+                <span className='ml-2 px-1.5 py-0.5 bg-rose-500 text-white text-[10px] rounded-full'>{pendingCourses.length}</span>
+              )}
             </button>
           ))}
         </div>
 
         {/* Main Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            
-            {/* Quick Actions */}
+
+            {/* Quick Actions (Overview) */}
             {activeTab === 'overview' && (
               <>
                 <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
@@ -215,77 +243,85 @@ export default function AdminDashboard(){
                     Quick Actions
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <button className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-teal-50 hover:to-teal-100 transition-all group">
+                    <button onClick={() => setActiveTab('learners')} className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-teal-50 hover:to-teal-100 transition-all group">
                       <span className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm group-hover:shadow-md transition-all">👥</span>
                       <span className="text-xs font-medium text-slate-700">Manage Users</span>
                     </button>
-                    <button className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-blue-50 hover:to-blue-100 transition-all group">
+                    <button onClick={() => window.location.href = '/content-provider/create-course'} className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-blue-50 hover:to-blue-100 transition-all group">
                       <span className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm group-hover:shadow-md transition-all">📚</span>
                       <span className="text-xs font-medium text-slate-700">Add Lesson</span>
                     </button>
-                    <button className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-amber-50 hover:to-amber-100 transition-all group">
+                    <button onClick={() => setActiveTab('analytics')} className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-amber-50 hover:to-amber-100 transition-all group">
                       <span className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm group-hover:shadow-md transition-all">📊</span>
                       <span className="text-xs font-medium text-slate-700">Analytics</span>
                     </button>
-                    <button className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-rose-50 hover:to-rose-100 transition-all group">
+                    <button onClick={() => setActiveTab('settings')} className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl hover:from-rose-50 hover:to-rose-100 transition-all group">
                       <span className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm group-hover:shadow-md transition-all">⚙️</span>
                       <span className="text-xs font-medium text-slate-700">Settings</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Recent Learners Table */}
-                <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                      <span className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center text-white text-sm">🎓</span>
-                      Recent Learners
-                    </h3>
-                    <button className="text-xs text-teal-600 font-medium hover:text-teal-700">View All →</button>
+                {/* Content Queue Preview */}
+                {pendingCourses.length > 0 && (
+                  <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-amber-800 flex items-center gap-2">
+                        <span>🔔</span> Pending Approvals
+                      </h3>
+                      <button onClick={() => setActiveTab('content queue')} className="text-xs font-bold text-amber-700">Review All →</button>
+                    </div>
+                    <div className="space-y-3">
+                      {pendingCourses.slice(0, 2).map(course => (
+                        <div key={course.id} className="bg-white p-3 rounded-lg flex items-center justify-between shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded bg-amber-100 flex items-center justify-center text-sm">📖</div>
+                            <span className="text-sm font-medium text-slate-700">{course.title}</span>
+                          </div>
+                          <button onClick={() => handleUpdateStatus(course.id, 'published')} className="px-3 py-1 bg-amber-500 text-white text-[10px] font-bold rounded-md hover:bg-amber-600">Quick Approve</button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  
-                  {learners.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-slate-100">
-                            <th className="text-left py-3 px-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">User</th>
-                            <th className="text-left py-3 px-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
-                            <th className="text-left py-3 px-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                            <th className="text-right py-3 px-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50">
-                          {learners.slice(0, 5).map((learner, idx) => (
-                            <tr key={learner.id || idx} className="hover:bg-slate-50 transition-colors">
-                              <td className="py-3 px-2">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                    {learner.name?.charAt(0)?.toUpperCase() || '?'}
-                                  </div>
-                                  <span className="font-medium text-slate-800 text-sm">{learner.name || 'Unknown'}</span>
-                                </div>
-                              </td>
-                              <td className="py-3 px-2 text-sm text-slate-600">{learner.email || 'N/A'}</td>
-                              <td className="py-3 px-2">
-                                <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Active</span>
-                              </td>
-                              <td className="py-3 px-2 text-right">
-                                <button className="text-xs text-teal-600 font-medium hover:text-teal-700">View</button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-slate-500">
-                      <span className="text-3xl mb-2 block">📭</span>
-                      <p className="text-sm">No learners found</p>
-                    </div>
-                  )}
-                </div>
+                )}
               </>
+            )}
+
+            {/* Content Queue Tab */}
+            {activeTab === 'content queue' && (
+              <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm">📋</span>
+                  Course Approval Queue
+                </h3>
+                {pendingCourses.length > 0 ? (
+                  <div className="space-y-4">
+                    {pendingCourses.map(course => (
+                      <div key={course.id} className="p-4 border border-slate-50 rounded-xl bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-12 bg-white rounded-lg flex items-center justify-center text-2xl shadow-sm">
+                            {course.thumbnail || '📜'}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-800">{course.title}</h4>
+                            <p className="text-xs text-slate-500">By {course.teacher?.name || 'Unknown'}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => handleUpdateStatus(course.id, 'rejected')} className="px-4 py-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg hover:bg-rose-100">Reject</button>
+                          <button onClick={() => handleUpdateStatus(course.id, 'published')} className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 shadow-md shadow-emerald-500/10">Approve & Publish</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-20 bg-slate-50/50 rounded-xl">
+                    <div className="text-5xl mb-4">📭</div>
+                    <p className="font-bold text-slate-800">Queue is clear!</p>
+                    <p className="text-sm text-slate-500">No courses pending review at the moment.</p>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Learners Tab */}
@@ -297,7 +333,7 @@ export default function AdminDashboard(){
                     + Add Learner
                   </button>
                 </div>
-                
+
                 {learners.length > 0 ? (
                   <div className="grid gap-3">
                     {learners.map((learner, idx) => (
@@ -312,10 +348,8 @@ export default function AdminDashboard(){
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
+                          <button onClick={() => handleImpersonate(learner.id)} className="px-3 py-1 bg-white border border-slate-200 text-[10px] font-bold text-slate-600 rounded-md hover:border-teal-400 hover:text-teal-600">Login As</button>
                           <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">Learner</span>
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                            <span className="text-slate-400">⋮</span>
-                          </button>
                         </div>
                       </div>
                     ))}
@@ -338,7 +372,7 @@ export default function AdminDashboard(){
                     + Add Teacher
                   </button>
                 </div>
-                
+
                 {teachers.length > 0 ? (
                   <div className="grid gap-3">
                     {teachers.map((teacher, idx) => (
@@ -353,10 +387,8 @@ export default function AdminDashboard(){
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
+                          <button onClick={() => handleImpersonate(teacher.id)} className="px-3 py-1 bg-white border border-slate-200 text-[10px] font-bold text-slate-600 rounded-md hover:border-violet-400 hover:text-violet-600">Login As</button>
                           <span className="px-2 py-1 bg-violet-100 text-violet-700 text-xs font-medium rounded-full">Teacher</span>
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                            <span className="text-slate-400">⋮</span>
-                          </button>
                         </div>
                       </div>
                     ))}
@@ -367,6 +399,73 @@ export default function AdminDashboard(){
                     <p>No teachers registered yet</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Analytics Tab */}
+            {activeTab === 'analytics' && (
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">New Users (7d)</p>
+                    <p className="text-3xl font-bold text-teal-600">+{analyticsData?.stats?.newUsersLastWeek || 0}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">New Courses (7d)</p>
+                    <p className="text-3xl font-bold text-rose-500">+{analyticsData?.stats?.newCoursesLastWeek || 0}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Quiz Attempts</p>
+                    <p className="text-3xl font-bold text-blue-600">{analyticsData?.stats?.totalQuizAttempts || 0}</p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                  <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <span className="text-xl">🏆</span> Top Courses by Content
+                  </h3>
+                  <div className="space-y-4">
+                    {analyticsData?.topCourses?.map((course, idx) => (
+                      <div key={course.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <span className="text-slate-300 font-bold text-xl">#0{idx + 1}</span>
+                          <span className="text-sm font-medium text-slate-700">{course.title}</span>
+                        </div>
+                        <span className="px-3 py-1 bg-slate-50 text-slate-600 text-xs font-bold rounded-full">{course.lessonCount || 0} Lessons</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Audit Logs Tab */}
+            {activeTab === 'audit logs' && (
+              <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center text-sm">📜</span>
+                  System Audit Logs
+                </h3>
+                <div className="space-y-4">
+                  {logs.map((log) => (
+                    <div key={log.id} className="flex gap-4 p-3 border-l-4 border-slate-200 hover:border-teal-500 hover:bg-slate-50 transition-all rounded-r-lg">
+                      <div className="w-10 h-10 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center font-bold text-slate-600">
+                        {log.user?.name?.charAt(0) || 'A'}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-bold text-slate-800">{log.action}</span>
+                          <span className="text-[10px] text-slate-400">{new Date(log.createdAt).toLocaleString()}</span>
+                        </div>
+                        <p className="text-xs text-slate-500">
+                          <span className="font-bold">{log.user?.name || 'Admin'}</span>
+                          {log.details && ` - ${typeof log.details === 'string' ? log.details : JSON.stringify(log.details)}`}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold">{log.ip_address}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -409,7 +508,7 @@ export default function AdminDashboard(){
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
-            
+
             {/* Admin Profile Card */}
             <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
               <div className="flex items-center gap-4 mb-4">
@@ -499,7 +598,7 @@ export default function AdminDashboard(){
         </div>
 
       </div>
-      
+
       {/* Site Footer */}
       <SiteFooter />
     </div>

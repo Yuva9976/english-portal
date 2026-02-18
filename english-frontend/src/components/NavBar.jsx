@@ -101,9 +101,9 @@ export default function NavBar(){
               {/* Learner: Show all learning links */}
               {isLearner && (
                 <>
-                  <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
                   <Link to='/modules/learn-english' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learn English</Link>
                   <Link to='/grammar-hub' className='text-slate-700 hover:text-teal-600 font-medium text-sm font-semibold text-teal-700 px-3 py-1 rounded-full bg-teal-50'>Grammar Hub</Link>
+                  <Link to='/learner' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Learner</Link>
                   <Link to='/grammar-hub/grammar' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Grammar</Link>
                   <Link to='/grammar-hub/vocabulary' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Vocabulary</Link>
                   <Link to='/grammar-hub/pronunciation' className='text-slate-700 hover:text-teal-600 font-medium text-sm'>Pronunciation</Link>

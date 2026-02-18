@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import LearnerSidebar from '../components/LearnerSidebar'
+import LearnerLayout from '../layouts/LearnerLayout'
 import apiClient from '../apiClient'
 
 // Priority Badge Component
@@ -43,7 +43,6 @@ function StatusBadge({ status }) {
 export default function TaskDetail() {
   const { taskId } = useParams()
   const navigate = useNavigate()
-  const [collapsed, setCollapsed] = useState(false)
   const [task, setTask] = useState(null)
   const [submission, setSubmission] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -131,33 +130,31 @@ export default function TaskDetail() {
 
   if (loading) {
     return (
-      <div className="flex bg-slate-50 min-h-screen">
-        <LearnerSidebar collapsed={collapsed} onToggle={() => setCollapsed(v => !v)} />
-        <main className="flex-1 flex items-center justify-center">
+      <LearnerLayout>
+        <div className="flex items-center justify-center min-h-96">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-slate-500 font-medium">Loading task...</p>
           </div>
-        </main>
-      </div>
+        </div>
+      </LearnerLayout>
     )
   }
 
   if (!task) {
     return (
-      <div className="flex bg-slate-50 min-h-screen">
-        <LearnerSidebar collapsed={collapsed} onToggle={() => setCollapsed(v => !v)} />
-        <main className="flex-1 flex items-center justify-center">
+      <LearnerLayout>
+        <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <div className="text-6xl mb-4">📋</div>
             <h2 className="text-xl font-semibold text-slate-700 mb-2">Task not found</h2>
             <p className="text-slate-500 mb-4">The task you're looking for doesn't exist.</p>
-            <Link to="/learner/tasks" className="px-4 py-2 bg-cyan-500 text-white rounded-lg">
+            <Link to="/learner/tasks" className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors">
               Back to Tasks
             </Link>
           </div>
-        </main>
-      </div>
+        </div>
+      </LearnerLayout>
     )
   }
 
@@ -166,39 +163,36 @@ export default function TaskDetail() {
   const isSubmitted = submission && ['submitted', 'graded'].includes(submission.status)
 
   return (
-    <div className="flex bg-gradient-to-br from-slate-50 via-white to-cyan-50/30 min-h-screen">
-      <LearnerSidebar collapsed={collapsed} onToggle={() => setCollapsed(v => !v)} />
+    <LearnerLayout>
+      <div className="max-w-5xl mx-auto">
+        {/* Back Button */}
+        <Link 
+          to="/learner/tasks" 
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-teal-600 mb-6 transition-colors font-medium"
+        >
+          <span>←</span> Back to Tasks
+        </Link>
 
-      <main className="flex-1 p-8 overflow-auto">
-        <div className="max-w-5xl mx-auto">
-          {/* Back Button */}
-          <Link 
-            to="/learner/tasks" 
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 mb-6 transition-colors"
-          >
-            <span>←</span> Back to Tasks
-          </Link>
-
-          {/* Header Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
-            <div className="bg-gradient-to-r from-cyan-500 to-teal-500 px-8 py-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-white text-sm font-medium">
-                      {task.type?.charAt(0).toUpperCase() + task.type?.slice(1)}
-                    </span>
-                    <PriorityBadge priority={task.priority} />
-                  </div>
-                  <h1 className="text-2xl font-bold text-white mb-2">{task.title}</h1>
-                  <p className="text-cyan-100">
-                    Assigned by {task.assignedBy?.name || 'Teacher'} 
-                    {task.classroom && ` • ${task.classroom.title}`}
-                  </p>
+        {/* Header Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+          <div className="bg-gradient-to-r from-teal-500 to-emerald-500 px-8 py-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-white text-sm font-medium">
+                    {task.type?.charAt(0).toUpperCase() + task.type?.slice(1)}
+                  </span>
+                  <PriorityBadge priority={task.priority} />
                 </div>
-                <StatusBadge status={submission?.status || 'pending'} />
+                <h1 className="text-2xl font-bold text-white mb-2">{task.title}</h1>
+                <p className="text-teal-100">
+                  Assigned by {task.assignedBy?.name || 'Teacher'} 
+                  {task.classroom && ` • ${task.classroom.title}`}
+                </p>
               </div>
+              <StatusBadge status={submission?.status || 'pending'} />
             </div>
+          </div>
 
             <div className="px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -291,7 +285,7 @@ export default function TaskDetail() {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Write your answer or response here..."
-                        className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none"
+                        className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
                       />
                       <div className="flex items-center justify-between mt-4">
                         <button
@@ -409,7 +403,6 @@ export default function TaskDetail() {
             </div>
           </div>
         </div>
-      </main>
 
       {/* Confirmation Modal */}
       {showConfirm && (
@@ -449,6 +442,6 @@ export default function TaskDetail() {
           </div>
         </div>
       )}
-    </div>
+    </LearnerLayout>
   )
 }

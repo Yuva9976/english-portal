@@ -4,7 +4,7 @@ import LearnerLayout from '../layouts/LearnerLayout'
 import apiClient from '../apiClient'
 
 // Animated Progress Ring Component
-function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d4' }) {
+function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#14b8a6' }) {
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const percent = Math.max(0, Math.min(100, value))
@@ -13,6 +13,12 @@ function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="transform -rotate-90">
+        <defs>
+          <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#14b8a6" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -26,7 +32,7 @@ function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={color}
+          stroke="url(#progressGradient)"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -35,7 +41,7 @@ function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold text-slate-800">{percent}%</span>
+        <span className="text-2xl font-bold text-teal-600">{percent}%</span>
       </div>
     </div>
   )
@@ -44,18 +50,18 @@ function ProgressRing({ value = 0, size = 120, strokeWidth = 10, color = '#06b6d
 // Stat Card Component
 function StatCard({ icon, label, value, subtitle, color = 'cyan', trend }) {
   const colorClasses = {
-    cyan: 'from-cyan-500 to-teal-500',
+    cyan: 'from-teal-500 to-cyan-500',
     violet: 'from-violet-500 to-purple-500',
-    amber: 'from-amber-500 to-orange-500',
-    emerald: 'from-emerald-500 to-green-500',
+    amber: 'from-amber-500 to-yellow-500',
+    emerald: 'from-emerald-500 to-teal-500',
     rose: 'from-rose-500 to-pink-500',
-    blue: 'from-blue-500 to-indigo-500'
+    blue: 'from-blue-500 to-cyan-500'
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100">
+    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
       <div className="flex items-start justify-between">
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white text-xl shadow-lg`}>
+        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white text-xl shadow-md`}>
           {icon}
         </div>
         {trend && (
@@ -211,15 +217,15 @@ export default function LearnerDashboard() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-800">
-                {greeting()}, <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">{data?.profile?.name || 'Learner'}</span>! 👋
+                {greeting()}, <span className="text-teal-600">{data?.profile?.name || 'Learner'}</span>! 👋
               </h1>
               <p className="text-slate-500 mt-1">{formatDate()}</p>
             </div>
             <div className="flex items-center gap-3">
-              <Link to="/learner/browse" className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-teal-400 hover:shadow transition-all flex items-center gap-2">
+              <Link to="/learner/browse" className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium text-slate-700 hover:border-teal-400 hover:shadow transition-all flex items-center gap-2">
                 <span>🔍</span> Browse
               </Link>
-              <Link to="/learner/classes" className="px-4 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all flex items-center gap-2">
+              <Link to="/learner/classes" className="px-4 py-2.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all flex items-center gap-2">
                 <span>📚</span> My Classes
               </Link>
             </div>
@@ -483,19 +489,19 @@ export default function LearnerDashboard() {
             </div>
 
             {/* Achievements */}
-            <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl shadow-lg overflow-hidden">
               <div className="p-6 text-white">
                 <h2 className="text-lg font-bold mb-4">Your Achievements</h2>
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-3 text-center">
                     <span className="text-2xl mb-1 block">🏆</span>
                     <p className="text-xs font-medium">{data?.achievements?.trophies || 0}</p>
                   </div>
-                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-3 text-center">
                     <span className="text-2xl mb-1 block">🔥</span>
                     <p className="text-xs font-medium">{data?.achievements?.streak || 0} day</p>
                   </div>
-                  <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                  <div className="bg-white/20 backdrop-blur rounded-xl p-3 text-center">
                     <span className="text-2xl mb-1 block">⭐</span>
                     <p className="text-xs font-medium">{data?.profile?.xp || 0} XP</p>
                   </div>

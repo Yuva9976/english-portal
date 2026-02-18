@@ -21,30 +21,25 @@ Read: **[FRONTEND_BACKEND_INTEGRATION.md](FRONTEND_BACKEND_INTEGRATION.md)** (10
 ```
 vishnu/
 ├── english-backend/              # Node.js Express API Server
-│   ├── RUN_APP.md
-│   ├── QUICK_START.md
-│   ├── START_HERE.md
-│   ├── DATA_INTEGRATION_COMPLETE.md
-│   ├── INTEGRATION_SUMMARY.md
-│   ├── BACKEND_STATUS_REPORT.md
-│   ├── INDEX.md
 │   ├── app.js                    ← Backend server
-│   ├── models/grammar.js         ← Database models
-│   ├── routes/grammar.js         ← API endpoints
-│   ├── data/                     ← 14 JSON learning files
-│   ├── seed_parts_of_speech.js   ← Data loader
-│   └── verify_data.js            ← Data validator
-│
-├── english-frontend/             # React Vite App
-│   ├── src/
-│   │   ├── apiClient.js          ← API integration
-│   │   ├── pages/Modules/
-│   │   │   └── VerbsDetail.jsx   ← Updated with API
-│   │   └── ...
+│   ├── models/                   ← Database models
+│   ├── routes/                   ← API endpoints
+│   ├── data/                     ← JSON learning files
 │   └── ...
 │
+├── english-frontend/             # React Vite App
+│   ├── src/                      ← React source code
+│   └── ...
+│
+├── docs/                         # Structured Documentation
+│   ├── architecture/             # System design & database schemas
+│   ├── guides/                   # How-to & setup instructions
+│   ├── features/                 # Module details (RBAC, Grammar Hub)
+│   └── reports/                  # Work summaries & status reports
+│
+├── legacy/                       # Backups & old versions
 ├── RUN_APP.md                    ← Quick start guide
-└── FRONTEND_BACKEND_INTEGRATION.md ← Integration guide
+└── README.md                     ← This file
 ```
 
 ---
@@ -90,43 +85,28 @@ Done! 🎉
 
 ---
 
-## 📖 Documentation By Topic
+## 📖 Documentation Index
 
-### Backend Setup
-- **[english-backend/START_HERE.md](english-backend/START_HERE.md)** - Overview
-- **[english-backend/QUICK_START.md](english-backend/QUICK_START.md)** - Commands
-- **[english-backend/DATA_INTEGRATION_COMPLETE.md](english-backend/DATA_INTEGRATION_COMPLETE.md)** - Full guide
-- **[english-backend/INTEGRATION_SUMMARY.md](english-backend/INTEGRATION_SUMMARY.md)** - What was done
+### 📐 Architecture
+- **[Architecture Overview](docs/architecture/ARCHITECTURE.md)**
+- **[Database Schema](docs/architecture/DATABASE_SCHEMA.md)**
+- **[RBAC Security Layers](docs/architecture/ROLE_BASED_ACCESS.md)**
 
-### Frontend Integration
-- **[FRONTEND_BACKEND_INTEGRATION.md](FRONTEND_BACKEND_INTEGRATION.md)** - How they connect
+### 📚 Guides
+- **[Running the App](RUN_APP.md)**
+- **[Integration Guide](docs/guides/FRONTEND_BACKEND_INTEGRATION.md)**
+- **[Setup & Installation](docs/guides/SETUP_GUIDE.md)**
+- **[Testing Instructions](docs/guides/TESTING_GUIDE.md)**
 
-### API Reference
-- **[english-backend/DATA_INTEGRATION_COMPLETE.md#endpoints](english-backend/DATA_INTEGRATION_COMPLETE.md#-api-endpoints-ready-to-use)** - All endpoints
+### ✨ Features
+- **[Grammar Hub Index](docs/features/GRAMMAR_HUB_DOCUMENTATION_INDEX.md)**
+- **[RBAC User Roles](docs/features/RBAC_DOCUMENTATION_INDEX.md)**
+- **[Tutor Dashboard Guide](docs/features/TUTOR_DASHBOARD_DOCUMENTATION_INDEX.md)**
 
-### Current Status
-- **[english-backend/BACKEND_STATUS_REPORT.md](english-backend/BACKEND_STATUS_REPORT.md)** - Latest info
-
----
-
-## 🎯 Common Tasks
-
-### Start the App
-See: **[RUN_APP.md](RUN_APP.md)**
-
-### Test the API
-See: **[FRONTEND_BACKEND_INTEGRATION.md#-step-by-step-testing](FRONTEND_BACKEND_INTEGRATION.md#-step-by-step-testing)**
-
-### Fix Issues
-See: **[FRONTEND_BACKEND_INTEGRATION.md#-troubleshooting](FRONTEND_BACKEND_INTEGRATION.md#-troubleshooting)**
-
-### Add New Content
-1. Create JSON files in `english-backend/data/`
-2. Run: `node seed_parts_of_speech.js`
-3. Data automatically available via API
-
-### Update a Component
-See: **[FRONTEND_BACKEND_INTEGRATION.md#-component-integration](FRONTEND_BACKEND_INTEGRATION.md#-component-integration)**
+### 📊 Reports
+- **[Final Status Report](docs/reports/RBAC_FINAL_STATUS_REPORT.md)**
+- **[Grammar Hub Summary](docs/reports/GRAMMAR_HUB_FINAL_SUMMARY.md)**
+- **[Code Changes History](docs/reports/CODE_CHANGES_SUMMARY.md)**
 
 ---
 
