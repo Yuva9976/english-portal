@@ -1,0 +1,16 @@
+TARGET_COURSE_ID: 2
+[ADD_QUIZ_ONLY]
+QUIZ: Test Quiz Index
+Q: What is 1+1?
+- 1
+- 2
+- 3
+- 4
+Correct: 1
+
+Q: Choose the capital of France.
+- Berlin
+- Madrid
+- Paris
+- Rome
+Correct: 2

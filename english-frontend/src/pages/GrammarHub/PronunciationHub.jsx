@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function PronunciationHub() {
+export default function PronunciationHub({ isInline }) {
   const navigate = useNavigate()
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [activeExercise, setActiveExercise] = useState(null)
+  const [hubViewMode, setHubViewMode] = useState(() => localStorage.getItem('pronunc_hub_view_mode') || 'grid')
+
+  useEffect(() => {
+    localStorage.setItem('pronunc_hub_view_mode', hubViewMode)
+  }, [hubViewMode])
 
   const lessons = [
     {
@@ -92,78 +97,154 @@ export default function PronunciationHub() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-white'>
+    <div className={isInline ? 'w-full' : 'min-h-screen bg-gradient-to-br from-slate-50 to-white'}>
       {/* Header - Premium Look */}
-      <div className='sticky top-0 z-40 bg-white shadow-md border-b border-teal-100'>
-        <div className='container mx-auto px-6 py-8'>
-          <div className='flex items-center justify-between'>
-            <div>
-              <h1 className='text-3xl font-bold mb-2 bg-gradient-to-r from-teal-600 to-rose-400 bg-clip-text text-transparent'>🎤 Pronunciation Lab</h1>
-              <p className='text-slate-600 text-sm'>Master pronunciation with native speaker audio and recording</p>
+      {!isInline && (
+        <div className='sticky top-0 z-40 bg-white shadow-md border-b border-teal-100'>
+          <div className='container mx-auto px-6 py-8 pl-10'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <h1 className='text-xl md:text-2xl font-black mb-1.5 bg-gradient-to-r from-teal-600 to-rose-400 bg-clip-text text-transparent uppercase tracking-tight'>🎤 Pronunciation Lab</h1>
+                <p className='text-slate-500 text-sm font-semibold opacity-80'>Master pronunciation with native speakers</p>
+              </div>
+              
+              {/* Hub View Switcher */}
+              <div className="flex bg-white p-1.5 rounded-[22px] border border-slate-100 shadow-sm">
+                 <button
+                  onClick={() => setHubViewMode('grid')}
+                  className={`w-12 h-12 flex items-center justify-center rounded-[18px] transition-all duration-300 ${hubViewMode === 'grid' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <span className="text-xl">⊞</span>
+                </button>
+                <button
+                  onClick={() => setHubViewMode('list')}
+                  className={`w-12 h-12 flex items-center justify-center rounded-[18px] transition-all duration-300 ${hubViewMode === 'list' ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <span className="text-xl">≡</span>
+                </button>
+              </div>
             </div>
-            <button
-              onClick={() => navigate('/grammar-hub')}
-              className='px-6 py-3 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-lg text-white rounded-lg font-semibold transition'
-            >
-              ← Back to Hub
-            </button>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Inline Header */}
+      {isInline && (
+        <div className='max-w-7xl mx-auto px-6 pt-6 -mb-6'>
+           <div className='flex bg-white/50 backdrop-blur-md rounded-2xl p-4 border border-teal-100/50 shadow-sm items-center gap-3'>
+              <span className='w-10 h-10 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white shadow-md text-xl'>🎤</span>
+              <div>
+                <h2 className='text-lg font-bold text-slate-800 leading-tight'>Pronunciation Lab</h2>
+                <p className='text-xs text-slate-500 font-medium'>Master pronunciation with native speakers</p>
+              </div>
+           </div>
+        </div>
+      )}
+
 
       {/* Main Content */}
-      <div className='max-w-7xl mx-auto px-6 py-12'>
-        <h2 className='text-2xl font-bold mb-8 text-slate-900'>🎓 Available Lessons</h2>
-        <div className='grid md:grid-cols-2 gap-8'>
-          {lessons.map((lesson) => (
-            <div
-              key={lesson.id}
-              onClick={() => setSelectedLesson(lesson.id)}
-              className='group cursor-pointer transform hover:scale-105 transition-all duration-300'
-            >
+      <div className='max-w-7xl mx-auto px-6 py-12 pl-12'>
+        <h2 className='text-lg font-black mb-8 text-slate-800 uppercase tracking-widest flex items-center gap-2'>
+           <span className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 text-sm border border-teal-100">🎓</span>
+           Available Lessons
+        </h2>
+        {hubViewMode === 'grid' ? (
+          <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
+            {lessons.map((lesson) => (
               <div
-                className={`bg-gradient-to-br ${lesson.color} p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all text-white mb-5`}
+                key={lesson.id}
+                onClick={() => setSelectedLesson(lesson.id)}
+                className='group cursor-pointer transform hover:scale-[1.03] transition-all duration-500'
               >
-                <div className='flex items-start justify-between mb-4'>
-                  <div className='text-6xl'>{lesson.icon}</div>
-                  <div className='text-sm bg-white/20 px-3 py-1 rounded-full font-semibold'>{lesson.difficulty}</div>
+                <div className="relative bg-white p-5 rounded-xl border-2 border-slate-50 shadow-sm hover:shadow-xl hover:border-teal-100 transition-all text-slate-800 h-full overflow-hidden">
+                  {/* Top Gradient Border */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-rose-400" />
+                  
+                  <div className='flex items-start justify-between mb-4 relative z-10'>
+                    <div className='text-4xl group-hover:scale-110 transition-transform duration-500'>{lesson.icon}</div>
+                    <div className='text-[9px] bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-black uppercase tracking-widest'>{lesson.difficulty}</div>
+                  </div>
+                  
+                  <h3 className="text-[17px] font-black mb-1 relative z-10 font-['Outfit'] tracking-tight group-hover:text-teal-600 transition-colors uppercase leading-tight">{lesson.title}</h3>
+                  <p className='text-[10px] text-slate-400 font-bold relative z-10 uppercase tracking-widest mb-6'>{lesson.itemCount} lessons</p>
+                  
+                  {/* Progress info */}
+                  <div className="relative z-10 pt-3 border-t border-slate-50">
+                    <div className='flex justify-between items-center mb-1.5'>
+                      <span className='text-[9px] font-black uppercase tracking-widest text-slate-400'>Progress</span>
+                      <span className='text-[11px] font-black text-teal-600'>{lesson.progress}%</span>
+                    </div>
+                    <div className='w-full bg-slate-100 rounded-full h-1.5 overflow-hidden shadow-inner'>
+                      <div className='bg-gradient-to-r from-teal-500 to-rose-400 h-full rounded-full transition-all duration-1000' style={{ width: `${lesson.progress}%` }} />
+                    </div>
+                  </div>
                 </div>
-                <h3 className='text-xl font-bold mb-3'>{lesson.title}</h3>
-                <p className='text-sm text-white/90 font-medium'>{lesson.itemCount} lessons to master</p>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-6">
+             {lessons.map((lesson) => (
+              <div
+                key={lesson.id}
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="group bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-teal-100 transition-all duration-500 cursor-pointer flex items-center gap-8 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-50 to-rose-50 opacity-10 rounded-bl-[100px] transition-transform duration-700 group-hover:scale-125"></div>
+                
+                <div className={`w-20 h-20 rounded-[24px] bg-gradient-to-br from-teal-50 to-rose-50 border border-slate-50 flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform relative z-10`}>
+                  {lesson.icon}
+                </div>
 
-              {/* Progress Bar - Premium Design */}
-              <div className='bg-white rounded-xl p-5 border border-teal-100 shadow-sm'>
-                <div className='flex justify-between items-center mb-3'>
-                  <span className='text-sm font-semibold text-slate-600'>Progress</span>
-                  <span className='text-sm font-bold bg-gradient-to-r from-teal-600 to-rose-400 bg-clip-text text-transparent'>{lesson.progress}%</span>
+                <div className="flex-1 relative z-10">
+                  <div className="flex items-center gap-4 mb-2">
+                     <h3 className="text-xl font-black text-slate-800 font-['Outfit'] uppercase tracking-tight">{lesson.title}</h3>
+                     <span className="text-[10px] font-black px-3 py-1 bg-slate-100 text-slate-500 rounded-full uppercase tracking-widest">{lesson.difficulty}</span>
+                  </div>
+                  <div className="flex items-center gap-6">
+                     <div className="flex items-center gap-2">
+                        <span className="text-slate-400 text-sm">📚</span>
+                        <span className="text-sm font-bold text-slate-600">{lesson.itemCount} Lessons</span>
+                     </div>
+                     <div className="flex-1 max-w-[200px]">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
+                          <span className="text-[11px] font-black text-teal-600">{lesson.progress}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <div className="bg-gradient-to-r from-teal-500 to-rose-400 h-full transition-all duration-1000" style={{ width: `${lesson.progress}%` }}></div>
+                        </div>
+                     </div>
+                  </div>
                 </div>
-                <div className='w-full bg-slate-200 rounded-full h-3 overflow-hidden'>
-                  <div
-                    className='bg-gradient-to-r from-teal-500 to-rose-400 h-3 rounded-full'
-                    style={{ width: `${lesson.progress}%` }}
-                  />
+
+                <div className="relative z-10 pr-4">
+                   <div className="w-12 h-12 rounded-full border-2 border-slate-100 flex items-center justify-center text-slate-300 group-hover:border-teal-500 group-hover:text-teal-500 transition-all">
+                      <span className="text-xl">→</span>
+                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Tips Section - Premium Design */}
-        <div className='mt-12 bg-white rounded-2xl p-8 border border-teal-100 shadow-md'>
-          <h3 className='text-2xl font-bold mb-8 flex items-center gap-2 text-slate-900'>
-            💡 Pronunciation Tips
+        <div className='mt-16 bg-white rounded-2xl p-8 border-2 border-slate-50 shadow-sm relative overflow-hidden'>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-rose-400" />
+          <h3 className='text-lg font-black mb-8 flex items-center gap-3 text-slate-800 uppercase tracking-tight'>
+            <span className="text-2xl">💡</span> Pronunciation Tips
           </h3>
-          <div className='grid md:grid-cols-2 gap-6'>
+          <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
             {[
-              { title: '🎧 Listen First', desc: 'Always listen to the native speaker pronunciation first' },
-              { title: '🗣️ Repeat Aloud', desc: 'Speak out loud to practice muscle memory' },
-              { title: '🎙️ Record Yourself', desc: 'Use the recording feature to compare with native speakers' },
-              { title: '📅 Practice Daily', desc: 'Consistent practice improves pronunciation rapidly' }
+              { title: 'Listen First', desc: 'Always listen to the native speaker pronunciation first', icon: '🎧' },
+              { title: 'Repeat Aloud', desc: 'Speak out loud to practice muscle memory', icon: '🗣️' },
+              { title: 'Record Yourself', desc: 'Use the recording feature to compare with native speakers', icon: '🎙️' },
+              { title: 'Practice Daily', desc: 'Consistent practice improves pronunciation rapidly', icon: '📅' }
             ].map((tip, idx) => (
-              <div key={idx} className='bg-gradient-to-br from-slate-50 to-teal-50 p-6 rounded-xl border border-teal-100 hover:border-teal-300 transition'>
-                <div className='font-bold text-lg text-slate-900 mb-2'>{tip.title}</div>
-                <div className='text-slate-600'>{tip.desc}</div>
+              <div key={idx} className='bg-slate-50/50 p-5 rounded-xl border border-slate-100 group hover:border-teal-200 transition-all'>
+                <div className='w-10 h-10 rounded-lg bg-white flex items-center justify-center text-xl shadow-sm mb-4 border border-slate-100 group-hover:scale-110 transition-transform'>{tip.icon}</div>
+                <div className='font-black text-[13px] text-slate-800 mb-2 uppercase tracking-tight'>{tip.title}</div>
+                <div className='text-[11px] text-slate-500 font-medium leading-relaxed'>{tip.desc}</div>
               </div>
             ))}
           </div>

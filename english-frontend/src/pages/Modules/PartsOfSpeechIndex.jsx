@@ -50,15 +50,21 @@ const PartsOfSpeechIndex = () => {
       {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-20 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-rose-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-yellow-300/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-rose-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-yellow-300/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       {/* Header */}
       <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white sticky top-0 z-50 shadow-xl">
         <div className="container mx-auto max-w-6xl px-4 py-8">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (window.history.state && window.history.state.idx > 0) {
+                navigate(-1);
+              } else {
+                navigate('/modules/grammar-hub');
+              }
+            }}
             className="mb-3 flex items-center space-x-1 text-white hover:text-yellow-200 transition-colors text-sm font-semibold"
           >
             <span className="text-lg">←</span>
@@ -107,64 +113,64 @@ const PartsOfSpeechIndex = () => {
         {/* Parts Grid */}
         <h2 className="text-4xl font-black text-center mb-4 bg-gradient-to-r from-teal-600 to-rose-500 bg-clip-text text-transparent">Explore Each Part of Speech</h2>
         <p className="text-center text-gray-600 font-semibold mb-12 text-lg">Click on any card to dive deep into comprehensive lessons and quizzes</p>
-        
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-20">
           {parts.map((part) => {
             const route = partRoutes[part.name] || `/modules/${part.name.toLowerCase()}`;
-            
+
             // Modern color scheme based on website theme
             const colorMap = {
-              'Noun': { 
-                gradient: 'from-teal-400/20 to-teal-500/10', 
+              'Noun': {
+                gradient: 'from-teal-400/20 to-teal-500/10',
                 border: 'from-teal-400 to-teal-600',
                 textGrad: 'from-teal-600 to-teal-700',
                 icon: '📦',
                 accentColor: 'teal'
               },
-              'Pronoun': { 
-                gradient: 'from-teal-400/10 to-rose-400/20', 
+              'Pronoun': {
+                gradient: 'from-teal-400/10 to-rose-400/20',
                 border: 'from-teal-400 to-rose-400',
                 textGrad: 'from-teal-600 to-rose-600',
                 icon: '🔄',
                 accentColor: 'rose'
               },
-              'Verb': { 
-                gradient: 'from-rose-400/20 to-rose-500/10', 
+              'Verb': {
+                gradient: 'from-rose-400/20 to-rose-500/10',
                 border: 'from-rose-400 to-rose-600',
                 textGrad: 'from-rose-600 to-rose-700',
                 icon: '⚡',
                 accentColor: 'rose'
               },
-              'Adjective': { 
-                gradient: 'from-yellow-300/10 to-rose-400/20', 
+              'Adjective': {
+                gradient: 'from-yellow-300/10 to-rose-400/20',
                 border: 'from-yellow-300 to-rose-400',
                 textGrad: 'from-yellow-600 to-rose-600',
                 icon: '✨',
                 accentColor: 'yellow'
               },
-              'Adverb': { 
-                gradient: 'from-rose-400/10 to-yellow-300/20', 
+              'Adverb': {
+                gradient: 'from-rose-400/10 to-yellow-300/20',
                 border: 'from-rose-400 to-yellow-300',
                 textGrad: 'from-rose-600 to-yellow-600',
                 icon: '🎯',
                 accentColor: 'rose'
               },
-              'Preposition': { 
-                gradient: 'from-teal-500/10 to-yellow-300/20', 
+              'Preposition': {
+                gradient: 'from-teal-500/10 to-yellow-300/20',
                 border: 'from-teal-500 to-yellow-300',
                 textGrad: 'from-teal-700 to-yellow-600',
                 icon: '📍',
                 accentColor: 'teal'
               },
-              'Conjunction': { 
-                gradient: 'from-yellow-300/10 to-teal-400/20', 
+              'Conjunction': {
+                gradient: 'from-yellow-300/10 to-teal-400/20',
                 border: 'from-yellow-300 to-teal-400',
                 textGrad: 'from-yellow-600 to-teal-600',
                 icon: '🔗',
                 accentColor: 'yellow'
               },
-              'Interjection': { 
-                gradient: 'from-rose-400/20 to-yellow-300/10', 
+              'Interjection': {
+                gradient: 'from-rose-400/20 to-yellow-300/10',
                 border: 'from-rose-400 to-yellow-300',
                 textGrad: 'from-rose-600 to-yellow-600',
                 icon: '💬',
@@ -182,7 +188,7 @@ const PartsOfSpeechIndex = () => {
               >
                 {/* Animated gradient border */}
                 <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${color.border} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}></div>
-                
+
                 {/* Card background with glassmorphism */}
                 <div className="absolute inset-0 bg-white/40 backdrop-blur-xl rounded-2xl -z-10"></div>
 
@@ -276,19 +282,19 @@ const PartsOfSpeechIndex = () => {
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/10 rounded-full -ml-20 -mb-20"></div>
-          
+
           <div className="relative z-10">
             <h3 className="text-3xl md:text-4xl font-black mb-4 drop-shadow-lg">Ready to Master English Grammar?</h3>
             <p className="text-yellow-100 mb-8 max-w-2xl mx-auto text-lg font-semibold">Pick any part of speech above to start learning with definitions, examples, exercises, and interactive quizzes. Your journey to fluency starts here!</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={() => navigate('/modules/learn-english')} 
+              <button
+                onClick={() => navigate('/modules/learn-english')}
                 className="bg-gradient-to-r from-yellow-300 to-yellow-200 text-gray-800 px-8 py-4 rounded-xl font-bold hover:from-yellow-200 hover:to-yellow-100 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl text-lg"
               >
                 📚 View All Lessons
               </button>
-              <button 
-                onClick={() => navigate('/modules/grammar-hub')} 
+              <button
+                onClick={() => navigate('/modules/grammar-hub')}
                 className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold hover:bg-white/30 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl text-lg border-2 border-white/50"
               >
                 ✨ Grammar Hub

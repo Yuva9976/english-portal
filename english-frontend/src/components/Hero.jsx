@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function Hero(){
+export default function Hero() {
   return (
     <section className="container mx-auto px-4 md:px-6 pt-8 pb-2">
       {/* Banner Container */}
       <div className="relative bg-gradient-to-br from-teal-600 via-teal-500 to-rose-400 text-white rounded-2xl overflow-hidden min-h-[420px]">
-        
+
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
@@ -15,7 +15,7 @@ export default function Hero(){
 
         {/* Content Grid */}
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-6 p-6 md:p-8 items-center min-h-[420px]">
-          
+
           {/* Left Content - Takes 3 columns */}
           <div className="lg:col-span-3 space-y-5">
             {/* Badge */}
@@ -73,21 +73,21 @@ export default function Hero(){
             <div className="relative w-full max-w-[280px]">
               {/* Glow effect */}
               <div className="absolute -inset-3 bg-gradient-to-r from-yellow-300/20 to-rose-400/20 rounded-2xl blur-xl"></div>
-              
+
               {/* Card */}
               <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 overflow-hidden shadow-2xl">
                 {/* Image */}
                 <div className="relative h-44">
-                  <img 
-                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400&auto=format&fit=crop" 
-                    alt="Learning Community" 
+                  <img
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400&auto=format&fit=crop"
+                    alt="Learning Community"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-3 right-3 bg-yellow-400 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg shadow-lg">
                     ⭐
                   </div>
                 </div>
-                
+
                 {/* Info section */}
                 <div className="p-4 bg-white/5">
                   <div className="flex items-center gap-2 mb-2">

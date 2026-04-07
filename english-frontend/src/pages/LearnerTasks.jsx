@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import LearnerLayout from '../layouts/LearnerLayout'
 import apiClient from '../apiClient'
 
 // Priority Badge Component
@@ -11,7 +10,7 @@ function PriorityBadge({ priority }) {
     high: 'bg-amber-100 text-amber-600',
     urgent: 'bg-rose-100 text-rose-600'
   }
-  
+
   return (
     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${colors[priority] || colors.medium}`}>
       {priority?.charAt(0).toUpperCase() + priority?.slice(1)}
@@ -30,9 +29,9 @@ function StatusBadge({ status }) {
     overdue: { color: 'bg-rose-100 text-rose-600', icon: '⚠️', label: 'Overdue' },
     not_started: { color: 'bg-slate-100 text-slate-600', icon: '📝', label: 'Not Started' }
   }
-  
+
   const { color, icon, label } = config[status] || config.pending
-  
+
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${color}`}>
       <span>{icon}</span> {label}
@@ -49,9 +48,9 @@ function TypeBadge({ type }) {
     practice: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: '✏️' },
     quiz: { color: 'bg-rose-50 text-rose-700 border-rose-200', icon: '❓' }
   }
-  
+
   const { color, icon } = config[type] || config.assignment
-  
+
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border text-xs font-medium ${color}`}>
       <span>{icon}</span> {type?.charAt(0).toUpperCase() + type?.slice(1)}
@@ -82,25 +81,23 @@ function StatsCard({ icon, label, value, color, onClick, active }) {
   }
 
   return (
-    <button 
+    <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg text-left w-full border-2 ${
-        active 
-          ? `bg-gradient-to-br ${gradientMap[color]} text-white shadow-lg` 
-          : `bg-white ${bgLightMap[color]} hover:shadow-md`
-      }`}
+      className={`relative overflow-hidden rounded-xl p-3.5 transition-all duration-300 hover:scale-105 hover:shadow-lg text-left w-full border-2 ${active
+        ? `bg-gradient-to-br ${gradientMap[color]} text-white shadow-lg`
+        : `bg-white ${bgLightMap[color]} hover:shadow-md`
+        }`}
     >
-      <div className="flex items-center gap-3">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl ${
-          active 
-            ? 'bg-white/20 backdrop-blur-sm' 
-            : `bg-gradient-to-br ${gradientMap[color]} text-white shadow-md`
-        }`}>
+      <div className="flex items-center gap-2.5">
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-lg ${active
+          ? 'bg-white/20 backdrop-blur-sm'
+          : `bg-gradient-to-br ${gradientMap[color]} text-white shadow-md`
+          }`}>
           {icon}
         </div>
         <div>
-          <p className={`text-2xl font-bold ${active ? 'text-white' : 'text-slate-800'}`}>{value}</p>
-          <p className={`text-xs font-medium ${active ? 'text-white/80' : 'text-slate-500'}`}>{label}</p>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '18px', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1 }}>{value}</p>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '10px', fontBlack: true, color: active ? 'rgba(255,255,255,0.85)' : '#94a3b8', textTransform: 'uppercase', tracking: '0.05em', marginTop: '1px' }}>{label}</p>
         </div>
       </div>
       {active && (
@@ -119,8 +116,8 @@ function TaskCard({ task, onStart, onView }) {
 
   const formatDate = (date) => {
     if (!date) return 'No due date'
-    return new Date(date).toLocaleDateString('en-US', { 
-      month: 'short', 
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
@@ -137,86 +134,78 @@ function TaskCard({ task, onStart, onView }) {
   }
 
   return (
-    <div className={`group bg-white rounded-2xl shadow-sm border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-      isOverdue ? 'border-rose-200 ring-1 ring-rose-100' : 'border-slate-100'
-    }`}>
-      {/* Colored Top Bar */}
-      <div className={`h-1.5 bg-gradient-to-r ${typeGradients[task.type] || typeGradients.assignment}`}></div>
-      
+    <div className={`group bg-white rounded-xl shadow-sm border-2 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isOverdue ? 'border-rose-200' : 'border-slate-50'
+      }`}>
+      {/* Top Gradient Border */}
+      <div className={`h-1 bg-gradient-to-r ${typeGradients[task.type] || typeGradients.assignment}`}></div>
+
       {/* Header */}
-      <div className="px-6 py-4">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <div className="flex items-center gap-2 flex-wrap">
+      <div className="px-8 py-6">
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex items-center gap-1.5 flex-wrap">
             <TypeBadge type={task.type} />
-            <PriorityBadge priority={task.priority} />
           </div>
           <StatusBadge status={task.taskStatus} />
         </div>
-        <h3 className="font-bold text-lg text-slate-800 group-hover:text-teal-600 transition-colors line-clamp-1">
+        <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: '20px', color: '#0f172a', lineHeight: 1.2, letterSpacing: '-0.02em' }} className="group-hover:text-teal-600 transition-colors line-clamp-1 uppercase">
           {task.title}
         </h3>
       </div>
 
-      {/* Body */}
-      <div className="px-6 pb-4">
-        <p className="text-sm text-slate-500 line-clamp-2 mb-4 min-h-[40px]">
+      <div className="px-8 py-6">
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '14px', fontWeight: 500, color: '#64748b', lineHeight: 1.6 }} className="line-clamp-2 mb-6 min-h-[44px]">
           {task.description || 'No description provided'}
         </p>
 
-        {/* Info Grid with Icons */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded-xl">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center text-sm">👤</div>
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+            <div className="text-[12px]">👤</div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-400">Teacher</p>
-              <p className="text-sm font-medium text-slate-700 truncate">{task.assignedBy?.name || 'Teacher'}</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '8px', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Assigned</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: 700, color: '#1e293b' }} className="truncate">Teacher</p>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded-xl">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center text-sm">🏫</div>
+          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+            <div className="text-[12px]">🏫</div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-400">Class</p>
-              <p className="text-sm font-medium text-slate-700 truncate">{task.classroom?.title || 'General'}</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '8px', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Class</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: 700, color: '#1e293b' }} className="truncate">General</p>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded-xl">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isOverdue ? 'bg-rose-100' : 'bg-amber-100'}`}>📅</div>
+          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+            <div className="text-[12px]">📅</div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-400">Due Date</p>
-              <p className={`text-sm font-medium truncate ${isOverdue ? 'text-rose-600' : 'text-slate-700'}`}>
-                {formatDate(task.dueDate)}
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '8px', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Deadline</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: 700, color: isOverdue ? '#e11d48' : '#1e293b' }} className="truncate">
+                {formatDate(task.dueDate).split(',')[0]}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded-xl">
-            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-sm">🎯</div>
+          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+            <div className="text-[12px]">🎯</div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-400">Points</p>
-              <p className="text-sm font-medium text-slate-700">{task.maxPoints} pts</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '8px', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Points</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '11px', fontWeight: 700, color: '#1e293b' }}>{task.maxPoints} pts</p>
             </div>
           </div>
         </div>
 
         {/* Due Date Warning */}
         {dueDate && !['submitted', 'graded'].includes(task.taskStatus) && (
-          <div className={`rounded-xl p-3 mb-4 flex items-center gap-2 ${
-            isOverdue ? 'bg-gradient-to-r from-rose-50 to-rose-100 text-rose-700 border border-rose-200' :
-            daysUntilDue <= 1 ? 'bg-gradient-to-r from-amber-50 to-orange-100 text-amber-700 border border-amber-200' :
-            daysUntilDue <= 3 ? 'bg-gradient-to-r from-teal-50 to-emerald-100 text-teal-700 border border-teal-200' :
-            'bg-gradient-to-r from-emerald-50 to-teal-100 text-emerald-700 border border-emerald-200'
-          }`}>
-            <span className="text-lg">
-              {isOverdue ? '⚠️' : daysUntilDue === 0 ? '🔥' : daysUntilDue === 1 ? '⏰' : '📆'}
+          <div className={`rounded-xl p-2.5 mb-3 flex items-center gap-2 ${isOverdue ? 'bg-rose-50 text-rose-700' :
+            daysUntilDue <= 1 ? 'bg-amber-50 text-amber-700' :
+                'bg-emerald-50 text-emerald-700'
+            }`}>
+            <span className="text-sm">
+              {isOverdue ? '⚠️' : daysUntilDue === 0 ? '🔥' : '📆'}
             </span>
-            <p className="text-sm font-semibold">
+            <p className="text-[11px] font-bold uppercase tracking-wide">
               {isOverdue ? (
-                <>Overdue by {Math.abs(daysUntilDue)} day{Math.abs(daysUntilDue) !== 1 ? 's' : ''}</>
+                <>Overdue by {Math.abs(daysUntilDue)}d</>
               ) : daysUntilDue === 0 ? (
                 <>Due today!</>
-              ) : daysUntilDue === 1 ? (
-                <>Due tomorrow</>
               ) : (
-                <>Due in {daysUntilDue} days</>
+                <>Due in {daysUntilDue}d</>
               )}
             </p>
           </div>
@@ -226,11 +215,11 @@ function TaskCard({ task, onStart, onView }) {
         {task.submission && (
           <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-4 mb-4 border border-slate-200">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500 font-medium">
+              <span className="text-xs text-slate-400 font-black uppercase tracking-wider">
                 {task.submission.status === 'graded' ? '🌟 Score' : '📤 Submitted'}
               </span>
-              <span className="font-bold text-slate-800">
-                {task.submission.status === 'graded' 
+              <span className="font-black text-slate-900 tracking-tight">
+                {task.submission.status === 'graded'
                   ? `${task.submission.pointsEarned}/${task.maxPoints} pts`
                   : formatDate(task.submission.submittedAt)
                 }
@@ -252,34 +241,28 @@ function TaskCard({ task, onStart, onView }) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-t border-slate-100 flex items-center gap-3">
+      <div className="px-5 py-3 bg-slate-50/50 border-t border-slate-50">
         {task.taskStatus === 'pending' || task.taskStatus === 'overdue' ? (
-          <button 
+          <button
             onClick={() => onStart(task.id)}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-teal-500/25 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-slate-900 text-white rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-teal-600 transition-all active:scale-95"
           >
-            <span>🚀</span> Start Task
+            Start Task
           </button>
         ) : task.taskStatus === 'in_progress' ? (
-          <button 
+          <button
             onClick={() => onView(task.id)}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-teal-500/25 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/20 rounded-lg font-black text-[10px] uppercase tracking-widest hover:scale-[1.02] transition-all"
           >
-            <span>✏️</span> Continue Working
+            Submit Work
           </button>
         ) : (
-          <button 
+          <button
             onClick={() => onView(task.id)}
-            className="flex-1 px-4 py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg font-black text-[10px] uppercase tracking-widest hover:border-teal-400 transition-all"
           >
-            <span>👁️</span> View Details
+            Review Task
           </button>
-        )}
-        {task.attachments && task.attachments.length > 0 && (
-          <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 rounded-lg text-sm text-slate-600">
-            <span>📎</span>
-            <span className="font-medium">{task.attachments.length}</span>
-          </div>
         )}
       </div>
     </div>
@@ -307,7 +290,7 @@ function EmptyState({ filter, onClear }) {
       <h3 className="text-xl font-bold text-slate-800 mb-2">{title}</h3>
       <p className="text-slate-500 mb-6 max-w-md mx-auto">{desc}</p>
       {filter !== 'all' && (
-        <button 
+        <button
           onClick={onClear}
           className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:shadow-lg text-white rounded-xl font-semibold transition-all"
         >
@@ -389,29 +372,41 @@ export default function LearnerTasks() {
 
   if (loading) {
     return (
-      <LearnerLayout>
+      <div className="w-full flex-1">
         <div className="flex-1 flex items-center justify-center min-h-96">
           <div className="flex flex-col items-center gap-4">
             <div className="w-14 h-14 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-slate-600 font-medium">Loading your tasks...</p>
           </div>
         </div>
-      </LearnerLayout>
+      </div>
     )
   }
 
   return (
-    <LearnerLayout>
-      <div>
+    <div className="w-full flex-1">
+      <div className="pt-10 pl-10 pr-10 pb-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="mb-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white text-lg shadow-lg">📋</span>
-                My Tasks
+              <h1 className="mb-2" style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: '42px',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                background: 'linear-gradient(135deg, #14b8a6 0%, #f43f5e 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <span style={{ WebkitTextFillColor: 'initial' }}>📋</span> My Tasks
               </h1>
-              <p className="text-slate-500 mt-2">Track and complete your assigned tasks</p>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: '15px', color: '#64748b', marginLeft: '4px' }}>Track and complete your assigned tasks</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -428,111 +423,113 @@ export default function LearnerTasks() {
           </div>
         </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <StatsCard
-              icon="📋"
-              label="Total"
-              value={stats.total || 0}
-              color="slate"
-              onClick={() => setFilter('all')}
-              active={filter === 'all'}
-            />
-            <StatsCard
-              icon="⏳"
-              label="Pending"
-              value={stats.pending || 0}
-              color="cyan"
-              onClick={() => setFilter('pending')}
-              active={filter === 'pending'}
-            />
-            <StatsCard
-              icon="🔄"
-              label="In Progress"
-              value={stats.inProgress || 0}
-              color="cyan"
-              onClick={() => setFilter('in_progress')}
-              active={filter === 'in_progress'}
-            />
-            <StatsCard
-              icon="✅"
-              label="Submitted"
-              value={stats.submitted || 0}
-              color="emerald"
-              onClick={() => setFilter('submitted')}
-              active={filter === 'submitted'}
-            />
-            <StatsCard
-              icon="⭐"
-              label="Graded"
-              value={stats.graded || 0}
-              color="amber"
-              onClick={() => setFilter('graded')}
-              active={filter === 'graded'}
-            />
-            <StatsCard
-              icon="⚠️"
-              label="Overdue"
-              value={stats.overdue || 0}
-              color="rose"
-              onClick={() => setFilter('overdue')}
-              active={filter === 'overdue'}
-            />
-          </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <StatsCard
+            icon="📋"
+            label="Total"
+            value={stats.total || 0}
+            color="slate"
+            onClick={() => setFilter('all')}
+            active={filter === 'all'}
+          />
+          <StatsCard
+            icon="⏳"
+            label="Pending"
+            value={stats.pending || 0}
+            color="cyan"
+            onClick={() => setFilter('pending')}
+            active={filter === 'pending'}
+          />
+          <StatsCard
+            icon="🔄"
+            label="In Progress"
+            value={stats.inProgress || 0}
+            color="cyan"
+            onClick={() => setFilter('in_progress')}
+            active={filter === 'in_progress'}
+          />
+          <StatsCard
+            icon="✅"
+            label="Submitted"
+            value={stats.submitted || 0}
+            color="emerald"
+            onClick={() => setFilter('submitted')}
+            active={filter === 'submitted'}
+          />
+          <StatsCard
+            icon="⭐"
+            label="Graded"
+            value={stats.graded || 0}
+            color="amber"
+            onClick={() => setFilter('graded')}
+            active={filter === 'graded'}
+          />
+          <StatsCard
+            icon="⚠️"
+            label="Overdue"
+            value={stats.overdue || 0}
+            color="rose"
+            onClick={() => setFilter('overdue')}
+            active={filter === 'overdue'}
+          />
+        </div>
 
-          {/* Filters Bar */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-6">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-slate-600">Type:</span>
-                <select
-                  value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value)}
-                  className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
-                >
-                  <option value="all">All Types</option>
-                  <option value="assignment">📋 Assignment</option>
-                  <option value="homework">📚 Homework</option>
-                  <option value="project">🎯 Project</option>
-                  <option value="practice">✏️ Practice</option>
-                  <option value="quiz">❓ Quiz</option>
-                </select>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-slate-600">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
-                >
-                  <option value="due_date">Due Date</option>
-                  <option value="priority">Priority</option>
-                  <option value="created">Recently Added</option>
-                </select>
-              </div>
-              <div className="flex-1"></div>
-              <div className="text-sm text-slate-500 bg-slate-50 px-4 py-2 rounded-lg font-medium">
-                Showing <span className="text-teal-600 font-bold">{filteredTasks.length}</span> of <span className="font-bold">{tasks.length}</span> tasks
-              </div>
+        {/* Filters Bar */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: 600, color: '#475569' }}>Type:</span>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: 500, color: '#334155' }}
+                className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+              >
+                <option value="all">All Types</option>
+                <option value="assignment">📋 Assignment</option>
+                <option value="homework">📚 Homework</option>
+                <option value="project">🎯 Project</option>
+                <option value="practice">✏️ Practice</option>
+                <option value="quiz">❓ Quiz</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: 600, color: '#475569' }}>Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: 500, color: '#334155' }}
+                className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+              >
+                <option value="due_date">Due Date</option>
+                <option value="priority">Priority</option>
+                <option value="created">Recently Added</option>
+              </select>
+            </div>
+            <div className="flex-1"></div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '12px', fontWeight: 500, color: '#64748b' }} className="bg-slate-50 px-4 py-2 rounded-lg">
+              Showing <span style={{ color: '#0d9488', fontWeight: 700 }}>{filteredTasks.length}</span> of <span style={{ fontWeight: 700, color: '#334155' }}>{tasks.length}</span> tasks
             </div>
           </div>
+        </div>
 
-          {/* Tasks Grid */}
-          {filteredTasks.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredTasks.map(task => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onStart={handleStart}
-                  onView={handleView}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState filter={filter} onClear={() => setFilter('all')} />
-          )}
+        {/* Tasks Grid */}
+        {filteredTasks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+            {filteredTasks.map(task => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onStart={handleStart}
+                onView={handleView}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState filter={filter} onClear={() => setFilter('all')} />
+        )}
       </div>
-    </LearnerLayout>
+    </div>
   )
 }

@@ -1,110 +1,122 @@
-import React from 'react'
-import TutorDashboardLayout from '../components/TutorDashboardLayout'
-
-const scheduleCards = [
-  { title: 'Conversational Lab', time: '09:00 - 10:00', status: 'Live', room: 'Room A' },
-  { title: 'Writing Workshop', time: '11:00 - 12:00', status: 'Upcoming', room: 'Room B' },
-]
-
-const stats = [
-  { label: 'Active classes', value: 2 },
-  { label: 'Total students', value: 3 },
-  { label: 'Avg quiz score', value: '78%' },
-  { label: 'Resources shared', value: 5 },
-]
-
-const resources = [
-  { title: 'Present Simple Guide', type: 'PDF', views: 3 },
-  { title: 'Pronunciation Lab', type: 'Video', views: 2 },
-  { title: 'Academic Vocabulary Pack', type: 'Link', views: 1 },
-]
-
-const notifications = [
-  { title: 'Learner Ana joined Conversational Lab', timestamp: 'Just now' },
-  { title: 'Quiz submission received from Learner Ben', timestamp: '10m ago' },
-  { title: 'Learner Cal viewed Pronunciation Lab', timestamp: '30m ago' },
-]
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import apiClient from '../apiClient'
 
 export default function TutorDashboardTest() {
-  return (
-    <TutorDashboardLayout>
-      <div className='space-y-8'>
-        <section>
-          <div className='flex items-center justify-between mb-3'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Schedule</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Today's Schedule</h2>
-            </div>
-            <span className='text-sm text-slate-500'>Live updates</span>
-          </div>
-          <div className='grid gap-4 md:grid-cols-2'>
-            {scheduleCards.map((session) => (
-              <div key={session.title} className='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm'>
-                <div className='flex items-center justify-between'>
-                  <p className='text-sm font-semibold text-slate-800'>{session.title}</p>
-                  <span className='text-xs font-semibold uppercase text-emerald-600'>{session.status}</span>
-                </div>
-                <p className='mt-2 text-sm text-slate-500'>{session.time}</p>
-                <p className='text-xs text-slate-400'>{session.room}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+  const navigate = useNavigate()
+  const [courses, setCourses] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [expandedCourse, setExpandedCourse] = useState(null)
 
-        <section>
-          <div className='flex items-center justify-between mb-3'>
-            <div>
-              <p className='text-xs uppercase tracking-wider text-slate-500'>Metrics</p>
-              <h2 className='text-2xl font-semibold text-slate-900'>Key Stats</h2>
-            </div>
-          </div>
-          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-            {stats.map((stat) => (
-              <div key={stat.label} className='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm'>
-                <p className='text-sm text-slate-500'>{stat.label}</p>
-                <p className='mt-3 text-3xl font-bold text-slate-900'>{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        // Tutors can view approved courses via teacher-resources
+        const res = await apiClient.get('/teacher-resources/available-courses')
+        setCourses(res.data?.courses || [])
+      } catch (err) {
+        console.error(err)
+        setError('Failed to load curriculum.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCourses()
+  }, [])
 
-        <section className='grid gap-4 lg:grid-cols-2'>
-          <div className='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm'>
-            <div className='flex items-center justify-between mb-3'>
-              <h2 className='text-xl font-semibold text-slate-900'>Recent Resources</h2>
-              <span className='text-xs text-slate-500'>Updated now</span>
-            </div>
-            <div className='space-y-3'>
-              {resources.map((resource) => (
-                <div key={resource.title} className='flex items-center justify-between'>
-                  <div>
-                    <p className='text-sm font-semibold text-slate-900'>{resource.title}</p>
-                    <p className='text-xs text-slate-500'>{resource.type}</p>
-                  </div>
-                  <span className='text-xs font-semibold text-slate-500'>{resource.views} views</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm'>
-            <div className='flex items-center justify-between mb-3'>
-              <h2 className='text-xl font-semibold text-slate-900'>Notifications</h2>
-              <span className='text-xs text-slate-500'>Live feed</span>
-            </div>
-            <div className='space-y-3'>
-              {notifications.map((note) => (
-                <div key={note.title} className='flex items-center justify-between'>
-                  <div>
-                    <p className='text-sm font-semibold text-slate-900'>{note.title}</p>
-                    <p className='text-xs text-slate-500'>{note.timestamp}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-slate-500 font-medium">
+        Loading curriculum...
       </div>
-    </TutorDashboardLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center text-rose-500 font-semibold">
+        {error}
+      </div>
+    )
+  }
+
+  return (
+    <div className='p-8 max-w-5xl mx-auto'>
+      <div className='mb-8'>
+        <h1 className='text-3xl font-bold text-slate-800 mb-2'>Curriculum Viewer</h1>
+        <p className='text-slate-600'>
+          Browse the global library of approved courses, lessons, and quizzes before assigning them to your class.
+        </p>
+      </div>
+
+      {courses.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-xl border border-slate-200">
+          <p className="text-slate-500">No approved courses available at the moment.</p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {courses.map(course => (
+            <div key={course.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-shadow hover:shadow-md">
+              <div 
+                className="p-6 cursor-pointer flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition-colors"
+                onClick={() => setExpandedCourse(expandedCourse === course.id ? null : course.id)}
+              >
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <span className="px-2.5 py-0.5 bg-teal-100 text-teal-700 text-xs font-semibold rounded-full">
+                      {course.level || 'General'}
+                    </span>
+                    <span className="text-sm text-slate-500">{course.lessonCount || 0} Lessons</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800">{course.title}</h3>
+                  <p className="text-slate-600 mt-2 text-sm max-w-3xl line-clamp-2">{course.description}</p>
+                </div>
+                <div className="text-slate-400">
+                  {expandedCourse === course.id ? '▼' : '▶'}
+                </div>
+              </div>
+
+              {expandedCourse === course.id && (
+                <div className="p-6 border-t border-slate-200">
+                  <h4 className="font-semibold text-slate-700 mb-4 px-2">Course Modules & Lessons</h4>
+                  {course.lessons && course.lessons.length > 0 ? (
+                    <div className="space-y-3">
+                      {course.lessons.map((lesson, idx) => (
+                        <div key={lesson.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-100">
+                          <div className="flex items-center gap-4">
+                            <span className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 font-semibold text-sm">
+                              {idx + 1}
+                            </span>
+                            <span className="font-medium text-slate-700">{lesson.title}</span>
+                          </div>
+                          <button 
+                            onClick={() => navigate(`/lessons/${lesson.id}`)}
+                            className="px-4 py-2 bg-white border border-slate-200 text-teal-600 text-sm font-semibold rounded-lg hover:bg-teal-50 transition-colors"
+                          >
+                            Preview
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500 italic px-2">No lessons detailed for this course.</p>
+                  )}
+                  
+                  <div className="mt-6 flex justify-end">
+                    <button 
+                      onClick={() => navigate('/tutor/classes')}
+                      className="px-6 py-2.5 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors shadow-sm"
+                    >
+                      Assign to Class
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

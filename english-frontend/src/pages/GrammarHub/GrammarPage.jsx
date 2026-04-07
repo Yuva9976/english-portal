@@ -9,7 +9,7 @@ import EnhancedGrammarQuizzes from '../../components/EnhancedGrammarQuizzes';
 
 const GradientHeading = ({ children, className = '' }) => (
   <h2
-    className={`text-2xl md:text-3xl font-extrabold mb-6 text-center bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent drop-shadow-sm ${className}`}
+    className={`text-xl md:text-2xl font-black mb-6 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent drop-shadow-sm ${className}`}
   >
     {children}
   </h2>
@@ -27,20 +27,20 @@ const GrammarPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Compact Premium Header */}
-      <div className="w-full flex justify-center pt-6 pb-6 px-4 container mx-auto">
+      <div className="w-full pl-8 pt-6 pb-6 px-4 container mx-auto">
         <div className="w-full max-w-4xl">
           <div className="relative rounded-lg bg-white border border-slate-200 p-4 md:p-6 flex items-center gap-4 md:gap-6">
             <div className="flex-none">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center">
-                <span className="text-2xl md:text-3xl">📚</span>
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center shadow-lg shadow-teal-500/10">
+                <span className="text-xl md:text-2xl">📚</span>
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 truncate">
+              <h1 className="text-xl md:text-2xl font-black leading-tight bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 truncate uppercase tracking-tight">
                 Grammar Essentials
               </h1>
-              <p className="text-sm md:text-base text-slate-700 mt-1 truncate">
-                Clear lessons, fast practice, and smart quizzes — master grammar fundamentals
+              <p className="text-xs md:text-sm text-slate-500 font-semibold mt-1 truncate">
+                Clear lessons, fast practice, and master fundamentals
               </p>
               <div className="mt-3">
                 <div className="flex flex-wrap gap-2 items-center">
@@ -64,7 +64,7 @@ const GrammarPage = () => {
       {/* What is Grammar - premium, screen-friendly card */}
       <div className="flex justify-center items-center w-full mt-2 mb-8 px-4">
         <div className="w-full max-w-6xl">
-          <div className="bg-gradient-to-br from-blue-50 via-white to-teal-50 rounded-2xl shadow-lg p-8 md:p-10 w-full border border-teal-100" style={{minHeight:'240px'}}>
+          <div className="bg-gradient-to-br from-blue-50 via-white to-teal-50 rounded-2xl shadow-lg p-8 md:p-10 w-full border border-teal-100" style={{ minHeight: '240px' }}>
             <h2 className="text-2xl font-bold text-teal-700 mb-4 flex items-center"><span className="text-3xl mr-2">📚</span>What is Grammar?</h2>
             <p className="text-gray-700 mb-6 text-base leading-relaxed">Grammar is the system of rules that governs how words are combined to form meaningful sentences. It includes the structure, syntax, and organization of language, helping us communicate clearly and effectively in both written and spoken forms.</p>
             <div className="bg-[#f2f8fd] border-l-4 border-[#0080ff] rounded-lg p-6 shadow-sm">
@@ -161,168 +161,83 @@ const GrammarPage = () => {
         </div>
       </div>
 
-      {/* Grammar Quiz of the Day - upgraded banner */}
+      {/* Grammar Quiz of the Day - simplified banner */}
       <div className="mb-16 max-w-6xl mx-auto px-4">
-        <div className="mx-auto max-w-4xl">
-          <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <div className="absolute inset-0 bg-gradient-to-r from-teal-50 to-cyan-50 opacity-60" />
-            <div className="relative p-6 md:p-8 lg:p-10 flex flex-col md:flex-row items-center gap-6">
-              {/* left: visual + stats */}
-              <div className="flex items-center gap-4 md:gap-6">
-                <div className="flex-none">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-lg bg-gradient-to-br from-teal-600 to-cyan-500 flex items-center justify-center text-white shadow-lg">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2L15 8H9L12 2Z" fill="white" opacity="0.95" />
-                      <rect x="4" y="9" width="16" height="11" rx="2" fill="white" opacity="0.06" />
-                      <path d="M8 12H16" stroke="#08323A" strokeWidth="0.9" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-extrabold text-teal-700">🎯 Quiz of the Day</h3>
-                  <p className="text-sm text-slate-700 mt-1">Quick challenge — 5 questions • ~3 min • instant feedback</p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <div className="w-12 h-12 flex items-center justify-center bg-white rounded-full border border-gray-100 shadow-sm">
-                      <div className="text-sm font-bold text-teal-700">5</div>
-                    </div>
-                    <div className="text-sm text-slate-600">Avg. time <span className="font-semibold text-slate-800">3m</span></div>
-                  </div>
-                </div>
+        <div className="mx-auto max-w-2xl">
+          <div className="relative bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 p-8 flex flex-col items-center text-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-rose-50/50" />
+            <div className="relative z-10">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center text-white text-3xl shadow-lg mb-6 mx-auto">
+                🎯
               </div>
-
-              {/* center: short preview */}
-              <div className="flex-1 min-w-0">
-                <div className="bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl p-4 md:p-5 shadow-md">
-                  <div className="text-sm text-slate-700 italic">Sample question</div>
-                  <div className="mt-2 text-base text-slate-900 font-medium">Which sentence correctly uses the past perfect?</div>
-                  <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <button className="text-sm text-slate-900 bg-white/70 border border-white/40 px-4 py-2 rounded-lg text-left shadow-sm hover:shadow-md transition">A. had finished</button>
-                    <button className="text-sm text-slate-900 bg-white/70 border border-white/40 px-4 py-2 rounded-lg text-left shadow-sm hover:shadow-md transition">B. finished</button>
-                    <button className="text-sm text-slate-900 bg-white/70 border border-white/40 px-4 py-2 rounded-lg text-left shadow-sm hover:shadow-md transition">C. has finished</button>
-                    <button className="text-sm text-slate-900 bg-white/70 border border-white/40 px-4 py-2 rounded-lg text-left shadow-sm hover:shadow-md transition">D. finishes</button>
-                  </div>
-                </div>
-              </div>
-
-              {/* right: CTA */}
-              <div className="flex-none flex flex-col items-center md:items-end gap-3">
-                <button onClick={() => setShowQuiz(true)} className="px-5 py-3 rounded-lg bg-gradient-to-r from-teal-600 to-rose-400 text-white font-semibold shadow-lg hover:scale-[1.02] transition">Start Quiz</button>
-                <a href="#parts-of-speech" className="text-sm text-slate-600 hover:underline">Explore lessons</a>
-              </div>
+              <h3 className="text-2xl font-black text-slate-800 mb-6 font-['Outfit']">Quiz of the Day</h3>
+              <button 
+                onClick={() => setShowQuiz(true)} 
+                className="px-10 py-4 rounded-xl bg-gradient-to-r from-teal-600 to-rose-400 text-white font-bold text-lg shadow-xl shadow-teal-500/20 hover:scale-[1.05] transition-all duration-300"
+              >
+                Start Quiz
+              </button>
             </div>
-            <div className="h-2 bg-gradient-to-r from-teal-400 via-cyan-300 to-rose-300" />
+            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 via-cyan-300 to-rose-300" />
           </div>
         </div>
       </div>
 
       {/* Parts of Speech */}
-      <div id="parts-of-speech" className="mb-16 max-w-6xl mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent">Parts of Speech</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Noun */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">🏛️</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Noun</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Names a person, place, thing, or idea</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/nouns')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/nouns-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
+      <div id="parts-of-speech" className="mb-16 max-w-7xl mx-auto px-4 pl-12">
+        <h2 className="text-xl md:text-2xl font-black mb-10 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 bg-clip-text text-transparent uppercase tracking-tight">Parts of Speech</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            { name: 'Noun', icon: '🏛️', desc: 'Names a person, place, thing, or idea', path: 'nouns' },
+            { name: 'Pronoun', icon: '💬', desc: 'Replaces a noun to avoid repetition', path: 'pronouns' },
+            { name: 'Verb', icon: '🏃‍♂️', desc: 'Expresses an action, occurrence, or state of being', path: 'verbs' },
+            { name: 'Adjective', icon: '✨', desc: 'Modifies or describes a noun or pronoun', path: 'adjectives' },
+            { name: 'Adverb', icon: '⚙️', desc: 'Modifies a verb, adjective, or another adverb', path: 'adverbs' },
+            { name: 'Preposition', icon: '🧭', desc: 'Shows relationship between words in a sentence', path: 'prepositions' },
+            { name: 'Conjunction', icon: '🔗', desc: 'Connects words, phrases, or clauses together', path: 'conjunctions' },
+            { name: 'Interjection', icon: '❗', desc: 'Expresses strong emotion or sudden feeling', path: 'interjections' }
+          ].map((item) => (
+            <div
+              key={item.name}
+              className="group relative bg-white rounded-[28px] shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-500 border border-slate-100 hover:border-teal-200 overflow-hidden transform hover:-translate-y-2"
+            >
+              {/* Top Gradient Line */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-500 via-teal-400 to-rose-400 opacity-80" />
+
+              <div className="p-8 flex flex-col items-center text-center">
+                {/* 1. Emoji / Icon - Larger as per screenshot */}
+                <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-4xl filter drop-shadow-sm">{item.iconOverride || item.icon}</span>
+                </div>
+
+                {/* 2. Title - font-['Outfit'], Sentence Case, text-xl */}
+                <h3 className="text-xl font-bold text-slate-800 mb-3 font-['Outfit'] tracking-tight">
+                  {item.name}
+                </h3>
+
+                {/* 3. Description - font-['Inter'], text-sm, Sentence Case */}
+                <p className="text-sm text-slate-500 mb-8 leading-relaxed font-medium font-['Inter'] h-12 flex items-center justify-center px-2">
+                  {item.desc}
+                </p>
+
+                {/* 4. Action Buttons - text-sm, font-bold, Sentence Case */}
+                <div className="flex gap-4 w-full px-2">
+                  <button
+                    onClick={() => navigate(`/modules/grammar-hub/${item.path}`)}
+                    className="flex-1 py-3 text-sm font-bold border-2 border-teal-600 text-teal-700 rounded-xl hover:bg-teal-50 transition-all flex items-center justify-center shadow-sm"
+                  >
+                    Learn
+                  </button>
+                  <button
+                    onClick={() => navigate(`/modules/grammar-hub/${item.path}-quiz`)}
+                    className="flex-1 py-3 text-sm font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-xl shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 transition-all flex items-center justify-center"
+                  >
+                    Quiz
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          {/* Pronoun */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">💬</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Pronoun</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Replaces a noun to avoid repetition</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/pronouns')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/pronouns-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Verb */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">🏃‍♂️</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Verb</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Expresses action or state of being</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/verbs')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/verbs-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Adjective */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">✨</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Adjective</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Describes or modifies a noun</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/adjectives')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/adjectives-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Adverb */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">⚙️</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Adverb</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Modifies a verb, adjective, or adverb</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/adverbs')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/adverbs-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Preposition */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">🧭</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Preposition</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Shows relationship between words</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/prepositions')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/prepositions-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Conjunction */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">🔗</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Conjunction</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Connects words, phrases, or clauses</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/conjunctions')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/conjunctions-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
-          {/* Interjection */}
-          <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl hover:shadow-teal-200 transition-all duration-300 border-2 border-gray-100 hover:border-teal-400 overflow-hidden transform hover:scale-105">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400" />
-            <div className="p-5">
-              <div className="text-center mb-3"><span className="text-3xl group-hover:scale-110 transition-transform duration-300 inline-block">❗</span></div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 text-center">Interjection</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center leading-relaxed">Expresses emotion or feeling</p>
-              <div className="flex gap-2">
-                <button onClick={() => navigate('/modules/grammar-hub/interjections')} className="flex-1 px-3 py-2 text-xs font-bold border-2 border-teal-600 text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-300">Learn</button>
-                <button onClick={() => navigate('/modules/grammar-hub/interjections-quiz')} className="flex-1 px-3 py-2 text-xs font-bold bg-gradient-to-r from-teal-600 to-rose-400 text-white rounded-lg hover:shadow-lg transition-all duration-300">Quiz</button>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

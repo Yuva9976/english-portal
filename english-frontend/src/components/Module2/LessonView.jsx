@@ -72,64 +72,123 @@ export default function LessonView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50/50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-600 to-blue-600 text-white py-8 shadow-lg">
+      <div className="bg-white border-b border-slate-200 py-6 shadow-sm">
         <div className="container mx-auto px-4 max-w-5xl">
           <button
             onClick={() => navigate('/modules/learn-english')}
-            className="flex items-center text-white hover:text-gray-200 mb-4 transition-colors"
+            className="flex items-center text-slate-400 hover:text-[#0D9488] mb-4 transition-colors text-xs font-black uppercase tracking-widest"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to All Lessons
+            Module Repository
           </button>
-          <h1 className="text-4xl font-bold mb-2">{lesson.title || lesson.slug}</h1>
-          <p className="text-teal-100">Interactive lesson with exercises</p>
+          <div className="flex items-center gap-4 mb-2">
+            <span className="px-2 py-0.5 bg-teal-50 text-[#0D9488] text-[10px] font-black uppercase tracking-widest rounded border border-teal-100">
+              Interactive Curriculum
+            </span>
+          </div>
+          <h1 className="text-2xl font-black text-slate-800 tracking-tighter font-['Outfit'] uppercase">
+            {lesson.title || lesson.slug}
+          </h1>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-          {/* Lesson Content */}
-          <div
-            className="prose prose-lg max-w-none 
-                       prose-headings:text-teal-700 
-                       prose-h1:text-3xl prose-h1:border-b prose-h1:border-teal-200 prose-h1:pb-2 prose-h1:mb-4
-                       prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-teal-600
-                       prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-teal-500
-                       prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-                       prose-a:text-teal-600 prose-a:no-underline hover:prose-a:underline
-                       prose-strong:text-gray-900 prose-strong:font-bold
-                       prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
-                       prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
-                       prose-li:text-gray-700 prose-li:mb-2
-                       prose-code:text-teal-600 prose-code:bg-teal-50 prose-code:px-2 prose-code:py-1 prose-code:rounded
-                       prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg
-                       prose-blockquote:border-l-4 prose-blockquote:border-teal-500 prose-blockquote:pl-4 prose-blockquote:italic
-                       prose-table:border-collapse prose-table:w-full
-                       prose-th:bg-teal-100 prose-th:p-3 prose-th:text-left prose-th:font-semibold
-                       prose-td:border prose-td:border-gray-300 prose-td:p-3
-                       prose-hr:border-teal-200 prose-hr:my-8"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+      <div className="container mx-auto px-4 py-10 max-w-5xl">
+        <div className="space-y-12 mb-12">
+          {/* Loop through structured sections if they exist */}
+          {lesson.LessonSections && lesson.LessonSections.length > 0 ? (
+            lesson.LessonSections.sort((a, b) => a.order_index - b.order_index).map((section, idx) => {
+              const sInfo = {
+                overview: { icon: '📖', color: 'teal' },
+                video: { icon: '🎥', color: 'blue' },
+                writing: { icon: '✍️', color: 'rose' },
+                reading: { icon: '📚', color: 'amber' },
+                resource: { icon: '🎭', color: 'purple' }
+              }[section.section_type] || { icon: '📝', color: 'slate' }
+
+              return (
+                <div key={idx} className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden animate-slideUp">
+                  <div className="px-10 py-6 bg-slate-50/30 border-b border-slate-100 flex items-center gap-4">
+                    <span className="text-2xl">{sInfo.icon}</span>
+                    <h2 className="text-lg font-black text-slate-800 uppercase tracking-tight font-['Outfit']">{section.title}</h2>
+                  </div>
+                  <div className="p-10">
+                    {section.section_type === 'video' ? (
+                      <div className="aspect-video w-full bg-slate-50 rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50 border border-slate-200 flex items-center justify-center p-1">
+                        {section.content.includes('http') ? (
+                          <iframe
+                            src={section.content.replace('watch?v=', 'embed/')}
+                            className="w-full h-full rounded-2xl"
+                            allowFullScreen
+                            title={section.title}
+                          />
+                        ) : (
+                          <div className="text-slate-400 font-black text-[10px] uppercase tracking-widest">Repository Missing Visual Media Data</div>
+                        )}
+                      </div>
+                    ) : section.section_type === 'resource' ? (
+                      <div className="bg-gradient-to-br from-teal-50 to-blue-50/30 p-8 rounded-3xl border border-teal-100 flex items-center justify-between shadow-sm">
+                        <div className="flex items-center gap-5">
+                          <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-3xl">📄</div>
+                          <div>
+                            <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm">{section.title}</h4>
+                            <p className="text-[10px] font-bold text-[#0D9488] uppercase tracking-widest mt-1">Supplemental Documentation</p>
+                          </div>
+                        </div>
+                        <a
+                          href={section.content}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-8 py-3 bg-white text-slate-800 font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-md active:scale-95"
+                        >
+                          Access File
+                        </a>
+                      </div>
+                    ) : (
+                      <div
+                        className="prose prose-sm max-w-none 
+                                   prose-headings:text-slate-800 
+                                   prose-p:text-slate-500 prose-p:leading-relaxed prose-p:font-medium italic"
+                        dangerouslySetInnerHTML={{ __html: marked.parse(section.content || '') }}
+                      />
+                    )}
+                  </div>
+                </div>
+              )
+            })
+          ) : (
+            <div className="bg-white rounded-[2.5rem] shadow-xl p-10 border border-slate-100">
+              <div
+                className="prose prose-sm max-w-none 
+                           prose-headings:text-slate-800 
+                           prose-p:text-slate-500 prose-p:leading-relaxed prose-p:font-medium"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Practice Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 p-10 border border-slate-100">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">Practice Quiz</h2>
-              <p className="text-gray-600">Test your understanding with interactive exercises</p>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 rounded-full bg-[#F43F5E] animate-pulse"></span>
+                <span className="text-[10px] font-black text-[#F43F5E] uppercase tracking-widest">Operational Assessment</span>
+              </div>
+              <h2 className="text-2xl font-black text-slate-800 font-['Outfit'] uppercase tracking-tighter">Practice Logic</h2>
+              <p className="text-slate-500 font-semibold text-[11px] leading-relaxed mt-1 border-l-2 border-slate-100 pl-3">Verify your linguistic acquisition through thematic diagnostics.</p>
             </div>
             {!showQuiz && (
               <button
                 onClick={() => setShowQuiz(true)}
-                className="bg-gradient-to-r from-teal-600 to-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-teal-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
+                className="bg-gradient-to-r from-[#0D9488] to-[#F43F5E] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest hover:shadow-2xl hover:shadow-teal-500/30 transition-all transform hover:scale-[1.02] active:scale-95"
               >
-                Start Quiz 🎯
+                Initiate Assessment 🎯
               </button>
             )}
           </div>
@@ -137,54 +196,53 @@ export default function LessonView() {
           {showQuiz ? (
             quizData ? (
               // Route to appropriate quiz component based on quiz type
-              quizData.quiz_type === 'audio' ? (
-                <AudioQuiz quiz={quizData} />
-              ) : quizData.quiz_type === 'speaking' ? (
-                <SpeakingQuiz quiz={quizData} />
-              ) : quizData.quiz_type === 'reading' ? (
-                <ReadingQuiz quiz={quizData} />
-              ) : quizData.quiz_type === 'writing' ? (
-                <WritingQuiz quiz={quizData} />
-              ) : (
-                <QuizMCQ lessonId={lesson.slug} />
-              )
+              <div className="animate-fadeIn">
+                {quizData.quiz_type === 'audio' ? (
+                  <AudioQuiz quiz={quizData} />
+                ) : quizData.quiz_type === 'speaking' ? (
+                  <SpeakingQuiz quiz={quizData} />
+                ) : quizData.quiz_type === 'reading' ? (
+                  <ReadingQuiz quiz={quizData} />
+                ) : quizData.quiz_type === 'writing' ? (
+                  <WritingQuiz quiz={quizData} />
+                ) : (
+                  <QuizMCQ lessonId={lesson.slug} />
+                )}
+              </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-teal-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading quiz...</p>
+              <div className="text-center py-20 flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-[#0D9488] border-t-transparent rounded-full animate-spin mb-6"></div>
+                <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest">Synchronizing Quiz Matrix...</p>
               </div>
             )
           ) : (
-            <div className="text-center py-12 bg-gradient-to-br from-gray-50 to-teal-50 rounded-lg border-2 border-dashed border-teal-300">
-              <div className="text-6xl mb-4">📝</div>
-              <p className="text-gray-600 text-lg mb-4">
-                Ready to test what you've learned?
+            <div className="text-center py-20 bg-slate-50/50 rounded-[2.5rem] border-2 border-dashed border-slate-200">
+              <div className="text-5xl mb-6 opacity-30">🚀</div>
+              <p className="text-slate-600 font-black uppercase tracking-widest text-[10px] mb-2">
+                Deployment Ready
               </p>
-              <p className="text-gray-500">
-                Click "Start Quiz" to begin the practice exercises
+              <p className="text-slate-400 font-medium italic text-xs">
+                Activate the assessment protocol to commit this module to memory.
               </p>
             </div>
           )}
         </div>
 
         {/* Navigation */}
-        <div className="mt-8 flex justify-between items-center">
+        <div className="mt-12 flex justify-between items-center px-4">
           <button
             onClick={() => navigate('/modules/learn-english')}
-            className="flex items-center text-teal-600 hover:text-teal-700 font-semibold transition-colors"
+            className="flex items-center text-slate-400 hover:text-[#0D9488] font-black uppercase text-[10px] tracking-widest transition-colors"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            All Lessons
+            ← Previous Channel
           </button>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center text-gray-600 hover:text-gray-700 font-semibold transition-colors"
+            className="flex items-center text-slate-300 hover:text-slate-500 font-black uppercase text-[10px] tracking-widest transition-colors"
           >
-            Back to Top
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            Upstream
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" />
             </svg>
           </button>
         </div>

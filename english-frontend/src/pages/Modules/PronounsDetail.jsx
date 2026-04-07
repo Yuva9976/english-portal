@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LearnMoreModal from '../../components/LearnMoreModal';
 
 const PronounsDetail = () => {
-    // Banner removed for compact header style
+  // Banner removed for compact header style
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('overview');
   const [writingRevealed, setWritingRevealed] = useState(false);
@@ -272,7 +272,7 @@ const PronounsDetail = () => {
   const handleQuiz = (questionId, answerIndex) => {
     const question = quizQuestions.find(q => q.id === questionId);
     const isCorrect = answerIndex === question.correct;
-    
+
     setQuizAnswers(prev => ({
       ...prev,
       [questionId]: { selected: answerIndex, correct: isCorrect }
@@ -294,7 +294,17 @@ const PronounsDetail = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -308,11 +318,10 @@ const PronounsDetail = () => {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -325,7 +334,7 @@ const PronounsDetail = () => {
         {/* OVERVIEW SECTION */}
         <section id="overview" className="mb-12 scroll-mt-32">
           {/* What are Pronouns - Super Compact Header Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6" style={{marginLeft: '50px', marginRight: '50px'}}>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6" style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div className="flex items-start gap-2 md:gap-3 mb-2">
               <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">💬</span>
               <div className="flex-1 min-w-0">
@@ -383,7 +392,7 @@ const PronounsDetail = () => {
         </section>
         {/* VIDEO LESSONS */}
         <section id="videos" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-6 md:p-10" style={{marginLeft: '15px'}}>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-6 md:p-10" style={{ marginLeft: '15px' }}>
             <h2 className="text-2xl md:text-3xl font-extrabold text-teal-700 mb-3 flex items-center gap-2 drop-shadow">
               <span className="text-3xl bg-gradient-to-r from-blue-400 via-teal-400 to-rose-400 bg-clip-text text-transparent">🎥</span>
               Video Lessons
@@ -417,7 +426,7 @@ const PronounsDetail = () => {
 
         {/* WRITING EXERCISE */}
         <section id="writing" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-rose-50 rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-teal-500 card-hover" style={{marginLeft: '15px'}}>
+          <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-rose-50 rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-teal-500 card-hover" style={{ marginLeft: '15px' }}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
               <span className="text-xl mr-2">✍️</span>
               Writing Exercise
@@ -452,7 +461,7 @@ const PronounsDetail = () => {
 
         {/* READING EXERCISE */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover" style={{marginLeft: '15px'}}>
+          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover" style={{ marginLeft: '15px' }}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
               <span className="text-xl mr-2">📚</span>
               Reading Exercise
@@ -463,8 +472,8 @@ const PronounsDetail = () => {
                 <span className="mr-2">💡</span> Read this paragraph
               </h3>
               <p className="text-base text-gray-700 leading-relaxed">
-                <strong className="text-blue-600">I</strong> love reading books because <strong className="text-blue-600">they</strong> transport <strong className="text-blue-600">me</strong> to different worlds. 
-                <strong className="text-blue-600">My</strong> favorite author is Jane Austen, and <strong className="text-blue-600">her</strong> novels inspire <strong className="text-blue-600">me</strong> every day. 
+                <strong className="text-blue-600">I</strong> love reading books because <strong className="text-blue-600">they</strong> transport <strong className="text-blue-600">me</strong> to different worlds.
+                <strong className="text-blue-600">My</strong> favorite author is Jane Austen, and <strong className="text-blue-600">her</strong> novels inspire <strong className="text-blue-600">me</strong> every day.
                 Last week, <strong className="text-blue-600">I</strong> finished <strong className="text-blue-600">her</strong> masterpiece, and <strong className="text-blue-600">it</strong> was wonderful!
               </p>
             </div>
@@ -553,11 +562,10 @@ const PronounsDetail = () => {
 
                   {/* Answer Status */}
                   {answered && (
-                    <div className={`text-xs font-medium p-1.5 rounded ${
-                      answered.correct 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                    <div className={`text-xs font-medium p-1.5 rounded ${answered.correct
+                        ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-orange-50 text-orange-700 border border-orange-200'
-                    }`}>
+                      }`}>
                       {answered.correct ? 'Correct!' : 'Try again'}
                     </div>
                   )}
@@ -578,7 +586,7 @@ const PronounsDetail = () => {
                 {/* Progress Bar - Hidden in Single Question Mode */}
                 {!singleQuestionMode && (
                   <div className="h-1.5 bg-slate-100">
-                    <div 
+                    <div
                       className="h-full bg-gradient-to-r from-teal-500 to-rose-500 transition-all duration-300"
                       style={{ width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%` }}
                     ></div>
@@ -660,26 +668,24 @@ const PronounsDetail = () => {
                                   }
                                 }}
                                 disabled={answered}
-                                className={`w-full p-3 md:p-4 rounded-lg border-2 transition-all text-left font-medium group ${
-                                  answered
+                                className={`w-full p-3 md:p-4 rounded-lg border-2 transition-all text-left font-medium group ${answered
                                     ? index === question.correct
                                       ? 'bg-green-50 border-green-400 shadow-sm'
                                       : answered.selected === index
-                                      ? 'bg-red-50 border-red-400 shadow-sm'
-                                      : 'bg-slate-50 border-slate-200 text-slate-500'
+                                        ? 'bg-red-50 border-red-400 shadow-sm'
+                                        : 'bg-slate-50 border-slate-200 text-slate-500'
                                     : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
-                                }`}
+                                  }`}
                               >
                                 <div className="flex items-center gap-3">
-                                  <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-xs flex-shrink-0 transition-colors ${
-                                    answered
+                                  <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-xs flex-shrink-0 transition-colors ${answered
                                       ? index === question.correct
                                         ? 'bg-green-200 text-green-700'
                                         : answered.selected === index
-                                        ? 'bg-red-200 text-red-700'
-                                        : 'bg-slate-200 text-slate-600'
+                                          ? 'bg-red-200 text-red-700'
+                                          : 'bg-slate-200 text-slate-600'
                                       : 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
-                                  }`}>
+                                    }`}>
                                     {String.fromCharCode(65 + index)}
                                   </span>
                                   <span className="flex-1 text-sm md:text-base text-slate-700 group-hover:text-slate-800">{option}</span>
@@ -692,11 +698,10 @@ const PronounsDetail = () => {
 
                           {/* Feedback */}
                           {answered && (
-                            <div className={`p-4 rounded-lg border-l-4 space-y-1.5 ${
-                              answered.correct
+                            <div className={`p-4 rounded-lg border-l-4 space-y-1.5 ${answered.correct
                                 ? 'bg-green-50 border-green-500'
                                 : 'bg-orange-50 border-orange-500'
-                            }`}>
+                              }`}>
                               <p className="font-bold text-base">
                                 {answered.correct ? '🎉 Correct!' : '❌ Not quite right!'}
                               </p>
@@ -756,8 +761,8 @@ const PronounsDetail = () => {
                   /* Results Screen */
                   <div className="p-6 md:p-8 text-center space-y-5">
                     <h3 className="text-3xl md:text-4xl font-bold text-slate-800">
-                      {Object.keys(modalQuizAnswers).length === quizQuestions.length 
-                        ? '🎊 Quiz Complete!' 
+                      {Object.keys(modalQuizAnswers).length === quizQuestions.length
+                        ? '🎊 Quiz Complete!'
                         : '⏸️ Quiz Paused'}
                     </h3>
 
@@ -778,10 +783,10 @@ const PronounsDetail = () => {
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length === quizQuestions.length
                               ? '🏆 Perfect! You\'re a pronoun master!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 8
-                              ? '🥇 Excellent work!'
-                              : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
-                              ? '👏 Good effort!'
-                              : '📚 Keep practicing!'}
+                                ? '🥇 Excellent work!'
+                                : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
+                                  ? '👏 Good effort!'
+                                  : '📚 Keep practicing!'}
                           </p>
                         </div>
 
@@ -892,11 +897,11 @@ const PronounsDetail = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={selectedType}
         title="Pronouns"
       />

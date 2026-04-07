@@ -34,20 +34,20 @@ export default function Login() {
         }
       }
 
-      // Redirect based on user role - All users go to home page first
-      const user = res.data?.user
-      const userRole = user?.roleAlias || user?.role
+      // Redirect based on user role
+      const user = res.data?.user;
+      const userRole = user?.roleAlias || user?.role;
       
-      if (userRole === 'learner') {
-        navigate('/')
-      } else if (userRole === 'teacher' || userRole === 'tutor') {
-        navigate('/') // Tutor goes to home first, can access dashboard from navbar
-      } else if (userRole === 'admin') {
-        navigate('/')
+      if (userRole === 'admin') {
+        navigate('/admin-dashboard');
+      } else if (userRole === 'tutor' || userRole === 'teacher') {
+        navigate('/tutor/dashboard');
+      } else if (userRole === 'learner') {
+        navigate('/learner');
       } else if (userRole === 'content_provider' || userRole === 'provider') {
-        navigate('/')
+        navigate('/content-provider');
       } else {
-        navigate('/')
+        navigate('/');
       }
     } catch (err) {
       console.error('Login error:', err);

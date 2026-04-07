@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import LearnerLayout from '../layouts/LearnerLayout';
+import { useNavigate, useParams } from 'react-router-dom';
 import apiClient from '../apiClient';
 
 export default function BrowseClasses() {
-  const [classes, setClasses] = useState([]);
+  const [availableClasses, setAvailableClasses] = useState([]);
+  const [enrolledClasses, setEnrolledClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { view } = useParams();
   const [enrolling, setEnrolling] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAvailableClasses();
+    fetchData();
   }, []);
 
-  const fetchAvailableClasses = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await apiClient.get('/classroom/available');
-      setClasses(res.data?.classes || []);
+      const [availableRes, enrolledRes] = await Promise.all([
+        apiClient.get('/classroom/available'),
+        apiClient.get('/dashboard/learner')
+      ]);
+      setAvailableClasses(availableRes.data?.classes || []);
+      setEnrolledClasses(enrolledRes.data?.classes || []);
     } catch (err) {
-      console.error('Failed to load classes:', err);
-      setError('Failed to load available classes');
+      console.error('Failed to load class data:', err);
+      setError('Failed to load class data');
     } finally {
       setLoading(false);
     }
@@ -32,231 +38,279 @@ export default function BrowseClasses() {
     try {
       setEnrolling(classId);
       await apiClient.post(`/classroom/${classId}/enroll`);
-      // Update the class in the list to show enrolled status
-      setClasses(prev => prev.map(cls => 
-        cls.id === classId ? { ...cls, isEnrolled: true } : cls
-      ));
+      // Refresh data after enrollment
+      fetchData();
     } catch (err) {
-      console.error('Failed to enroll:', err);
-      alert(err.response?.data?.error || 'Failed to enroll in class');
+      alert(err.response?.data?.error || 'Failed to enroll');
     } finally {
       setEnrolling(null);
     }
   };
 
-  const filteredClasses = classes.filter(cls => {
-    const matchesSearch = cls.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cls.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cls.teacher?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredAvailable = availableClasses.filter(cls => {
+    const matchesSearch =
+      cls.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cls.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cls.teacher?.name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLevel = levelFilter === 'all' || cls.level === levelFilter;
-    return matchesSearch && matchesLevel;
+    const notEnrolled = !enrolledClasses.some(ec => ec.id === cls.id);
+    return matchesSearch && matchesLevel && notEnrolled;
   });
 
-  const levels = ['all', ...new Set(classes.map(c => c.level).filter(Boolean))];
+  const learningSections = [
+    { id: 'vocabulary', title: 'Vocabulary Master', icon: '📚', description: 'Learn 5000+ words with AI-powered flashcards', color: 'from-[#14b8a6] to-[#f43f5e]', path: '/learner/vocabulary' },
+    { id: 'pronunciation', title: 'Pronunciation Lab', icon: '🎤', description: 'Perfect your accent with native speaker audio', color: 'from-[#f43f5e] to-[#ec4899]', path: '/learner/pronunciation' },
+    { id: 'grammar', title: 'Grammar Mastery', icon: '✏️', description: 'Interactive lessons on all English grammar topics', color: 'from-[#14b8a6] to-[#0ea5e9]', path: '/learner/grammar' },
+    { id: 'exercises', title: 'Practice Hub', icon: '⚡', description: 'Hands-on exercises to master your skills faster', color: 'from-slate-600 to-slate-800', path: '/modules/grammar-hub/exercises', isLink: true }
+  ];
+
+  if (loading) {
+    return (
+      <div className="w-full flex-1">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-12 h-12 border-4 border-[#14b8a6] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-slate-500 font-medium font-['Inter']">Preparing your Classes Hub...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <LearnerLayout>
-      <div>
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-800">Browse Classes</h1>
-          <p className="text-sm text-slate-600">Discover and enroll in available classes</p>
-        </div>
+    <div className="w-full flex-1">
+      <div className="min-h-screen bg-transparent relative font-['Inter']">
+        {/* ── Page Header ── */}
+        <div className="px-10 pt-10 pb-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-12">
+              <div>
+                <h1 className="mb-2" style={{
+                  fontFamily: "'Outfit', sans-serif",
+                  fontSize: '42px',
+                  fontWeight: 900,
+                  letterSpacing: '-0.02em',
+                  background: 'linear-gradient(135deg, #14b8a6 0%, #f43f5e 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  lineHeight: 1.1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}>
+                  <span style={{ WebkitTextFillColor: 'initial' }}>🔍</span> Classroom Hub
+                </h1>
+                <p className="text-slate-500 font-medium max-w-2xl leading-relaxed font-['Inter']" style={{ marginLeft: '4px' }}>
+                  Manage your active enrollments and discover new learning opportunities with expert-led sessions.
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-[20px] border border-teal-100/50 text-center min-w-[100px] shadow-sm">
+                  <div className="text-[24px] font-black tracking-tight text-[#14b8a6] leading-none mb-1 font-['Outfit']">42</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Day Streak</div>
+                </div>
+                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-[20px] border border-pink-100/50 text-center min-w-[100px] shadow-sm">
+                  <div className="text-[24px] font-black tracking-tight text-[#f43f5e] leading-none mb-1 font-['Outfit']">850</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total XP</div>
+                </div>
+              </div>
+            </div>
 
-          {/* Search and Filters */}
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100 mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+
+            {/* Refined Filter Bar - Premium Style */}
+            <div className="bg-white rounded-[24px] border border-slate-100 shadow-sm mb-12 p-4 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+                <div className="flex items-center bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-3">Type</span>
+                  <select className="bg-transparent font-bold text-slate-700 outline-none text-[13px] pr-4 cursor-pointer">
+                    <option>All Classes</option>
+                    <option>Live Class</option>
+                    <option>Self-Paced</option>
+                  </select>
+                </div>
+                <div className="flex items-center bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-3">Level</span>
+                  <select 
+                    value={levelFilter}
+                    onChange={(e) => setLevelFilter(e.target.value)}
+                    className="bg-transparent font-bold text-slate-700 outline-none text-[13px] pr-4 cursor-pointer"
+                  >
+                    <option value="all">Any Level</option>
+                    {['Beginner', 'Intermediate', 'Advanced'].map(lvl => (
+                      <option key={lvl} value={lvl}>{lvl}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 w-full md:w-1/3">
+                <div className="relative flex-1">
                   <input
                     type="text"
-                    placeholder="Search classes by name, description, or instructor..."
+                    placeholder="Search classes..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-2.5 pl-10 pr-4 text-[13px] font-medium outline-none focus:border-teal-400/50 transition-all font-['Inter']"
                   />
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <select
-                  value={levelFilter}
-                  onChange={(e) => setLevelFilter(e.target.value)}
-                  className="px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                >
-                  {levels.map(level => (
-                    <option key={level} value={level}>
-                      {level === 'all' ? 'All Levels' : level}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center text-white">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-800">{classes.length}</div>
-                  <div className="text-xs text-slate-500">Available Classes</div>
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                  {filteredAvailable.length + enrolledClasses.length} Results
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center text-white">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-800">
-                    {new Set(classes.map(c => c.teacher?.id).filter(Boolean)).size}
-                  </div>
-                  <div className="text-xs text-slate-500">Instructors</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center text-white">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-800">
-                    {classes.filter(c => c.isEnrolled).length}
-                  </div>
-                  <div className="text-xs text-slate-500">Enrolled</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Classes Grid */}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-500 border-t-transparent"></div>
-            </div>
-          ) : error ? (
-            <div className="bg-red-50 text-red-700 p-4 rounded-lg text-center">{error}</div>
-          ) : filteredClasses.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">No Classes Found</h3>
-              <p className="text-slate-500 mb-4">
-                {searchTerm || levelFilter !== 'all' 
-                  ? 'Try adjusting your search or filters'
-                  : 'No classes are available at the moment'}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredClasses.map((cls) => (
-                <div
-                  key={cls.id}
-                  className={`bg-white rounded-2xl shadow-sm border overflow-hidden transition-all hover:shadow-md ${
-                    cls.isEnrolled ? 'border-teal-200 ring-1 ring-teal-100' : 'border-slate-100'
-                  }`}
-                >
-                  {/* Card Header */}
-                  <div className="h-28 p-4 flex flex-col justify-between bg-gradient-to-br from-teal-500 to-emerald-500">
-                    <div className="flex justify-between items-start">
-                      <span className="text-white/80 text-xs font-medium px-2 py-1 bg-white/20 rounded-full">
-                        {cls.level || 'General'}
-                      </span>
-                      {cls.isEnrolled && (
-                        <span className="flex items-center gap-1 text-white text-xs font-semibold px-2 py-1 bg-white/20 rounded-full">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          Enrolled
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-white font-bold text-lg truncate">{cls.title}</h3>
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="p-4">
-                    <p className="text-slate-600 text-sm line-clamp-2 mb-4 min-h-[40px]">
-                      {cls.description || 'No description provided'}
-                    </p>
-
-                    {/* Teacher */}
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                        {cls.teacher?.name?.charAt(0)?.toUpperCase() || '?'}
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-slate-800">{cls.teacher?.name || 'Unknown'}</div>
-                        <div className="text-xs text-slate-500">Instructor</div>
-                      </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="flex items-center justify-between text-sm text-slate-500 mb-4 pb-4 border-b border-slate-100">
-                      <div className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        {cls.studentCount || 0} students
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        {cls.sessionCount || 0} sessions
-                      </div>
-                    </div>
-
-                    {/* Action Button */}
-                    {cls.isEnrolled ? (
-                      <Link
-                        to={`/learner/class/${cls.id}`}
-                        className="block w-full py-2.5 text-center rounded-lg font-semibold bg-gradient-to-r from-teal-500 to-emerald-500 text-white hover:from-teal-600 hover:to-emerald-600 transition-all"
-                      >
-                        View Class
-                      </Link>
-                    ) : (
-                      <button
-                        onClick={() => handleEnroll(cls.id)}
-                        disabled={enrolling === cls.id}
-                        className="w-full py-2.5 rounded-lg font-semibold border-2 border-teal-500 text-teal-600 hover:bg-teal-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {enrolling === cls.id ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Enrolling...
-                          </span>
-                        ) : 'Enroll Now'}
-                      </button>
-                    )}
-                  </div>
-                </div>
+            {/* Combined Class List */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20">
+              {/* Active Classes First */}
+              {enrolledClasses.map((cls) => (
+                <EnrolledClassCard key={cls.id} cls={cls} navigate={navigate} />
               ))}
+              
+              {/* Available Classes */}
+              {filteredAvailable.map((cls) => (
+                <AvailableClassCard
+                  key={cls.id}
+                  cls={cls}
+                  enrolling={enrolling === cls.id}
+                  onEnroll={handleEnroll}
+                />
+              ))}
+
+              {/* Empty State if absolutely nothing matches */}
+              {enrolledClasses.length === 0 && filteredAvailable.length === 0 && (
+                <div className="col-span-full py-20 text-center bg-slate-50/50 rounded-[40px] border-2 border-dashed border-slate-200">
+                  <span className="text-4xl mb-4 block">🔍</span>
+                  <h3 className="font-black text-xl text-slate-800 uppercase tracking-tight font-['Outfit']">No classes found</h3>
+                  <p className="text-slate-500 font-medium font-['Inter']">Try adjusting your filters or search terms.</p>
+                </div>
+              )}
             </div>
-          )}
+
+              {/* Learning Specializations */}
+              <section className="pt-20 border-t border-slate-100">
+                <div className="mb-10">
+                  <h2 className="font-black text-[24px] text-slate-900 tracking-tight mb-2 font-['Outfit'] uppercase">
+                    Learning Specializations
+                  </h2>
+                  <p className="text-slate-500 font-medium text-[14px]">Focus on targeted skill development with our core modules</p>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                  {learningSections.map((section) => (
+                    <div
+                      key={section.id}
+                      onClick={() => {
+                        if (section.isLink) window.open(section.path, '_blank');
+                        else {
+                          navigate(section.path);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="group flex flex-col p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden cursor-pointer"
+                    >
+                      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${section.color}`} />
+                      
+                      <div className="text-3xl mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110 origin-left">{section.icon}</div>
+                      <h3 className="text-[16px] font-black text-[#2c3e50] mb-1.5 relative z-10 leading-tight font-['Outfit'] uppercase tracking-tight">{section.title}</h3>
+                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed mb-4 flex-1 relative z-10 font-['Inter']">{section.description}</p>
+                      <div className="flex items-center text-[10px] font-black bg-gradient-to-r from-teal-500 to-pink-500 bg-clip-text text-transparent uppercase tracking-[0.2em] gap-2 group-hover:gap-4 transition-all relative z-10 font-['Outfit']">
+                        View Details <span className="text-pink-500">→</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+          </div>
+        </div>
       </div>
-    </LearnerLayout>
+    </div>
+  );
+}
+
+function EnrolledClassCard({ cls, navigate }) {
+  return (
+    <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border-2 border-slate-50 hover:border-teal-100 overflow-hidden transform hover:-translate-y-1">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-rose-400" />
+      
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-3">
+          <span className="px-4 py-1.5 bg-teal-50 text-teal-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-teal-100">
+            {cls.level}
+          </span>
+          <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
+            ⚡
+          </div>
+        </div>
+
+        <div className="text-center mb-4">
+          <h3 className="text-[15px] font-black text-slate-800 mb-1 font-['Outfit'] uppercase tracking-tight">{cls.title}</h3>
+          <p className="text-[10px] text-slate-500 font-medium line-clamp-2 px-1 leading-relaxed font-['Inter']">{cls.description}</p>
+        </div>
+
+        <div className="bg-slate-50/50 rounded-xl p-2.5 border border-slate-100/50 mb-4 space-y-1.5">
+          <div className="flex items-center justify-between text-[9px] font-black text-slate-400 uppercase tracking-widest font-['Inter']">
+            <span>Mastery</span>
+            <span className="text-teal-600">65%</span>
+          </div>
+          <div className="w-full bg-slate-200 rounded-full h-1 overflow-hidden shadow-inner">
+             <div className="bg-gradient-to-r from-teal-500 to-teal-400 h-full w-[65%] rounded-full shadow-[0_0_4px_rgba(20,184,166,0.3)]"></div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => navigate(`/class/${cls.id}`)}
+          className="w-full py-2.5 bg-slate-900 hover:bg-teal-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95"
+        >
+          {cls.status === 'live' ? 'Join Live' : 'Open Class'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AvailableClassCard({ cls, enrolling, onEnroll }) {
+  return (
+    <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 border-2 border-slate-50 hover:border-teal-100 overflow-hidden transform hover:-translate-y-1">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-rose-400 to-teal-400" />
+      
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-3">
+          <span className="px-4 py-1.5 bg-pink-50 text-pink-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-pink-100">
+            {cls.level || 'General'}
+          </span>
+          <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
+            🎓
+          </div>
+        </div>
+
+        <div className="text-center mb-4">
+          <h3 className="text-[15px] font-black text-slate-800 mb-1 font-['Outfit'] uppercase tracking-tight">{cls.title}</h3>
+          <p className="text-[10px] text-slate-500 font-medium line-clamp-2 px-1 leading-relaxed font-['Inter']">Master {cls.title} with expert sessions.</p>
+        </div>
+
+        <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100/50 mb-4 grid grid-cols-3 gap-1">
+            <div className="text-center">
+              <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mb-1">Teacher</p>
+              <p className="text-[10px] font-bold text-slate-700 truncate">{cls.teacher?.name || 'Dr. Smith'}</p>
+            </div>
+            <div className="text-center border-x border-slate-200">
+              <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mb-1">Units</p>
+              <p className="text-[10px] font-bold text-slate-700">{cls.sessionCount || '12'}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[8px] text-slate-400 font-black uppercase tracking-widest mb-1">Learners</p>
+              <p className="text-[10px] font-bold text-slate-700">{cls.studentCount || '85'}+</p>
+            </div>
+        </div>
+
+        <button
+          onClick={() => onEnroll(cls.id)}
+          disabled={enrolling}
+          className="w-full py-2.5 bg-transparent hover:bg-pink-600 border-2 border-slate-100 hover:border-pink-600 text-slate-800 hover:text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+        >
+          {enrolling ? '...' : 'Secure Spot'}
+        </button>
+      </div>
+    </div>
   );
 }

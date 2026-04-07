@@ -55,9 +55,9 @@ export default function TeacherDashboard() {
 
   return (
     <div className='space-y-6'>
-      <div>
-        <h2 className='text-3xl font-bold text-gray-800'>Teacher Dashboard</h2>
-        <p className='text-gray-600 mt-1'>Manage your lessons and track student progress</p>
+      <div className="mb-8">
+        <h2 className='text-2xl font-bold text-[#0D9488] tracking-tight uppercase font-["Outfit"]'>Teacher Dashboard</h2>
+        <p className='text-slate-400 mt-1 font-medium text-sm'>Manage your lessons and track student progress</p>
       </div>
 
       {/* Summary Cards */}

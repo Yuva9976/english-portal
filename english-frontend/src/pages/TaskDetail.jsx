@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import LearnerLayout from '../layouts/LearnerLayout'
 import apiClient from '../apiClient'
 
 // Priority Badge Component
@@ -11,7 +10,7 @@ function PriorityBadge({ priority }) {
     high: 'bg-amber-100 text-amber-600',
     urgent: 'bg-rose-100 text-rose-600'
   }
-  
+
   return (
     <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${colors[priority] || colors.medium}`}>
       {priority?.charAt(0).toUpperCase() + priority?.slice(1)} Priority
@@ -30,9 +29,9 @@ function StatusBadge({ status }) {
     overdue: { color: 'bg-rose-100 text-rose-600', icon: '⚠️', label: 'Overdue' },
     not_started: { color: 'bg-slate-100 text-slate-600', icon: '📝', label: 'Not Started' }
   }
-  
+
   const { color, icon, label } = config[status] || config.pending
-  
+
   return (
     <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${color}`}>
       <span className="text-lg">{icon}</span> {label}
@@ -84,11 +83,17 @@ export default function TaskDetail() {
   const handleSubmit = async () => {
     try {
       setSubmitting(true)
-      await apiClient.post(`/tasks/${taskId}/submit`, { content })
+      // Updated to match backend route /api/dashboard/learner/submit-task
+      await apiClient.post(`/dashboard/learner/submit-task`, { 
+        taskId, 
+        content,
+        status: 'submitted' 
+      })
       setShowConfirm(false)
       loadTask() // Refresh to show submitted status
     } catch (error) {
       console.error('Failed to submit:', error)
+      alert("Submission failed. Please try again.")
     } finally {
       setSubmitting(false)
     }
@@ -96,9 +101,9 @@ export default function TaskDetail() {
 
   const formatDate = (date) => {
     if (!date) return 'No due date'
-    return new Date(date).toLocaleDateString('en-US', { 
+    return new Date(date).toLocaleDateString('en-US', {
       weekday: 'long',
-      month: 'long', 
+      month: 'long',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
@@ -119,31 +124,31 @@ export default function TaskDetail() {
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    
+
     if (days > 0) {
       return { overdue: false, text: `${days} day${days !== 1 ? 's' : ''} ${hours} hour${hours !== 1 ? 's' : ''} remaining` }
     }
-    
+
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
     return { overdue: false, text: `${hours} hour${hours !== 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''} remaining` }
   }
 
   if (loading) {
     return (
-      <LearnerLayout>
+      <div className="w-full flex-1">
         <div className="flex items-center justify-center min-h-96">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-slate-500 font-medium">Loading task...</p>
           </div>
         </div>
-      </LearnerLayout>
+      </div>
     )
   }
 
   if (!task) {
     return (
-      <LearnerLayout>
+      <div className="w-full flex-1">
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <div className="text-6xl mb-4">📋</div>
@@ -154,7 +159,7 @@ export default function TaskDetail() {
             </Link>
           </div>
         </div>
-      </LearnerLayout>
+      </div>
     )
   }
 
@@ -163,14 +168,14 @@ export default function TaskDetail() {
   const isSubmitted = submission && ['submitted', 'graded'].includes(submission.status)
 
   return (
-    <LearnerLayout>
+    <div className="w-full flex-1">
       <div className="max-w-5xl mx-auto">
         {/* Back Button */}
-        <Link 
-          to="/learner/tasks" 
+        <Link
+          to="/learner/tasks"
           className="inline-flex items-center gap-2 text-slate-500 hover:text-teal-600 mb-6 transition-colors font-medium"
         >
-          <span>←</span> Back to Tasks
+          <span className="font-black text-sm tracking-tight">← Back to Tasks</span>
         </Link>
 
         {/* Header Card */}
@@ -179,14 +184,14 @@ export default function TaskDetail() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-white text-sm font-medium">
+                  <span className="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-white text-[10px] font-black uppercase tracking-widest">
                     {task.type?.charAt(0).toUpperCase() + task.type?.slice(1)}
                   </span>
                   <PriorityBadge priority={task.priority} />
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-2">{task.title}</h1>
-                <p className="text-teal-100">
-                  Assigned by {task.assignedBy?.name || 'Teacher'} 
+                <h1 className="text-3xl font-black text-white mb-2 tracking-tighter drop-shadow-sm">{task.title}</h1>
+                <p className="text-teal-50 text-sm font-bold uppercase tracking-wider opacity-90">
+                  Assigned by {task.assignedBy?.name || 'Teacher'}
                   {task.classroom && ` • ${task.classroom.title}`}
                 </p>
               </div>
@@ -194,215 +199,215 @@ export default function TaskDetail() {
             </div>
           </div>
 
-            <div className="px-8 py-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-sm text-slate-500 mb-1">Due Date</p>
-                  <p className="font-semibold text-slate-800">{formatDate(task.dueDate)}</p>
-                  {timeRemaining && (
-                    <p className={`text-sm mt-1 ${timeRemaining.overdue ? 'text-rose-600' : 'text-emerald-600'}`}>
-                      {timeRemaining.overdue ? '⚠️' : '⏰'} {timeRemaining.text}
-                    </p>
-                  )}
-                </div>
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-sm text-slate-500 mb-1">Points</p>
-                  <p className="font-semibold text-slate-800">{task.maxPoints} points maximum</p>
-                  {submission?.pointsEarned !== null && submission?.pointsEarned !== undefined && (
-                    <p className="text-sm text-violet-600 mt-1">
-                      ⭐ Earned: {submission.pointsEarned} points
-                    </p>
-                  )}
-                </div>
-                <div className="bg-slate-50 rounded-xl p-4">
-                  <p className="text-sm text-slate-500 mb-1">Late Submission</p>
-                  <p className="font-semibold text-slate-800">
-                    {task.allowLate ? `Allowed (${task.latePenalty}% penalty/day)` : 'Not allowed'}
+          <div className="px-8 py-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-50 rounded-xl p-4">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Due Date</p>
+                <p className="font-black text-slate-900 tracking-tight">{formatDate(task.dueDate)}</p>
+                {timeRemaining && (
+                  <p className={`text-[11px] font-bold uppercase mt-1 ${timeRemaining.overdue ? 'text-rose-600' : 'text-emerald-600'}`}>
+                    {timeRemaining.overdue ? '⚠️' : '⏰'} {timeRemaining.text}
                   </p>
-                </div>
+                )}
               </div>
-            </div>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - Instructions & Submission */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Description & Instructions */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-100">
-                  <h2 className="font-semibold text-slate-800">📝 Task Details</h2>
-                </div>
-                <div className="p-6">
-                  {task.description && (
-                    <div className="mb-6">
-                      <h3 className="text-sm font-medium text-slate-500 mb-2">Description</h3>
-                      <p className="text-slate-700 whitespace-pre-wrap">{task.description}</p>
-                    </div>
-                  )}
-                  {task.instructions && (
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-500 mb-2">Instructions</h3>
-                      <div className="bg-slate-50 rounded-xl p-4 text-slate-700 whitespace-pre-wrap">
-                        {task.instructions}
-                      </div>
-                    </div>
-                  )}
-                  {task.attachments && task.attachments.length > 0 && (
-                    <div className="mt-6">
-                      <h3 className="text-sm font-medium text-slate-500 mb-2">Attachments</h3>
-                      <div className="space-y-2">
-                        {task.attachments.map((url, i) => (
-                          <a 
-                            key={i} 
-                            href={url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
-                          >
-                            <span className="text-xl">📎</span>
-                            <span className="text-sm text-cyan-600 hover:underline">Attachment {i + 1}</span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <div className="bg-slate-50 rounded-xl p-4">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Points</p>
+                <p className="font-black text-slate-900 tracking-tight">{task.maxPoints} points maximum</p>
+                {submission?.pointsEarned !== null && submission?.pointsEarned !== undefined && (
+                  <p className="text-[11px] font-black text-violet-600 mt-1 uppercase">
+                    ⭐ Earned: {submission.pointsEarned} points
+                  </p>
+                )}
               </div>
-
-              {/* Submission Section */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                  <h2 className="font-semibold text-slate-800">✏️ Your Submission</h2>
-                  {!isSubmitted && (
-                    <span className="text-xs text-slate-400">Auto-saved as you type</span>
-                  )}
-                </div>
-                <div className="p-6">
-                  {canEdit ? (
-                    <>
-                      <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder="Write your answer or response here..."
-                        className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
-                      />
-                      <div className="flex items-center justify-between mt-4">
-                        <button
-                          onClick={handleSave}
-                          disabled={saving}
-                          className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors disabled:opacity-50"
-                        >
-                          {saving ? 'Saving...' : '💾 Save Draft'}
-                        </button>
-                        <button
-                          onClick={() => setShowConfirm(true)}
-                          disabled={!content.trim()}
-                          className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Submit Task →
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <div>
-                      <div className="bg-slate-50 rounded-xl p-4 mb-4">
-                        <p className="text-sm text-slate-500 mb-2">Your submitted answer:</p>
-                        <p className="text-slate-700 whitespace-pre-wrap">{submission?.content || 'No content submitted'}</p>
-                      </div>
-                      {submission?.submittedAt && (
-                        <p className="text-sm text-slate-500">
-                          Submitted on {formatDate(submission.submittedAt)}
-                          {submission.isLate && <span className="text-amber-600 ml-2">⚠️ Late submission</span>}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Feedback & Info */}
-            <div className="space-y-6">
-              {/* Grade Card (if graded) */}
-              {submission?.status === 'graded' && (
-                <div className="bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-                  <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                    <span>⭐</span> Your Grade
-                  </h3>
-                  <div className="text-center py-4">
-                    <div className="text-5xl font-bold mb-2">
-                      {submission.pointsEarned}
-                      <span className="text-2xl text-violet-200">/{task.maxPoints}</span>
-                    </div>
-                    <p className="text-violet-200">
-                      {Math.round((submission.pointsEarned / task.maxPoints) * 100)}% Score
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Feedback Card */}
-              {submission?.feedback && (
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                  <div className="px-6 py-4 border-b border-slate-100">
-                    <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-                      <span>💬</span> Teacher Feedback
-                    </h3>
-                  </div>
-                  <div className="p-6">
-                    <p className="text-slate-700 whitespace-pre-wrap">{submission.feedback}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Tips Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-100">
-                  <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-                    <span>💡</span> Tips
-                  </h3>
-                </div>
-                <div className="p-6">
-                  <ul className="space-y-3 text-sm text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-emerald-500 mt-0.5">✓</span>
-                      Read all instructions carefully before starting
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-emerald-500 mt-0.5">✓</span>
-                      Save your work frequently to avoid losing progress
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-emerald-500 mt-0.5">✓</span>
-                      Review your answer before submitting
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-emerald-500 mt-0.5">✓</span>
-                      Submit before the deadline to avoid penalties
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Help Card */}
-              <div className="bg-amber-50 rounded-2xl border border-amber-100 p-6">
-                <h3 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
-                  <span>❓</span> Need Help?
-                </h3>
-                <p className="text-sm text-amber-700 mb-4">
-                  If you have questions about this task, contact your teacher.
+              <div className="bg-slate-50 rounded-xl p-4">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Late Submission</p>
+                <p className="font-black text-slate-900 tracking-tight">
+                  {task.allowLate ? `Allowed (${task.latePenalty}% penalty/day)` : 'Not allowed'}
                 </p>
-                <Link 
-                  to="/queries" 
-                  className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-800"
-                >
-                  Submit a Query →
-                </Link>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Instructions & Submission */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Description & Instructions */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100">
+                <h2 className="font-black text-slate-900 uppercase tracking-tight">📝 Task Details</h2>
+              </div>
+              <div className="p-6">
+                {task.description && (
+                  <div className="mb-6">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Description</h3>
+                    <p className="text-slate-800 font-bold leading-relaxed whitespace-pre-wrap">{task.description}</p>
+                  </div>
+                )}
+                {task.instructions && (
+                  <div>
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Instructions</h3>
+                    <div className="bg-slate-50 rounded-xl p-4 text-slate-800 font-bold leading-relaxed whitespace-pre-wrap">
+                      {task.instructions}
+                    </div>
+                  </div>
+                )}
+                {task.attachments && task.attachments.length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-slate-500 mb-2">Attachments</h3>
+                    <div className="space-y-2">
+                      {task.attachments.map((url, i) => (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                        >
+                          <span className="text-xl">📎</span>
+                          <span className="text-sm text-cyan-600 hover:underline">Attachment {i + 1}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Submission Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h2 className="font-black text-slate-900 uppercase tracking-tight">✏️ Your Submission</h2>
+                {!isSubmitted && (
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Auto-saved as you type</span>
+                )}
+              </div>
+              <div className="p-6">
+                {canEdit ? (
+                  <>
+                    <textarea
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Write your answer or response here..."
+                      className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                    />
+                    <div className="flex items-center justify-between mt-4">
+                      <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors disabled:opacity-50"
+                      >
+                        {saving ? 'Saving...' : '💾 Save Draft'}
+                      </button>
+                      <button
+                        onClick={() => setShowConfirm(true)}
+                        disabled={!content.trim()}
+                        className="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Submit Task →
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                      <p className="text-sm text-slate-500 mb-2">Your submitted answer:</p>
+                      <p className="text-slate-700 whitespace-pre-wrap">{submission?.content || 'No content submitted'}</p>
+                    </div>
+                    {submission?.submittedAt && (
+                      <p className="text-sm text-slate-500">
+                        Submitted on {formatDate(submission.submittedAt)}
+                        {submission.isLate && <span className="text-amber-600 ml-2">⚠️ Late submission</span>}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Feedback & Info */}
+          <div className="space-y-6">
+            {/* Grade Card (if graded) */}
+            {submission?.status === 'graded' && (
+              <div className="bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <span>⭐</span> Your Grade
+                </h3>
+                <div className="text-center py-4">
+                  <div className="text-5xl font-bold mb-2">
+                    {submission.pointsEarned}
+                    <span className="text-2xl text-violet-200">/{task.maxPoints}</span>
+                  </div>
+                  <p className="text-violet-200">
+                    {Math.round((submission.pointsEarned / task.maxPoints) * 100)}% Score
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Feedback Card */}
+            {submission?.feedback && (
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100">
+                  <h3 className="font-semibold text-slate-800 flex items-center gap-2">
+                    <span>💬</span> Teacher Feedback
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <p className="text-slate-700 whitespace-pre-wrap">{submission.feedback}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Tips Card */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100">
+                <h3 className="font-semibold text-slate-800 flex items-center gap-2">
+                  <span>💡</span> Tips
+                </h3>
+              </div>
+              <div className="p-6">
+                <ul className="space-y-3 text-sm text-slate-600">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 mt-0.5">✓</span>
+                    Read all instructions carefully before starting
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 mt-0.5">✓</span>
+                    Save your work frequently to avoid losing progress
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 mt-0.5">✓</span>
+                    Review your answer before submitting
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 mt-0.5">✓</span>
+                    Submit before the deadline to avoid penalties
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Help Card */}
+            <div className="bg-amber-50 rounded-2xl border border-amber-100 p-6">
+              <h3 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
+                <span>❓</span> Need Help?
+              </h3>
+              <p className="text-sm text-amber-700 mb-4">
+                If you have questions about this task, contact your teacher.
+              </p>
+              <Link
+                to="/queries"
+                className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-800"
+              >
+                Submit a Query →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Confirmation Modal */}
       {showConfirm && (
@@ -442,6 +447,6 @@ export default function TaskDetail() {
           </div>
         </div>
       )}
-    </LearnerLayout>
+    </div>
   )
 }

@@ -1,8 +1,77 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import TutorDashboardLayout from '../components/TutorDashboardLayout'
+import { useNavigate } from 'react-router-dom'
 import apiClient from '../apiClient'
 
+const Modal = ({ show, onClose, title, children }) => {
+  if (!show) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-teal-500 to-emerald-500">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-white">{title}</h3>
+            <button onClick={onClose} className="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+          </div>
+        </div>
+        <div className="p-6">{children}</div>
+      </div>
+    </div>
+  )
+}
+
+const ClassForm = ({ formData, setFormData, submitting, onSubmit, buttonText }) => (
+  <form onSubmit={onSubmit} className="space-y-4">
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-1">Class Title *</label>
+      <input
+        type="text"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+        placeholder="e.g., Advanced Grammar A2"
+        required
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-1">Description</label>
+      <textarea
+        value={formData.description}
+        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all resize-none"
+        rows={3}
+        placeholder="Brief description of the class..."
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-1">Level</label>
+      <select
+        value={formData.level}
+        onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+      >
+        <option value="General">General</option>
+        <option value="Beginner">Beginner (A1)</option>
+        <option value="Elementary">Elementary (A2)</option>
+        <option value="Intermediate">Intermediate (B1)</option>
+        <option value="Upper Intermediate">Upper Intermediate (B2)</option>
+        <option value="Advanced">Advanced (C1)</option>
+        <option value="Proficiency">Proficiency (C2)</option>
+      </select>
+    </div>
+    <div className="flex gap-3 pt-2">
+      <button
+        type="submit"
+        disabled={submitting}
+        className="flex-1 py-3 px-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+      >
+        {submitting ? 'Saving...' : buttonText}
+      </button>
+    </div>
+  </form>
+)
+
 export default function TutorClasses() {
+  const navigate = useNavigate()
   const [classes, setClasses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -82,77 +151,8 @@ export default function TutorClasses() {
     setShowEditModal(true)
   }
 
-  const Modal = ({ show, onClose, title, children }) => {
-    if (!show) return null
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-          <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-teal-500 to-emerald-500">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-white">{title}</h3>
-              <button onClick={onClose} className="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
-            </div>
-          </div>
-          <div className="p-6">{children}</div>
-        </div>
-      </div>
-    )
-  }
-
-  const ClassForm = ({ onSubmit, buttonText }) => (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">Class Title *</label>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
-          placeholder="e.g., Advanced Grammar A2"
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">Description</label>
-        <textarea
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all resize-none"
-          rows={3}
-          placeholder="Brief description of the class..."
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">Level</label>
-        <select
-          value={formData.level}
-          onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
-        >
-          <option value="General">General</option>
-          <option value="Beginner">Beginner (A1)</option>
-          <option value="Elementary">Elementary (A2)</option>
-          <option value="Intermediate">Intermediate (B1)</option>
-          <option value="Upper Intermediate">Upper Intermediate (B2)</option>
-          <option value="Advanced">Advanced (C1)</option>
-          <option value="Proficiency">Proficiency (C2)</option>
-        </select>
-      </div>
-      <div className="flex gap-3 pt-2">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="flex-1 py-3 px-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
-        >
-          {submitting ? 'Saving...' : buttonText}
-        </button>
-      </div>
-    </form>
-  )
-
   return (
-    <TutorDashboardLayout>
-      <div className="space-y-6">
+    <div className="p-8 space-y-6">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -211,11 +211,10 @@ export default function TutorClasses() {
                 <div className="p-6">
                   {/* Status Badge */}
                   <div className="flex items-center justify-between mb-3">
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      cls.status === 'active' 
-                        ? 'bg-emerald-100 text-emerald-700' 
-                        : 'bg-slate-100 text-slate-600'
-                    }`}>
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${cls.status === 'active'
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-slate-100 text-slate-600'
+                      }`}>
                       {cls.status === 'active' ? '● Active' : 'Inactive'}
                     </span>
                     <span className="text-xs text-slate-400">{cls.level}</span>
@@ -244,8 +243,14 @@ export default function TutorClasses() {
                   {/* Actions */}
                   <div className="flex gap-2 pt-3 border-t border-slate-100">
                     <button
+                      onClick={() => navigate(`/tutor/classes/${cls.id}/resources`)}
+                      className="flex-1 py-2 px-3 text-sm font-medium text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+                    >
+                      📁 Resources
+                    </button>
+                    <button
                       onClick={() => openEditModal(cls)}
-                      className="flex-1 py-2 px-3 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors"
+                      className="py-2 px-3 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors"
                     >
                       ✏️ Edit
                     </button>
@@ -264,14 +269,13 @@ export default function TutorClasses() {
 
         {/* Create Modal */}
         <Modal show={showCreateModal} onClose={() => setShowCreateModal(false)} title="Create New Class">
-          <ClassForm onSubmit={handleCreateClass} buttonText="Create Class" />
+          <ClassForm formData={formData} setFormData={setFormData} submitting={submitting} onSubmit={handleCreateClass} buttonText="Create Class" />
         </Modal>
 
         {/* Edit Modal */}
         <Modal show={showEditModal} onClose={() => { setShowEditModal(false); setSelectedClass(null); }} title="Edit Class">
-          <ClassForm onSubmit={handleEditClass} buttonText="Save Changes" />
+          <ClassForm formData={formData} setFormData={setFormData} submitting={submitting} onSubmit={handleEditClass} buttonText="Save Changes" />
         </Modal>
       </div>
-    </TutorDashboardLayout>
   )
 }

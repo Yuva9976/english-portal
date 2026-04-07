@@ -7,7 +7,7 @@ const AdverbsDetail = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [writingRevealed, setWritingRevealed] = useState(false);
   const [readingRevealed, setReadingRevealed] = useState(false);
-  
+
   // Learn More Modal States
   const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -55,7 +55,17 @@ const AdverbsDetail = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -69,11 +79,10 @@ const AdverbsDetail = () => {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -226,11 +235,11 @@ const AdverbsDetail = () => {
       </div>
 
       <style>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>
-      
+
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={selectedItem}
         title="Adverbs"
       />

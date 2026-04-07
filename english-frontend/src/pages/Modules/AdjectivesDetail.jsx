@@ -11,7 +11,7 @@ const AdjectivesDetail = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [modalQuizAnswers, setModalQuizAnswers] = useState({});
   const [singleQuestionMode, setSingleQuestionMode] = useState(false);
-  
+
   // Learn More Modal States
   const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -64,7 +64,17 @@ const AdjectivesDetail = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -78,11 +88,10 @@ const AdjectivesDetail = () => {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -163,11 +172,11 @@ const AdjectivesDetail = () => {
 
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl shadow-md p-5 md:p-6 border border-yellow-300">
             <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center"><span className="text-2xl mr-2">🌟</span>Pro Tips & Common Mistakes</h3>
-            <div className="grid sm:grid-cols-2 gap-3 mb-4">{tips.map((tip,idx)=>(<div key={idx} className={`bg-${tip.color}-50 border-l-4 border-${tip.color}-500 p-3 rounded-r-lg`}><div className="flex items-start gap-2"><span className="text-xl flex-shrink-0">{tip.icon}</span><div><span className={`font-semibold text-${tip.color}-700 block mb-0.5 text-sm`}>{tip.type}</span><p className="text-gray-700 text-sm">{tip.text}</p></div></div></div>))}</div>
+            <div className="grid sm:grid-cols-2 gap-3 mb-4">{tips.map((tip, idx) => (<div key={idx} className={`bg-${tip.color}-50 border-l-4 border-${tip.color}-500 p-3 rounded-r-lg`}><div className="flex items-start gap-2"><span className="text-xl flex-shrink-0">{tip.icon}</span><div><span className={`font-semibold text-${tip.color}-700 block mb-0.5 text-sm`}>{tip.type}</span><p className="text-gray-700 text-sm">{tip.text}</p></div></div></div>))}</div>
           </div>
         </section>
 
-        <section id="videos" className="mb-12 scroll-mt-32"><div className="bg-white rounded-xl shadow-md p-6"><h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">🎥</span>Video Lessons</h2><p className="text-gray-600 text-sm mb-5">Short lessons to reinforce usage</p><div className="grid md:grid-cols-2 gap-4">{videos.map(video=> (<div key={video.id} className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all"><div className="aspect-video bg-gray-900"><iframe className="w-full h-full" src={`https://www.youtube.com/embed/${video.embedId}`} title={video.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/></div><div className="p-3"><h3 className="font-semibold text-base text-gray-800 mb-1">{video.title}</h3><p className="text-sm text-gray-600">{video.description}</p></div></div>))}</div></div></section>
+        <section id="videos" className="mb-12 scroll-mt-32"><div className="bg-white rounded-xl shadow-md p-6"><h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">🎥</span>Video Lessons</h2><p className="text-gray-600 text-sm mb-5">Short lessons to reinforce usage</p><div className="grid md:grid-cols-2 gap-4">{videos.map(video => (<div key={video.id} className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all"><div className="aspect-video bg-gray-900"><iframe className="w-full h-full" src={`https://www.youtube.com/embed/${video.embedId}`} title={video.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen /></div><div className="p-3"><h3 className="font-semibold text-base text-gray-800 mb-1">{video.title}</h3><p className="text-sm text-gray-600">{video.description}</p></div></div>))}</div></div></section>
 
         <section id="writing" className="mb-12 scroll-mt-32"><div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl shadow-md p-5 md:p-6 border border-green-300"><h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 flex items-center"><span className="text-2xl mr-2">✍️</span>Writing Exercise</h2><p className="text-gray-600 text-sm mb-4">Practice choosing clear, natural modifiers</p><div className="bg-white rounded-lg p-4 shadow-sm"><div className="bg-green-100 border-l-4 border-green-500 p-3 rounded-r-lg mb-4"><h3 className="font-semibold text-gray-800 mb-1 text-sm">📝 Your Task:</h3><p className="text-gray-700 text-sm">Write five short sentences using different adjective types and order them naturally.</p></div><textarea className="w-full border-2 border-gray-300 rounded-lg p-4 mb-4 focus:border-green-500 focus:outline-none min-h-[200px]" placeholder={"Type your sentences here...\n\nExample:\n1. The small brown dog barked loudly."} /><div className="flex gap-3 flex-wrap"><button onClick={() => setWritingRevealed(!writingRevealed)} className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">{writingRevealed ? 'Hide' : 'Show'} Sample Answer</button><button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">Submit for Review</button></div>{writingRevealed && (<div className="mt-6 bg-green-50 border-2 border-green-300 rounded-xl p-6 animate-fade-in"><h4 className="font-bold text-gray-800 mb-4">📋 Sample Answer:</h4><ol className="space-y-3 list-decimal list-inside text-gray-700"><li>The <span className="font-semibold">old</span> house looked charming.</li><li>She bought <span className="font-semibold">three</span> red apples.</li><li>I prefer the <span className="font-semibold">quiet</span> corner for study.</li></ol></div>)}</div></div></section>
 
@@ -255,11 +264,11 @@ const AdjectivesDetail = () => {
       </div>
 
       <style>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>
-      
+
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={selectedItem}
         title="Adjectives"
       />

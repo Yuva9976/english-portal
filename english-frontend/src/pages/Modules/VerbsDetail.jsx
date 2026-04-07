@@ -19,13 +19,13 @@ const VerbsDetail = () => {
   const [learnMoreData, setLearnMoreData] = useState(null);
   const [loadingLearnMore, setLoadingLearnMore] = useState(false);
   const [activeLearnTab, setActiveLearnTab] = useState('overview');
-  
+
   // API Data State
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quizQuestions, setQuizQuestions] = useState([]);
-  
+
   // Comprehensive Content Modal State
   const [showComprehensiveModal, setShowComprehensiveModal] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
@@ -37,11 +37,11 @@ const VerbsDetail = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Fetch part details (ID 11 for Verbs)
         const partResponse = await grammarAPI.getPartDetails(11);
         setApiData(partResponse.data);
-        
+
         // Fetch quiz questions
         const quizResponse = await grammarAPI.getQuiz(11);
         setQuizQuestions(quizResponse.data || []);
@@ -135,7 +135,17 @@ const VerbsDetail = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -149,11 +159,10 @@ const VerbsDetail = () => {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -239,14 +248,14 @@ const VerbsDetail = () => {
                     <div className="px-7 pb-8 flex-1 flex flex-col z-10">
                       <p className="text-base text-gray-700 leading-relaxed mb-5 font-semibold bg-white/70 rounded-xl px-3 py-2 shadow-sm">{topic.definition}</p>
                       <div className="space-y-4 mb-5">
-                        {topic.examples.slice(0,2).map((ex, i) => (
+                        {topic.examples.slice(0, 2).map((ex, i) => (
                           <div key={i} className={`bg-gradient-to-r from-${topic.color}-50 to-blue-50 px-5 py-3 rounded-xl border border-${topic.color}-100 shadow group-hover:scale-[1.03] group-hover:border-${topic.color}-300 transition-all`}>
                             <p className="text-base text-gray-700 font-medium" dangerouslySetInnerHTML={{ __html: ex }} />
                           </div>
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-3 mb-5">
-                        {topic.sampleWords.slice(0,4).map((w, idx) => (
+                        {topic.sampleWords.slice(0, 4).map((w, idx) => (
                           <span key={idx} className={`bg-gradient-to-r from-${topic.color}-200 to-blue-200 text-${topic.color}-700 px-5 py-2 rounded-full text-base font-bold border border-${topic.color}-300 shadow group-hover:ring-2 group-hover:ring-blue-200`}>{w}</span>
                         ))}
                       </div>
@@ -374,7 +383,7 @@ const VerbsDetail = () => {
 
         {/* READING EXERCISE - Modern Nouns Style */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover max-w-6xl mx-auto" style={{marginLeft: '20px'}}>
+          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover max-w-6xl mx-auto" style={{ marginLeft: '20px' }}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
               <span className="text-xl mr-2">📚</span>
               Reading Exercise
@@ -474,11 +483,10 @@ const VerbsDetail = () => {
 
                   {/* Answer Status */}
                   {answered && (
-                    <div className={`text-xs font-medium p-1.5 rounded ${
-                      answered.correct 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                    <div className={`text-xs font-medium p-1.5 rounded ${answered.correct
+                        ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-orange-50 text-orange-700 border border-orange-200'
-                    }`}>
+                      }`}>
                       {answered.correct ? 'Correct!' : 'Try again'}
                     </div>
                   )}
@@ -514,7 +522,7 @@ const VerbsDetail = () => {
                       const question = allQuestions[currentQuestionIndex];
                       const answered = modalQuizAnswers[question.id];
                       const isApiQuestion = quizQuestions.length > 0;
-                      
+
                       return (
                         <div className="space-y-5">
                           <div className="space-y-2">
@@ -620,7 +628,7 @@ const VerbsDetail = () => {
       {showComprehensiveModal && selectedType && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-2 md:p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full my-4 max-h-[95vh] overflow-y-auto">
-            
+
             {/* Modal Header */}
             <div className="sticky top-0 bg-gradient-to-r from-teal-600 via-teal-500 to-rose-400 text-white p-6 md:p-8 flex items-start justify-between border-b-4 border-teal-300 gap-4">
               <div className="flex items-start gap-4 flex-1">
@@ -640,7 +648,7 @@ const VerbsDetail = () => {
 
             {/* Modal Content */}
             <div className="p-6 md:p-8 space-y-6">
-              
+
               {/* Quick Overview Section */}
               <div className="bg-gradient-to-br from-teal-50 to-rose-50 rounded-xl p-6 border-2 border-teal-200">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
@@ -672,7 +680,7 @@ const VerbsDetail = () => {
 
               {/* Expandable Sections */}
               <div className="space-y-3">
-                
+
                 {/* Section 1: Deep Explanation */}
                 <div className="border-2 border-gray-300 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                   <button
@@ -918,7 +926,7 @@ const VerbsDetail = () => {
                               { q: "Choose the correct form: 'They ___ running.'", opts: ["is", "are", "am", "been"], ans: "B", exp: "Plural 'they' needs 'are'" }
                             ].map((item, i) => (
                               <div key={i} className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                                <p className="font-semibold text-gray-800 mb-2">{i+1}. {item.q}</p>
+                                <p className="font-semibold text-gray-800 mb-2">{i + 1}. {item.q}</p>
                                 <p className="text-sm text-gray-700 text-sm mb-2">
                                   <span className="font-semibold">Answer:</span> {item.ans} - {item.exp}
                                 </p>
@@ -939,7 +947,7 @@ const VerbsDetail = () => {
                               { q: "Which shows correct tense consistency?", opts: ["ran and buys", "runs and bought", "ran and bought", "running and buy"], ans: "C", exp: "Both past tense: consistent" }
                             ].map((item, i) => (
                               <div key={i} className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
-                                <p className="font-semibold text-gray-800 mb-2">{i+1}. {item.q}</p>
+                                <p className="font-semibold text-gray-800 mb-2">{i + 1}. {item.q}</p>
                                 <p className="text-sm text-gray-700 mb-2">
                                   <span className="font-semibold">Answer:</span> {item.ans} - {item.exp}
                                 </p>
@@ -960,7 +968,7 @@ const VerbsDetail = () => {
                               { q: "Analyze: 'While they were playing, she entered.' Tenses?", opts: ["Past simple only", "Past continuous and past simple", "Both future", "Both present"], ans: "B", exp: "Were playing = continuous, entered = simple past" }
                             ].map((item, i) => (
                               <div key={i} className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
-                                <p className="font-semibold text-gray-800 mb-2">{i+1}. {item.q}</p>
+                                <p className="font-semibold text-gray-800 mb-2">{i + 1}. {item.q}</p>
                                 <p className="text-sm text-gray-700 mb-2">
                                   <span className="font-semibold">Answer:</span> {item.ans} - {item.exp}
                                 </p>
@@ -1053,7 +1061,7 @@ const VerbsDetail = () => {
                       { title: "Common Mistakes with Action Verbs", channel: "Learn English Lab", duration: "9 mins", topics: "Errors, corrections, tips" }
                     ].map((vid, i) => (
                       <div key={i} className="bg-white p-4 rounded-lg hover:shadow-md transition-shadow">
-                        <p className="font-bold text-purple-700 mb-1">{i+1}. {vid.title}</p>
+                        <p className="font-bold text-purple-700 mb-1">{i + 1}. {vid.title}</p>
                         <p className="text-sm text-gray-700 mb-2">
                           <span className="font-semibold">Channel:</span> {vid.channel} • <span className="font-semibold">Duration:</span> {vid.duration}
                         </p>
@@ -1113,11 +1121,11 @@ const VerbsDetail = () => {
       )}
 
       <style>{`@keyframes fade-in {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} } .animate-fade-in { animation: fade-in 0.3s ease-out; }`}</style>
-      
+
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={learnMoreData}
         title="Verbs"
       />

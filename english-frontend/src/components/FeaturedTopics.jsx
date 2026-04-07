@@ -11,7 +11,7 @@ const topics = [
   { key: 'reading', slug: 'reading', title: 'Reading', desc: 'Short texts with comprehension.', route: '/modules/learn-english/reading' },
 ]
 
-export default function FeaturedTopics(){
+export default function FeaturedTopics() {
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -36,14 +36,13 @@ export default function FeaturedTopics(){
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
           {topics.map(t => (
-            <div 
+            <div
               key={t.key}
               onClick={() => handleCardClick(t.route)}
-              className={`block bg-white rounded-lg p-6 shadow transition transform ${
-                token 
-                  ? 'hover:shadow-xl hover:scale-105 cursor-pointer' 
+              className={`block bg-white rounded-lg p-6 shadow transition transform ${token
+                  ? 'hover:shadow-xl hover:scale-105 cursor-pointer'
                   : 'hover:shadow-xl hover:scale-105 cursor-pointer'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 text-white flex items-center justify-center font-bold">{t.title[0]}</div>

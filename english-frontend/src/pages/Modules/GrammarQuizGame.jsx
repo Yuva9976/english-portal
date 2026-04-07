@@ -268,47 +268,47 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
   const questions = quizType === 'nouns'
     ? nounQuestions
     : quizType === 'pronouns'
-    ? pronounQuestions
-    : quizType === 'verbs'
-    ? verbQuestions
-    : quizType === 'adjectives'
-    ? adjectiveQuestions
-    : quizType === 'adverbs'
-    ? adverbQuestions
-    : quizType === 'prepositions'
-    ? prepositionQuestions
-    : quizType === 'conjunctions'
-    ? conjunctionQuestions
-    : quizType === 'determiners'
-    ? determinerQuestions
-    : quizType === 'interjections'
-    ? interjectionQuestions
-    : nounQuestions;
+      ? pronounQuestions
+      : quizType === 'verbs'
+        ? verbQuestions
+        : quizType === 'adjectives'
+          ? adjectiveQuestions
+          : quizType === 'adverbs'
+            ? adverbQuestions
+            : quizType === 'prepositions'
+              ? prepositionQuestions
+              : quizType === 'conjunctions'
+                ? conjunctionQuestions
+                : quizType === 'determiners'
+                  ? determinerQuestions
+                  : quizType === 'interjections'
+                    ? interjectionQuestions
+                    : nounQuestions;
 
   const quizTitle = quizType === 'nouns'
     ? 'Comprehensive Nouns Quiz'
     : quizType === 'pronouns'
-    ? 'Comprehensive Pronouns Quiz'
-    : quizType === 'verbs'
-    ? 'Comprehensive Verbs Quiz'
-    : quizType === 'adjectives'
-    ? 'Comprehensive Adjectives Quiz'
-    : quizType === 'adverbs'
-    ? 'Comprehensive Adverbs Quiz'
-    : quizType === 'prepositions'
-    ? 'Comprehensive Prepositions Quiz'
-    : quizType === 'conjunctions'
-    ? 'Comprehensive Conjunctions Quiz'
-    : quizType === 'determiners'
-    ? 'Comprehensive Determiners Quiz'
-    : quizType === 'interjections'
-    ? 'Comprehensive Interjections Quiz'
-    : 'Comprehensive Quiz';
+      ? 'Comprehensive Pronouns Quiz'
+      : quizType === 'verbs'
+        ? 'Comprehensive Verbs Quiz'
+        : quizType === 'adjectives'
+          ? 'Comprehensive Adjectives Quiz'
+          : quizType === 'adverbs'
+            ? 'Comprehensive Adverbs Quiz'
+            : quizType === 'prepositions'
+              ? 'Comprehensive Prepositions Quiz'
+              : quizType === 'conjunctions'
+                ? 'Comprehensive Conjunctions Quiz'
+                : quizType === 'determiners'
+                  ? 'Comprehensive Determiners Quiz'
+                  : quizType === 'interjections'
+                    ? 'Comprehensive Interjections Quiz'
+                    : 'Comprehensive Quiz';
 
   const handleAnswer = (answerIndex) => {
     const question = questions[currentQuestionIndex];
     const isCorrect = answerIndex === question.correct;
-    
+
     setQuizAnswers(prev => ({
       ...prev,
       [question.id]: { selected: answerIndex, correct: isCorrect }
@@ -344,8 +344,8 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
               {quizType === 'nouns' ? '🏛️' : '💬'} {quizTitle}
             </h1>
             <p className="text-gray-600 text-sm md:text-base mb-4">
-              {quizType === 'nouns' 
-                ? 'Test your knowledge of noun types, usage, and identification!' 
+              {quizType === 'nouns'
+                ? 'Test your knowledge of noun types, usage, and identification!'
                 : 'Test your knowledge of pronoun types, usage, and identification!'}
             </p>
           </div>
@@ -387,7 +387,13 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
               Start Quiz 🚀
             </button>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
               className="flex-1 border-2 border-gray-300 text-gray-700 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-50 transition-colors"
             >
               Go Back
@@ -423,11 +429,10 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
             {questions.map((q, index) => (
               <div
                 key={q.id}
-                className={`p-4 rounded-lg border-l-4 ${
-                  quizAnswers[q.id]?.correct
+                className={`p-4 rounded-lg border-l-4 ${quizAnswers[q.id]?.correct
                     ? 'bg-green-50 border-green-500'
                     : 'bg-red-50 border-red-500'
-                }`}
+                  }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -454,7 +459,13 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
               Retake Quiz
             </button>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
               className="flex-1 border-2 border-gray-300 text-gray-700 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-50 transition-colors"
             >
               Go Back
@@ -519,15 +530,14 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
                 key={index}
                 onClick={() => !isAnswered && handleAnswer(index)}
                 disabled={isAnswered}
-                className={`w-full p-2.5 md:p-3 rounded-lg border-2 text-left text-sm font-medium transition-all duration-200 ${
-                  isAnswered
+                className={`w-full p-2.5 md:p-3 rounded-lg border-2 text-left text-sm font-medium transition-all duration-200 ${isAnswered
                     ? index === question.correct
                       ? 'bg-green-50 border-green-400 text-green-900'
                       : index === quizAnswers[question.id]?.selected
-                      ? 'bg-red-50 border-red-400 text-red-900'
-                      : 'bg-gray-50 border-gray-200 text-gray-400'
+                        ? 'bg-red-50 border-red-400 text-red-900'
+                        : 'bg-gray-50 border-gray-200 text-gray-400'
                     : 'bg-white border-gray-300 hover:border-teal-400 hover:bg-teal-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center">
@@ -545,11 +555,10 @@ const GrammarQuizGame = ({ quizType = 'nouns' }) => {
 
           {/* Feedback */}
           {isAnswered && (
-            <div className={`p-3 rounded-lg border-l-4 mb-4 ${
-              quizAnswers[question.id].correct
+            <div className={`p-3 rounded-lg border-l-4 mb-4 ${quizAnswers[question.id].correct
                 ? 'bg-green-50 border-green-500'
                 : 'bg-orange-50 border-orange-500'
-            }`}>
+              }`}>
               <p className="text-xs text-gray-800 mb-1.5">
                 <span className="font-bold">{quizAnswers[question.id].correct ? '🎉 Correct!' : '📝 Not quite!'}</span>
               </p>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import SiteFooter from './SiteFooter'
+import SidebarProfile from './shared/SidebarProfile'
 
 const sidebarItems = [
   { label: 'Dashboard', icon: '📊', to: '/tutor/dashboard', description: 'Overview & stats' },
@@ -90,30 +91,11 @@ export default function TutorDashboardLayout({ children }) {
           <aside className='hidden lg:flex lg:w-72 flex-shrink-0 flex-col min-h-[calc(100vh-64px)] sticky top-16'>
             {/* Sidebar Inner Container with Glass Effect */}
             <div className='flex flex-col h-full py-6 pr-6'>
-              {/* User Profile Card */}
-              <div className='mb-6 p-4 rounded-2xl bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-600 text-white shadow-xl shadow-teal-200/50'>
-                <div className='flex items-center gap-3 mb-3'>
-                  <div className='w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center font-bold text-lg border border-white/30'>
-                    {initials}
-                  </div>
-                  <div>
-                    <p className='font-semibold'>{userName}</p>
-                    <p className='text-xs text-teal-100 flex items-center gap-1'>
-                      <span className='w-2 h-2 bg-emerald-300 rounded-full animate-pulse'></span>
-                      Online • Tutor
-                    </p>
-                  </div>
-                </div>
-                <div className='grid grid-cols-2 gap-2 pt-3 border-t border-white/20'>
-                  <div className='text-center p-2 rounded-lg bg-white/10'>
-                    <p className='text-lg font-bold'>24</p>
-                    <p className='text-[10px] text-teal-100 uppercase tracking-wide'>Students</p>
-                  </div>
-                  <div className='text-center p-2 rounded-lg bg-white/10'>
-                    <p className='text-lg font-bold'>8</p>
-                    <p className='text-[10px] text-teal-100 uppercase tracking-wide'>Classes</p>
-                  </div>
-                </div>
+              {/* User Profile Card - Integrated SidebarProfile */}
+              <SidebarProfile profile={user} collapsed={false} />
+
+              <div className='mb-6 p-4 rounded-2xl bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-600 text-white shadow-xl shadow-teal-200/50 hidden'>
+                {/* Old card hidden */}
               </div>
 
               {/* Navigation Section */}

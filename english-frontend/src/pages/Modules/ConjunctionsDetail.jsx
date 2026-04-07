@@ -11,7 +11,7 @@ export default function ConjunctionsDetail() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [modalQuizAnswers, setModalQuizAnswers] = useState({});
   const [singleQuestionMode, setSingleQuestionMode] = useState(false);
-  
+
   // Learn More Modal States
   const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -34,18 +34,22 @@ export default function ConjunctionsDetail() {
   ];
 
   const rules = [
-    { icon: '✅', title: 'Tips', color: 'green', points: [
-      'Use a comma before coordinating conjunctions in compound sentences.',
-      'Match the conjunction type to the relationship you want to show.',
-      'Correlative conjunctions must be used in pairs.'
-    ] },
-    { icon: '❌', title: 
-      
-      "DON'Ts", color: 'red', points: [
-      'Don\'t use a comma before subordinating conjunctions at the start of a sentence.',
-      'Don\'t mix up correlative pairs (e.g., "either...and").',
-      'Don\'t overuse conjunctions in one sentence.'
-    ] }
+    {
+      icon: '✅', title: 'Tips', color: 'green', points: [
+        'Use a comma before coordinating conjunctions in compound sentences.',
+        'Match the conjunction type to the relationship you want to show.',
+        'Correlative conjunctions must be used in pairs.'
+      ]
+    },
+    {
+      icon: '❌', title:
+
+        "DON'Ts", color: 'red', points: [
+          'Don\'t use a comma before subordinating conjunctions at the start of a sentence.',
+          'Don\'t mix up correlative pairs (e.g., "either...and").',
+          'Don\'t overuse conjunctions in one sentence.'
+        ]
+    }
   ];
 
   const videos = [
@@ -81,7 +85,17 @@ export default function ConjunctionsDetail() {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -95,11 +109,10 @@ export default function ConjunctionsDetail() {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -196,9 +209,9 @@ export default function ConjunctionsDetail() {
               <div className="bg-green-100 border-l-4 border-green-500 p-3 rounded-r-lg mb-4">
                 <h3 className="font-semibold text-gray-800 mb-1 text-sm">📝 Your Task:</h3>
                 <p className="text-gray-700 text-sm">Combine the following pairs of sentences into one sentence using an appropriate conjunction (and, but, so, because, although).</p>
-                 <ul className="list-disc pl-5 text-sm text-gray-700 mt-2">
-                    <li>The sun was shining. It was cold outside.</li>
-                    <li>She studied hard. She passed the exam.</li>
+                <ul className="list-disc pl-5 text-sm text-gray-700 mt-2">
+                  <li>The sun was shining. It was cold outside.</li>
+                  <li>She studied hard. She passed the exam.</li>
                 </ul>
               </div>
               <textarea className="w-full border-2 border-gray-300 rounded-lg p-4 mb-4 focus:border-green-500 focus:outline-none min-h-[100px]" placeholder="Type your combined sentences here..." />
@@ -404,11 +417,11 @@ export default function ConjunctionsDetail() {
         }
         .animate-fade-in { animation: fade-in 0.3s ease-out; }
       `}</style>
-      
+
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={selectedItem}
         title="Conjunctions"
       />

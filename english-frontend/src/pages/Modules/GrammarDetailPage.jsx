@@ -5,7 +5,7 @@ import { grammarAPI } from '../../apiClient';
 export default function GrammarDetailPage() {
   const navigate = useNavigate();
   const { partId } = useParams();
-  
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +53,16 @@ export default function GrammarDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 text-lg mb-4">{error}</p>
-          <button onClick={() => navigate(-1)} className="px-6 py-2 bg-blue-600 text-white rounded-lg">
+          <button
+            onClick={() => {
+              if (window.history.state && window.history.state.idx > 0) {
+                navigate(-1);
+              } else {
+                navigate('/modules/grammar-hub');
+              }
+            }}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg"
+          >
             Go Back
           </button>
         </div>
@@ -98,7 +107,16 @@ export default function GrammarDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white sticky top-0 z-50 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-6">
-          <button onClick={() => navigate(-1)} className="mb-3 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm">
+          <button
+            onClick={() => {
+              if (window.history.state && window.history.state.idx > 0) {
+                navigate(-1);
+              } else {
+                navigate('/modules/grammar-hub');
+              }
+            }}
+            className="mb-3 flex items-center space-x-1 text-white hover:text-blue-100 transition-colors text-sm"
+          >
             <span className="text-lg">←</span>
             <span className="font-medium">Back</span>
           </button>

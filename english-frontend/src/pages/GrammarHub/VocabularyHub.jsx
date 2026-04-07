@@ -1,619 +1,469 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import apiClient from '../../apiClient'
 
-export default function VocabularyHub() {
+export default function VocabularyHub({ isInline, lessonId }) {
   const navigate = useNavigate()
-  const [selectedTopic, setSelectedTopic] = useState(null)
-  const [viewMode, setViewMode] = useState('grid') // grid, list, study
+  const [words, setWords] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('All')
+  const [sortOrder, setSortOrder] = useState('A-Z')
+  const [viewMode, setViewMode] = useState('grid') // 'grid' | 'list'
+  const [isSpeaking, setIsSpeaking] = useState(null)
+  
+  // User Role Check
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const isLearner = user.role === 'learner'
+  const canManage = ['admin', 'content_provider', 'provider', 'teacher', 'tutor'].includes(user.role)
 
-  const topics = [
-    {
-      id: 1,
-      name: 'Travel',
-      icon: '✈️',
-      color: 'from-blue-500 to-cyan-500',
-      wordCount: 45,
-      progress: 60,
-      difficulty: 'A2'
-    },
-    {
-      id: 2,
-      name: 'Business',
-      icon: '💼',
-      color: 'from-purple-500 to-pink-500',
-      wordCount: 52,
-      progress: 35,
-      difficulty: 'B1'
-    },
-    {
-      id: 3,
-      name: 'Academic',
-      icon: '🎓',
-      color: 'from-green-500 to-emerald-500',
-      wordCount: 68,
-      progress: 28,
-      difficulty: 'B2'
-    },
-    {
-      id: 4,
-      name: 'Exam Preparation',
-      icon: '📝',
-      color: 'from-orange-500 to-red-500',
-      wordCount: 95,
-      progress: 45,
-      difficulty: 'B2+',
-    },
-    {
-      id: 5,
-      name: 'Everyday Conversation',
-      icon: '💬',
-      color: 'from-pink-500 to-rose-500',
-      wordCount: 38,
-      progress: 80,
-      difficulty: 'A1'
-    },
-    {
-      id: 6,
-      name: 'Literary & Advanced',
-      icon: '📖',
-      color: 'from-indigo-500 to-purple-500',
-      wordCount: 72,
-      progress: 15,
-      difficulty: 'C1'
+  // Flip state for learner cards (using word.id as key)
+  const [flippedCards, setFlippedCards] = useState({})
+
+  const toggleFlip = (id) => {
+    if (!isLearner) return
+    setFlippedCards(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  // Modals
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showBulkModal, setShowBulkModal] = useState(false)
+  const [editingWord, setEditingWord] = useState(null)
+  
+  // Form State
+  const [wordForm, setWordForm] = useState({
+    word: '',
+    part_of_speech: 'noun',
+    definition: '',
+    example_sentence: '',
+    pronunciation: '',
+    difficulty_level: 'A1',
+    category: 'General',
+    is_global: true
+  })
+
+  const topics = ['General', 'Travel', 'Business', 'Social', 'Daily Life', 'Grammar', 'Academic', 'Technology']
+
+  useEffect(() => {
+    fetchWords()
+  }, [lessonId, categoryFilter])
+
+  const fetchWords = async () => {
+    try {
+      setLoading(true)
+      let endpoint = '/grammar-hub/words/vocabulary-hub/global'
+      const res = await apiClient.get(`/grammar-hub/words/vocabulary-hub/global?include_all=${canManage}`)
+      setWords(res.data || [])
+    } catch (err) {
+      console.error('Failed to fetch words:', err)
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
-  const sampleWords = [
-    {
-      id: 1,
-      word: 'Serendipity',
-      partOfSpeech: 'noun',
-      meaning: 'The occurrence of events by chance in a happy or beneficial way',
-      example: 'Finding that old photo was pure serendipity.',
-      synonyms: ['fortune', 'luck', 'chance'],
-      cefrLevel: 'B2',
-      topic: 'Academic'
-    },
-    {
-      id: 2,
-      word: 'Ephemeral',
-      partOfSpeech: 'adjective',
-      meaning: 'Lasting for a very short time',
-      example: 'The beauty of cherry blossoms is ephemeral.',
-      synonyms: ['fleeting', 'temporary', 'transient'],
-      cefrLevel: 'C1',
-      topic: 'Academic'
-    },
-    {
-      id: 3,
-      word: 'Ubiquitous',
-      partOfSpeech: 'adjective',
-      meaning: 'Present, appearing, or found everywhere',
-      example: 'Smartphones have become ubiquitous in modern society.',
-      synonyms: ['omnipresent', 'universal', 'pervasive'],
-      cefrLevel: 'B2',
-      topic: 'Academic'
+  const handleSpeak = (text, id) => {
+    if (!window.speechSynthesis) return alert('Your browser does not support speech synthesis.')
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel()
+    
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = 0.9
+    utterance.pitch = 1
+    
+    utterance.onstart = () => setIsSpeaking(id)
+    utterance.onend = () => setIsSpeaking(null)
+    utterance.onerror = () => setIsSpeaking(null)
+    
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const handleSaveWord = async (e) => {
+    e.preventDefault()
+    try {
+      if (editingWord) {
+        const res = await apiClient.put(`/grammar-hub/word/vocabulary/${editingWord.id}`, wordForm)
+        setWords(words.map(w => w.id === editingWord.id ? res.data : w))
+      } else {
+        const res = await apiClient.post('/grammar-hub/words/vocabulary', {
+          ...wordForm,
+          status: 'approved',
+          is_global: true
+        })
+        setWords([res.data, ...words])
+      }
+      setShowAddModal(false)
+      setEditingWord(null)
+      alert('Entry updated successfully!')
+      setWordForm({ word: '', part_of_speech: 'noun', definition: '', example_sentence: '', pronunciation: '', difficulty_level: 'A1', category: 'General', is_global: true })
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to save word')
     }
-  ]
+  }
 
-  return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-white'>
-      {/* Header - Premium Look */}
-      <div className='sticky top-0 z-40 bg-white shadow-md border-b border-teal-100'>
-        <div className='container mx-auto px-6 py-8'>
-          <div className='flex items-center justify-between mb-6'>
-            <div>
-              <h1 className='text-3xl font-bold mb-2 bg-gradient-to-r from-teal-600 to-rose-400 bg-clip-text text-transparent'>📚 Vocabulary Master</h1>
-              <p className='text-slate-600 text-sm'>Learn 5000+ words with AI-powered flashcards and exercises</p>
-            </div>
-            <button
-              onClick={() => navigate('/grammar-hub')}
-              className='px-6 py-3 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-lg text-white rounded-lg font-semibold transition'
-            >
-              ← Back to Hub
+  const handleDeleteWord = async (id) => {
+    if (!window.confirm('Delete this word?')) return
+    try {
+      await apiClient.delete(`/grammar-hub/word/vocabulary/${id}`)
+      setWords(words.filter(w => w.id !== id))
+    } catch (err) {
+      alert('Failed to delete word')
+    }
+  }
+
+  const handlePromoteWord = async (id) => {
+    try {
+      const res = await apiClient.put(`/grammar-hub/word/vocabulary/${id}`, { is_global: true })
+      setWords(prev => prev.map(w => w.id === id ? res.data : w))
+    } catch (err) {
+      alert('Failed to promote word')
+    }
+  }
+
+  const handleBulkUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    
+    const formData = new FormData()
+    formData.append('file', file)
+    if (lessonId) formData.append('lessonId', lessonId)
+    formData.append('makeGlobal', !lessonId)
+
+    try {
+      setLoading(true)
+      const res = await apiClient.post('/content-provider/vocabulary/bulk-upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      if (res.data?.success) {
+        alert(res.data.message || 'Bulk upload successful!')
+        fetchWords()
+        setShowBulkModal(false)
+      }
+    } catch (err) {
+      alert(err.response?.data?.error || 'Bulk upload failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredWords = words
+    .filter(w => {
+      const q = searchQuery.toLowerCase()
+      return w.word.toLowerCase().includes(q) || w.definition?.toLowerCase().includes(q)
+    })
+    .sort((a, b) => {
+      if (sortOrder === 'A-Z') return a.word.localeCompare(b.word)
+      if (sortOrder === 'Z-A') return b.word.localeCompare(a.word)
+      return 0
+    })
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] animate-fadeIn">
+        <div className="w-16 h-16 border-4 border-[#0D9488] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-slate-500 font-bold tracking-tight uppercase text-xs">Accessing Dictionary Repository...</p>
+      </div>
+    )
+  }  return (
+    <div className="space-y-12 animate-fadeIn max-w-7xl mx-auto p-4 lg:p-8 bg-slate-50/30 min-h-screen">
+      {/* CSS for Premium UI Elements */}
+      <style>{`
+        .flip-card {
+          perspective: 1200px;
+          height: auto;
+          min-height: 320px;
+        }
+        .flip-card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+          transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          border-radius: 1.5rem;
+          overflow: hidden;
+          border: 1px solid #0D9488;
+        }
+        .flip-card-back {
+          transform: rotateY(180deg);
+          border: 1px solid #0D9488;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          background: rgba(15, 23, 42, 0.7);
+          backdrop-filter: blur(12px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          overflow-y: auto;
+        }
+        
+        .premium-card {
+          background: white;
+          border: 1px solid rgba(226, 232, 240, 0.8);
+          box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -15px rgba(13, 148, 136, 0.1);
+          border-color: rgba(13, 148, 136, 0.2);
+        }
+      `}</style>
+
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 py-4">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+             <span className="px-3 py-1 bg-teal-50 text-[#0D9488] text-[9px] font-black rounded-lg uppercase tracking-[0.2em] border border-teal-100">Lexical Core</span>
+             <span className="w-2 h-2 bg-[#F43F5E] rounded-full animate-pulse shadow-lg shadow-pink-500/50"></span>
+          </div>
+          <h1 className="text-2xl font-black tracking-tighter font-['Outfit'] uppercase text-slate-800">
+            Vocabulary <span className="text-[#0D9488]">Hub</span>
+          </h1>
+          <p className="text-slate-400 font-medium text-sm max-w-lg italic">"Language is the roadmap of a culture. It tells you where its people come from and where they are going."</p>
+        </div>
+
+        {canManage && (
+          <div className="flex items-center gap-4">
+            <button onClick={() => setShowBulkModal(true)} className="px-6 py-4 bg-white text-slate-500 font-black border border-slate-200 rounded-2xl hover:border-[#F43F5E] hover:text-[#F43F5E] transition-all shadow-sm uppercase tracking-widest text-[9px]">
+              Mass Upload
+            </button>
+            <button onClick={() => { setEditingWord(null); setWordForm({ word: '', part_of_speech: 'noun', definition: '', example_sentence: '', pronunciation: '', difficulty_level: 'A1', category: 'General', is_global: true }); setShowAddModal(true); }} className="px-8 py-4 bg-gradient-to-r from-[#0D9488] to-[#F43F5E] text-white font-black rounded-2xl hover:shadow-2xl hover:shadow-teal-500/20 active:scale-95 transition-all uppercase tracking-widest text-[9px]">
+              Inject Word
             </button>
           </div>
-
-          {/* View Mode Selector */}
-          <div className='flex gap-3 border-t border-teal-100 pt-4'>
-            {['grid', 'list', 'study'].map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setViewMode(mode)}
-                className={`px-5 py-2 rounded-lg transition font-semibold ${
-                  viewMode === mode
-                    ? 'bg-gradient-to-r from-teal-600 to-rose-400 text-white shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {mode === 'grid' && '⊞ Grid View'}
-                {mode === 'list' && '≡ List View'}
-                {mode === 'study' && '📖 Study Mode'}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className='max-w-7xl mx-auto px-6 py-12'>
-        {!selectedTopic ? (
-          <div>
-            {/* Topics Grid */}
-            <h2 className='text-2xl font-bold mb-8 text-slate-900'>📚 Select a Topic</h2>
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
-              {topics.map((topic) => (
-                <div
-                  key={topic.id}
-                  onClick={() => setSelectedTopic(topic.id)}
-                  className='group cursor-pointer transform hover:scale-105 transition-all duration-300'
-                >
-                  <div
-                    className={`bg-gradient-to-br ${topic.color} p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all text-white mb-5`}
-                  >
-                    <div className='flex items-start justify-between mb-4'>
-                      <div className='text-6xl'>{topic.icon}</div>
-                      <div className='text-sm bg-white/20 px-3 py-1 rounded-full font-semibold'>{topic.difficulty}</div>
-                    </div>
-                    <h3 className='text-xl font-bold mb-3'>{topic.name}</h3>
-                    <p className='text-sm text-white/90 font-medium'>{topic.wordCount} words to master</p>
-                  </div>
-
-                  {/* Progress Bar - Premium Design */}
-                  <div className='bg-white rounded-xl p-5 border border-teal-100 shadow-sm'>
-                    <div className='flex justify-between items-center mb-3'>
-                      <span className='text-sm font-semibold text-slate-600'>Progress</span>
-                      <span className='text-sm font-bold bg-gradient-to-r from-teal-600 to-rose-400 bg-clip-text text-transparent'>{topic.progress}%</span>
-                    </div>
-                    <div className='w-full bg-slate-200 rounded-full h-3 overflow-hidden'>
-                      <div
-                        className='bg-gradient-to-r from-teal-500 to-rose-400 h-3 rounded-full transition-all'
-                        style={{ width: `${topic.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            {/* Topic Detail View */}
-            <div className='mb-10'>
-              <button
-                onClick={() => setSelectedTopic(null)}
-                className='px-5 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition font-semibold mb-6 border border-teal-200'
-              >
-                ← Back to Topics
-              </button>
-              <div>
-                <h2 className='text-2xl font-bold mb-2 text-slate-900'>{topics.find(t => t.id === selectedTopic)?.name}</h2>
-                <p className='text-slate-600 text-sm'>Continue learning new words and improve your vocabulary</p>
-              </div>
-            </div>
-
-            {/* Study Controls */}
-            <div className='grid md:grid-cols-4 gap-4 mb-10'>
-              {['🃏 Flashcards', '🧩 Matching', '📝 Fill Gaps', '✅ Review'].map((exercise, idx) => (
-                <button
-                  key={idx}
-                  className='px-6 py-4 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-lg text-white rounded-xl font-semibold transition transform hover:scale-105'
-                >
-                  {exercise}
-                </button>
-              ))}
-            </div>
-
-            {/* Words Display */}
-            {viewMode === 'grid' && (
-              <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                {sampleWords.map((word) => (
-                  <WordCard key={word.id} word={word} />
-                ))}
-              </div>
-            )}
-
-            {viewMode === 'list' && (
-              <div className='space-y-4'>
-                {sampleWords.map((word) => (
-                  <WordListItem key={word.id} word={word} />
-                ))}
-              </div>
-            )}
-
-            {viewMode === 'study' && (
-              <StudyMode words={sampleWords} />
-            )}
-          </div>
         )}
       </div>
-    </div>
-  )
-}
 
-function WordCard({ word }) {
-  const [isFlipped, setIsFlipped] = useState(false)
-
-  return (
-    <div
-      onClick={() => setIsFlipped(!isFlipped)}
-      className='cursor-pointer perspective'
-    >
-      <div
-        className={`relative w-full h-80 transition-transform duration-300 transform ${
-          isFlipped ? 'rotate-y-180' : ''
-        }`}
-        style={{
-          transformStyle: 'preserve-3d',
-          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-        }}
-      >
-        {/* Front */}
-        <div
-          className={`absolute w-full h-full bg-gradient-to-br from-teal-500 to-rose-400 rounded-xl p-6 shadow-lg flex flex-col justify-between text-white ${
-            isFlipped ? 'hidden' : ''
-          }`}
-        >
-          <div>
-            <div className='text-sm text-teal-100 font-semibold mb-2'>WORD</div>
-            <div className='text-4xl font-bold mb-4 text-white'>{word.word}</div>
-          </div>
-          <div className='flex items-center justify-between'>
-            <span className='px-3 py-1 bg-white/25 backdrop-blur rounded-full text-sm text-white font-medium'>{word.partOfSpeech}</span>
-            <span className='px-3 py-1 bg-amber-500 rounded-full text-sm font-bold text-white'>{word.cefrLevel}</span>
-          </div>
-        </div>
-
-        {/* Back */}
-        <div
-          className={`absolute w-full h-full bg-gradient-to-br from-rose-400 to-teal-500 rounded-xl p-6 shadow-lg flex flex-col justify-between text-white ${
-            isFlipped ? '' : 'hidden'
-          }`}
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-        >
-          <div className='space-y-3'>
-            <div>
-              <div className='text-xs text-rose-100 font-semibold mb-1'>MEANING</div>
-              <div className='text-sm font-semibold text-white'>{word.meaning}</div>
-            </div>
-            <div>
-              <div className='text-xs text-rose-100 font-semibold mb-1'>EXAMPLE</div>
-              <div className='text-sm italic text-white/90'>{word.example}</div>
-            </div>
-            <div>
-              <div className='text-xs text-rose-100 font-semibold mb-1'>SYNONYMS</div>
-              <div className='flex flex-wrap gap-1'>
-                {word.synonyms.map((syn, idx) => (
-                  <span key={idx} className='text-xs bg-white/25 backdrop-blur px-2 py-1 rounded text-white'>
-                    {syn}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className='text-xs text-teal-100'>Click to see word →</div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function WordListItem({ word }) {
-  return (
-    <div className='bg-white rounded-xl p-6 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-300 transition'>
-      <div className='grid grid-cols-2 md:grid-cols-5 gap-4'>
-        <div>
-          <div className='text-xs text-slate-500 font-semibold mb-1'>WORD</div>
-          <div className='font-bold text-lg text-slate-900'>{word.word}</div>
-        </div>
-        <div>
-          <div className='text-xs text-slate-500 font-semibold mb-1'>PART OF SPEECH</div>
-          <div className='text-sm capitalize text-slate-700'>{word.partOfSpeech}</div>
-        </div>
-        <div>
-          <div className='text-xs text-slate-500 font-semibold mb-1'>MEANING</div>
-          <div className='text-sm line-clamp-2 text-slate-600'>{word.meaning}</div>
-        </div>
-        <div>
-          <div className='text-xs text-slate-500 font-semibold mb-1'>CEFR</div>
-          <div className='px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-500 rounded-lg text-white text-sm font-bold w-fit'>{word.cefrLevel}</div>
-        </div>
-        <div className='flex items-end'>
-          <button className='px-6 py-2 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-md text-white rounded-lg transition w-full font-semibold'>
-            Learn
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function StudyMode({ words }) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [studyMode, setStudyMode] = useState('flashcard') // flashcard, quiz, writing
-  const [selectedAnswer, setSelectedAnswer] = useState(null)
-  const [showResult, setShowResult] = useState(false)
-  const [userSentence, setUserSentence] = useState('')
-  const [sentenceSubmitted, setSentenceSubmitted] = useState(false)
-  const [quizOptions, setQuizOptions] = useState([])
-
-  const currentWord = words[currentIndex]
-
-  // Generate quiz options - correct answer + 3 distractors
-  const generateQuizOptions = (word) => {
-    const distractors = [
-      'Something that happens regularly and predictably',
-      'A feeling of deep sadness or grief',
-      'The act of deliberately avoiding someone',
-      'A state of complete confusion or disorder',
-      'Moving very quickly without thinking',
-      'Something that is permanent and unchanging',
-      'Found only in one specific location',
-      'The process of making something smaller'
-    ]
-    
-    // Get the correct answer
-    const correctAnswer = word.meaning
-    
-    // Shuffle and pick 3 distractors that aren't similar to correct answer
-    const shuffledDistractors = distractors
-      .filter(d => d !== correctAnswer)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3)
-    
-    // Combine correct answer with distractors and shuffle
-    const allOptions = [correctAnswer, ...shuffledDistractors]
-      .sort(() => Math.random() - 0.5)
-    
-    return allOptions
-  }
-
-  // Generate options when word changes
-  React.useEffect(() => {
-    setQuizOptions(generateQuizOptions(currentWord))
-  }, [currentIndex])
-
-  // Reset state when moving to next word
-  const handleNext = () => {
-    if (currentIndex < words.length - 1) {
-      setCurrentIndex(currentIndex + 1)
-      setSelectedAnswer(null)
-      setShowResult(false)
-      setUserSentence('')
-      setSentenceSubmitted(false)
-    }
-  }
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1)
-      setSelectedAnswer(null)
-      setShowResult(false)
-      setUserSentence('')
-      setSentenceSubmitted(false)
-    }
-  }
-
-  const handleAnswerSelect = (option) => {
-    if (showResult) return // Prevent changing answer after submission
-    setSelectedAnswer(option)
-    setShowResult(true)
-  }
-
-  // Check if user's sentence contains the word (case insensitive)
-  const checkSentence = () => {
-    setSentenceSubmitted(true)
-  }
-
-  const sentenceContainsWord = userSentence.toLowerCase().includes(currentWord.word.toLowerCase())
-  const sentenceIsValid = userSentence.trim().length >= 10 && sentenceContainsWord
-
-  const isCorrect = selectedAnswer === currentWord.meaning
-
-  return (
-    <div className='max-w-2xl mx-auto'>
-      {/* Progress */}
-      <div className='mb-8'>
-        <div className='flex justify-between items-center mb-2'>
-          <span className='text-sm text-slate-600'>Word {currentIndex + 1} of {words.length}</span>
-          <span className='text-sm font-bold text-teal-600'>
-            {Math.round(((currentIndex + 1) / words.length) * 100)}%
-          </span>
-        </div>
-        <div className='w-full bg-slate-200 rounded-full h-2'>
-          <div
-            className='bg-gradient-to-r from-teal-500 to-teal-400 h-2 rounded-full transition-all'
-            style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Mode Selector */}
-      <div className='flex gap-2 mb-8'>
-        {['flashcard', 'quiz', 'writing'].map((mode) => (
-          <button
-            key={mode}
-            onClick={() => {
-              setStudyMode(mode)
-              setSelectedAnswer(null)
-              setShowResult(false)
-              setUserSentence('')
-              setSentenceSubmitted(false)
-            }}
-            className={`px-4 py-2 rounded-lg transition font-medium ${
-              studyMode === mode
-                ? 'bg-gradient-to-r from-teal-600 to-rose-400 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
-          >
-            {mode === 'flashcard' && '🃏 Flashcard'}
-            {mode === 'quiz' && '❓ Quiz'}
-            {mode === 'writing' && '✍️ Writing'}
-          </button>
-        ))}
-      </div>
-
-      {/* Study Content */}
-      <div className='bg-gradient-to-br from-teal-500 to-rose-400 rounded-xl p-8 md:p-12 shadow-2xl mb-8 text-center text-white'>
-        <div className='text-sm text-teal-100 font-semibold mb-4'>LEARNING MODE: {studyMode.toUpperCase()}</div>
-        
-        {studyMode === 'flashcard' && (
-          <div>
-            <div className='text-4xl md:text-5xl font-bold mb-6 text-white'>{currentWord.word}</div>
-            <div className='text-lg text-teal-100 mb-4'>{currentWord.partOfSpeech}</div>
-            <div className='inline-block px-4 py-2 bg-white/25 backdrop-blur rounded-full text-sm font-semibold text-white mb-6'>
-              {currentWord.cefrLevel}
-            </div>
-            <div className='mt-4 p-4 bg-white/15 rounded-lg'>
-              <p className='text-white/90 text-sm mb-2'><strong>Meaning:</strong> {currentWord.meaning}</p>
-              <p className='text-white/80 text-sm italic'><strong>Example:</strong> {currentWord.example}</p>
-            </div>
-          </div>
-        )}
-
-        {studyMode === 'quiz' && (
-          <div className='space-y-4'>
-            <div className='text-xl font-semibold mb-6 text-white'>What does "{currentWord.word}" mean?</div>
-            {quizOptions.map((option, idx) => {
-              let buttonClass = 'w-full p-4 rounded-lg transition text-left text-white font-medium '
-              
-              if (showResult) {
-                if (option === currentWord.meaning) {
-                  buttonClass += 'bg-green-500 border-2 border-green-300'
-                } else if (option === selectedAnswer) {
-                  buttonClass += 'bg-red-500 border-2 border-red-300'
-                } else {
-                  buttonClass += 'bg-white/20 opacity-50'
-                }
-              } else {
-                buttonClass += 'bg-white/20 hover:bg-white/30 cursor-pointer'
-              }
-              
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleAnswerSelect(option)}
-                  className={buttonClass}
-                  disabled={showResult}
-                >
-                  <span className='mr-3 inline-block w-6 h-6 bg-white/20 rounded-full text-center text-sm leading-6'>
-                    {String.fromCharCode(65 + idx)}
-                  </span>
-                  {option}
-                </button>
-              )
-            })}
-            
-            {showResult && (
-              <div className={`mt-6 p-4 rounded-lg ${isCorrect ? 'bg-green-500/30' : 'bg-red-500/30'}`}>
-                <p className='text-white font-bold text-lg mb-2'>
-                  {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-                </p>
-                {!isCorrect && (
-                  <p className='text-white/90 text-sm'>
-                    The correct answer is: <strong>{currentWord.meaning}</strong>
-                  </p>
-                )}
-                <p className='text-white/80 text-sm mt-2 italic'>
-                  Example: {currentWord.example}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {studyMode === 'writing' && (
-          <div className='space-y-4'>
-            <div className='text-xl font-semibold mb-2 text-white'>Write a sentence using "{currentWord.word}"</div>
-            <p className='text-teal-100 text-sm mb-4'>Meaning: {currentWord.meaning}</p>
-            <textarea
-              value={userSentence}
-              onChange={(e) => setUserSentence(e.target.value)}
-              placeholder={`Type a sentence using "${currentWord.word}"...`}
-              className='w-full p-4 rounded-lg bg-white/20 text-white placeholder-teal-200 outline-none focus:bg-white/30 min-h-[100px] resize-none'
-              disabled={sentenceSubmitted}
+      {/* Control Bar */}
+      <div className="bg-white/60 backdrop-blur-md p-6 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col gap-6 sticky top-4 z-40">
+        <div className="flex flex-col lg:flex-row items-center gap-6">
+          <div className="relative flex-1 w-full">
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg opacity-30">🔍</span>
+            <input 
+              type="text" 
+              placeholder="Query the repository for semantic definitions or specific terms..." 
+              className="w-full pl-14 pr-6 py-4 bg-white border border-slate-100 rounded-[1.5rem] focus:outline-none focus:ring-4 focus:ring-[#0D9488]/5 transition-all font-bold text-slate-800 placeholder:text-slate-300 text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {!sentenceSubmitted ? (
-              <div className='space-y-2'>
-                <button
-                  onClick={checkSentence}
-                  disabled={!userSentence.trim()}
-                  className='px-6 py-3 bg-white/30 hover:bg-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-semibold text-white'
-                >
-                  Check My Sentence
-                </button>
-                <p className='text-teal-100 text-xs'>
-                  Tip: Make sure to use the word "{currentWord.word}" in your sentence
-                </p>
-              </div>
-            ) : (
-              <div className={`p-4 rounded-lg text-left ${sentenceIsValid ? 'bg-green-500/30' : 'bg-red-500/30'}`}>
-                <p className='text-white font-bold mb-2'>
-                  {sentenceIsValid ? '✅ Great job!' : '❌ Try again!'}
-                </p>
-                {!sentenceContainsWord && (
-                  <p className='text-white/90 text-sm mb-2'>
-                    ⚠️ Your sentence doesn't contain the word "<strong>{currentWord.word}</strong>"
-                  </p>
-                )}
-                {userSentence.trim().length < 10 && (
-                  <p className='text-white/90 text-sm mb-2'>
-                    ⚠️ Your sentence is too short. Try writing a complete sentence.
-                  </p>
-                )}
-                <p className='text-white/90 text-sm mb-2'><strong>Your sentence:</strong> {userSentence}</p>
-                <p className='text-white/80 text-sm'><strong>Example sentence:</strong> {currentWord.example}</p>
-                {!sentenceIsValid && (
-                  <button
-                    onClick={() => {
-                      setSentenceSubmitted(false)
-                      setUserSentence('')
-                    }}
-                    className='mt-3 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition text-white text-sm'
-                  >
-                    Try Again
-                  </button>
-                )}
-              </div>
-            )}
           </div>
-        )}
-      </div>
+          
+          <div className="flex items-center gap-6">
+             <div className="flex bg-slate-100/50 p-1 rounded-2xl border border-slate-100">
+               <button onClick={() => setViewMode('grid')} className={`px-5 py-2.5 rounded-xl transition-all text-xs font-black uppercase tracking-widest ${viewMode === 'grid' ? 'bg-white shadow-md text-[#0D9488]' : 'text-slate-400'}`}>Grid</button>
+               <button onClick={() => setViewMode('list')} className={`px-5 py-2.5 rounded-xl transition-all text-xs font-black uppercase tracking-widest ${viewMode === 'list' ? 'bg-white shadow-md text-[#0D9488]' : 'text-slate-400'}`}>List</button>
+             </div>
+          </div>
+        </div>
 
-      {/* Navigation */}
-      <div className='flex gap-4 justify-between'>
-        <button
-          onClick={handlePrevious}
-          disabled={currentIndex === 0}
-          className='flex-1 px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-medium'
-        >
-          ← Previous
-        </button>
-        <div className='flex gap-2'>
-          {[
-            { emoji: '😟', label: 'Again', color: 'bg-red-100 hover:bg-red-200 text-red-600' },
-            { emoji: '🤔', label: 'Hard', color: 'bg-orange-100 hover:bg-orange-200 text-orange-600' },
-            { emoji: '👍', label: 'Good', color: 'bg-blue-100 hover:bg-blue-200 text-blue-600' },
-            { emoji: '🔥', label: 'Easy', color: 'bg-green-100 hover:bg-green-200 text-green-600' }
-          ].map((action, idx) => (
+        <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+          {['All', ...topics].map(topic => (
             <button
-              key={idx}
-              onClick={handleNext}
-              className={`px-4 py-3 ${action.color} rounded-lg transition`}
-              title={action.label}
+              key={topic}
+              onClick={() => setCategoryFilter(topic)}
+              className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap border ${categoryFilter === topic ? 'bg-slate-800 text-white border-slate-800 shadow-lg' : 'bg-white text-slate-400 border-slate-100 hover:border-teal-500/30 hover:text-[#0D9488]'}`}
             >
-              {action.emoji}
+              {topic}
             </button>
           ))}
         </div>
-        <button
-          onClick={handleNext}
-          disabled={currentIndex === words.length - 1}
-          className='flex-1 px-6 py-3 bg-gradient-to-r from-teal-600 to-rose-400 hover:shadow-lg text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition font-semibold'
-        >
-          Next →
-        </button>
       </div>
+
+      {/* Words Feed */}
+      {filteredWords.length === 0 ? (
+        <div className="py-32 text-center flex flex-col items-center justify-center animate-fadeIn">
+            <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-inner border border-slate-100 opacity-50">📂</div>
+            <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">No Data Found</h3>
+            <p className="text-slate-400 font-medium text-xs mt-2 italic">The specified parameters returned an empty repository set.</p>
+        </div>
+      ) : (
+        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20' : 'space-y-4 pb-20'}>
+          {filteredWords.map(word => {
+            const flipped = flippedCards[word.id]
+            
+            return (
+                <div 
+                  key={word.id} 
+                  className={`relative rounded-[1.5rem] ${isLearner ? 'flip-card' : 'bg-white border border-[#0D9488] shadow-sm p-6 hover:shadow-md transition-all'} ${flipped ? 'flipped' : ''}`}
+                  onClick={() => toggleFlip(word.id)}
+                >
+                <div className={`flip-card-inner min-h-[380px] ${!isLearner && 'flex flex-col'}`}>
+                  {/* Front Side */}
+                  <div className={`flip-card-front bg-white p-8 flex flex-col justify-between h-full ${!isLearner && 'relative'}`}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex gap-2">
+                           <span className="px-3 py-1 bg-teal-50 text-[#0D9488] text-[9px] font-black uppercase tracking-widest rounded-lg border border-teal-100">{word.category || 'General'}</span>
+                        </div>
+                        <div className="flex gap-2">
+                           {canManage && (
+                             <>
+                               <button onClick={(e) => { e.stopPropagation(); setEditingWord(word); setWordForm(word); setShowAddModal(true); }} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:text-[#0D9488] transition-colors text-sm">✏️</button>
+                               <button onClick={(e) => { e.stopPropagation(); handleDeleteWord(word.id); }} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:text-[#F43F5E] transition-colors text-sm">🗑️</button>
+                             </>
+                           )}
+                        </div>
+                     </div>
+
+                      <div className="space-y-2 mb-4">
+                        <h3 className="text-2xl font-bold tracking-tight text-[#0D9488] font-['Outfit'] uppercase leading-none">
+                          {word.word.split('-')[0]}
+                        </h3>
+                        <div className="flex items-center gap-3">
+                           <span className="text-[9px] font-bold text-slate-400 opacity-60 tracking-tight italic">{word.pronunciation}</span>
+                           <span className="w-1 h-1 rounded-full bg-slate-200"></span>
+                           <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{word.part_of_speech}</span>
+                        </div>
+                      </div>
+
+                     <div className="flex-1 space-y-4 pt-6 border-t border-slate-50">
+                        <div>
+                           <p className="text-[8px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">Definition</p>
+                           <p className="text-slate-600 font-medium text-sm leading-relaxed line-clamp-3">"{word.definition}"</p>
+                        </div>
+                     </div>
+
+                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleSpeak(word.word.split('-')[0], word.id); }} 
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all ${isSpeaking === word.id ? 'bg-[#F43F5E] text-white animate-pulse' : 'bg-slate-50 text-[#0D9488] hover:bg-[#0D9488] hover:text-white border border-teal-100'}`}
+                        >
+                           🔊
+                        </button>
+                        {isLearner && <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest group-hover:text-[#0D9488] transition-colors">Tap to Flip →</span>}
+                     </div>
+                  </div>
+
+                  {/* Back Side (Learner only) */}
+                  {isLearner && (
+                    <div className="flip-card-back bg-gradient-to-br from-[#0D9488] to-[#F43F5E] p-8 flex flex-col justify-between text-white relative overflow-hidden">
+                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                       
+                       <div className="flex items-center justify-between relative z-10">
+                          <span className="px-3 py-1 bg-white/10 text-white text-[9px] font-black uppercase tracking-widest rounded-lg border border-white/20 backdrop-blur-md">{word.category}</span>
+                       </div>
+  
+                       <div className="space-y-6 relative z-10">
+                          <div>
+                             <p className="text-[8px] font-black text-white/50 uppercase tracking-widest mb-2">Contextual Application</p>
+                             <p className="text-lg font-bold leading-tight italic">"{word.example_sentence}"</p>
+                          </div>
+                       </div>
+  
+                       <div className="flex items-center justify-between mt-6 relative z-10 border-t border-white/10 pt-6">
+                          <div className="flex gap-2">
+                             <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-xs backdrop-blur-md">📚</div>
+                          </div>
+                          <button className="text-[8px] font-black text-white/60 uppercase tracking-widest">Return Front</button>
+                       </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Add/Edit Modal */}
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="bg-white rounded-[3rem] w-full max-w-xl overflow-hidden shadow-2xl border border-slate-100 animate-scaleIn">
+            <div className="px-10 py-8 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
+               <div>
+                  <span className="text-[9px] font-black text-[#0D9488] uppercase tracking-[0.3em] block mb-1">Dictionary Architecture</span>
+                  <h3 className="text-2xl font-black tracking-tight font-['Outfit'] uppercase text-slate-800">{editingWord ? 'Refresh Data' : 'New Entry'}</h3>
+               </div>
+               <button onClick={() => setShowAddModal(false)} className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#F43F5E] transition-all">✕</button>
+            </div>
+
+            <form onSubmit={handleSaveWord} className="p-10 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Term</label>
+                    <input required type="text" value={wordForm.word} onChange={e => setWordForm({...wordForm, word: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-teal-500/5 outline-none font-bold text-slate-800" placeholder="e.g. Resilience" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Phonetic</label>
+                    <input type="text" value={wordForm.pronunciation} onChange={e => setWordForm({...wordForm, pronunciation: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-teal-500/5 outline-none font-bold italic text-slate-500" placeholder="e.g. /rɪˈzɪl.jəns/" />
+                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Category</label>
+                    <select value={wordForm.category} onChange={e => setWordForm({...wordForm, category: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold text-slate-600">
+                       {topics.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Lexical Type</label>
+                    <select value={wordForm.part_of_speech} onChange={e => setWordForm({...wordForm, part_of_speech: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold text-slate-600">
+                       <option value="noun">Noun</option>
+                       <option value="verb">Verb</option>
+                       <option value="adjective">Adjective</option>
+                       <option value="adverb">Adverb</option>
+                    </select>
+                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Definition</label>
+                <textarea required rows="2" value={wordForm.definition} onChange={e => setWordForm({...wordForm, definition: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold text-slate-700 resize-none" placeholder="Primary semantic meaning..."></textarea>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Usage Sentence</label>
+                <textarea required rows="2" value={wordForm.example_sentence} onChange={e => setWordForm({...wordForm, example_sentence: e.target.value})} className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold text-slate-500 italic resize-none" placeholder="Contextual realization..."></textarea>
+              </div>
+
+              <div className="pt-6 flex gap-4">
+                 <button type="submit" className="flex-1 py-4 bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-black transition-all">Commit Entry</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Modal (Simplified for brevity) */}
+      {showBulkModal && (
+        <div className="modal-overlay">
+           <div className="bg-white rounded-[3rem] w-full max-w-lg p-10 text-center animate-scaleIn">
+              <div className="w-20 h-20 bg-teal-50 rounded-3xl flex items-center justify-center mx-auto text-3xl mb-6 shadow-sm border border-teal-100">📂</div>
+              <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Mass Data Sync</h3>
+              <p className="text-slate-400 font-medium text-xs mt-2 italic mb-8 px-10">Synchronize your local repository via our standardized Excel architecture.</p>
+              
+              <input type="file" id="bulk-vocab-input" className="hidden" onChange={handleBulkUpload} accept=".xlsx, .csv" />
+              <div className="grid grid-cols-2 gap-4 mb-10">
+                 <button onClick={() => document.getElementById('bulk-vocab-input').click()} className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:bg-teal-50 hover:border-[#0D9488] transition-all group">
+                    <div className="text-2xl mb-2">📤</div>
+                    <div className="text-[8px] font-black text-slate-400 group-hover:text-[#0D9488] uppercase tracking-widest">Identify Source</div>
+                 </button>
+                 <a href={`${apiClient.defaults.baseURL}/content-provider/template?type=vocabulary`} target="_blank" rel="noopener noreferrer" className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:bg-pink-50 hover:border-[#F43F5E] transition-all group">
+                    <div className="text-2xl mb-2">📋</div>
+                    <div className="text-[8px] font-black text-slate-400 group-hover:text-[#F43F5E] uppercase tracking-widest">Architecture Template</div>
+                 </a>
+              </div>
+              <button onClick={() => setShowBulkModal(false)} className="text-[9px] font-black text-slate-300 uppercase tracking-widest hover:text-slate-500">Return to Repository</button>
+           </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -278,7 +278,7 @@ const NounsDetail = () => {
   const handleInteractiveQuiz = (questionId, answerIndex) => {
     const question = interactiveQuiz.find(q => q.id === questionId);
     const isCorrect = answerIndex === question.correct;
-    
+
     setQuizAnswers(prev => ({
       ...prev,
       [questionId]: { selected: answerIndex, correct: isCorrect }
@@ -303,11 +303,11 @@ const NounsDetail = () => {
     try {
       // Fetch comprehensive learning data from backend - correct port and endpoint
       const response = await fetch(`http://localhost:4000/api/grammar/types/${nounType.id}/learn-more`);
-      
+
       if (!response.ok) {
         throw new Error('Learn More content not available');
       }
-      
+
       const data = await response.json();
       setLearnMoreData(data.content);
     } catch (error) {
@@ -459,7 +459,17 @@ const NounsDetail = () => {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-lg">
         <div className="container mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2" title="Back">
+            <button
+              onClick={() => {
+                if (window.history.state && window.history.state.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/modules/grammar-hub');
+                }
+              }}
+              className="text-gray-500 hover:bg-gray-100 rounded-full p-2 transition-all mr-2"
+              title="Back"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
@@ -473,11 +483,10 @@ const NounsDetail = () => {
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                  activeSection === section.id
+                className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${activeSection === section.id
                     ? 'bg-gradient-to-r from-teal-400 to-blue-300 text-white shadow-lg'
                     : 'bg-white text-gray-500 hover:bg-gradient-to-r hover:from-teal-400 hover:to-blue-300 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="mr-1">{section.icon}</span>
                 {section.name}
@@ -491,7 +500,7 @@ const NounsDetail = () => {
         {/* OVERVIEW SECTION */}
         <section id="overview" className="mb-12 scroll-mt-32">
           {/* What are Nouns - Super Compact Header Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6" style={{marginLeft: '50px', marginRight: '50px'}}>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6" style={{ marginLeft: '50px', marginRight: '50px' }}>
             <div className="flex items-start gap-2 md:gap-3 mb-2">
               <span className="text-xl md:text-2xl flex-shrink-0 pt-0.5">🎭</span>
               <div className="flex-1 min-w-0">
@@ -571,7 +580,7 @@ const NounsDetail = () => {
           </div>
 
           {/* Pro Tips - Compact */}
-          <div className="bg-gradient-to-br from-teal-50 via-white to-rose-50 rounded-xl shadow-lg border border-teal-100 p-4 md:p-6 mb-2" style={{marginLeft: '50px'}}>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-rose-50 rounded-xl shadow-lg border border-teal-100 p-4 md:p-6 mb-2" style={{ marginLeft: '50px' }}>
             <h3 className="text-xl md:text-2xl font-bold text-teal-700 mb-4 flex items-center gap-2 drop-shadow">
               <span className="inline-block text-2xl md:text-3xl bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 bg-clip-text text-transparent">💡</span>
               Pro Tips & Common Confusions
@@ -608,7 +617,7 @@ const NounsDetail = () => {
 
         {/* VIDEO LESSONS - Compact */}
         <section id="videos" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-6 md:p-10" style={{marginLeft: '50px'}}>
+          <div className="bg-gradient-to-br from-teal-50 via-white to-blue-50 rounded-xl shadow-lg border border-teal-100 p-6 md:p-10" style={{ marginLeft: '50px' }}>
             <h2 className="text-2xl md:text-3xl font-extrabold text-teal-700 mb-3 flex items-center gap-2 drop-shadow">
               <span className="text-3xl bg-gradient-to-r from-blue-400 via-teal-400 to-rose-400 bg-clip-text text-transparent">🎬</span>
               Video Lessons
@@ -662,7 +671,7 @@ const NounsDetail = () => {
 
         {/* WRITING EXERCISE - Compact */}
         <section id="writing" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-rose-50 rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-teal-500 card-hover" style={{marginLeft: '50px'}}>
+          <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-rose-50 rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-teal-500 card-hover" style={{ marginLeft: '50px' }}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
               <span className="text-xl mr-2">✍️</span>
               Writing Exercise
@@ -714,7 +723,7 @@ const NounsDetail = () => {
 
         {/* READING EXERCISE - Compact */}
         <section id="reading" className="mb-12 scroll-mt-32">
-          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover" style={{marginLeft: '50px'}}>
+          <div className="bg-gradient-to-br from-indigo-100 via-purple-50 to-white rounded-3xl shadow-xl p-8 md:p-10 border-l-4 border-indigo-500 card-hover" style={{ marginLeft: '50px' }}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 flex items-center">
               <span className="text-xl mr-2">📖</span>
               Reading Exercise
@@ -725,10 +734,10 @@ const NounsDetail = () => {
                 <span className="mr-2">💡</span> Read this short story
               </h3>
               <p className="text-base text-gray-700 leading-relaxed">
-                <strong className="text-purple-600">Sarah</strong> woke up early on <strong className="text-purple-600">Monday</strong> morning. 
-                She needed to catch the <strong className="text-blue-600">train</strong> to <strong className="text-purple-600">London</strong>. 
-                Her <strong className="text-pink-600">excitement</strong> was obvious as she packed her <strong className="text-rose-600">suitcase</strong>. 
-                The <strong className="text-orange-600">family</strong> gathered to say goodbye, showing their <strong className="text-pink-600">love</strong>. 
+                <strong className="text-purple-600">Sarah</strong> woke up early on <strong className="text-purple-600">Monday</strong> morning.
+                She needed to catch the <strong className="text-blue-600">train</strong> to <strong className="text-purple-600">London</strong>.
+                Her <strong className="text-pink-600">excitement</strong> was obvious as she packed her <strong className="text-rose-600">suitcase</strong>.
+                The <strong className="text-orange-600">family</strong> gathered to say goodbye, showing their <strong className="text-pink-600">love</strong>.
                 She grabbed her <strong className="text-rose-600">backpack</strong> and headed to the <strong className="text-blue-600">station</strong>.
               </p>
             </div>
@@ -825,11 +834,10 @@ const NounsDetail = () => {
 
                   {/* Answer Status */}
                   {answered && (
-                    <div className={`text-xs font-medium p-1.5 rounded ${
-                      answered.correct 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                    <div className={`text-xs font-medium p-1.5 rounded ${answered.correct
+                        ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-orange-50 text-orange-700 border border-orange-200'
-                    }`}>
+                      }`}>
                       {answered.correct ? 'Correct!' : 'Try again'}
                     </div>
                   )}
@@ -850,7 +858,7 @@ const NounsDetail = () => {
                 {/* Progress Bar - Hidden in Single Question Mode */}
                 {!singleQuestionMode && (
                   <div className="h-1.5 bg-slate-100">
-                    <div 
+                    <div
                       className="h-full bg-gradient-to-r from-teal-500 to-rose-500 transition-all duration-300"
                       style={{ width: `${((currentQuestionIndex + 1) / interactiveQuiz.length) * 100}%` }}
                     ></div>
@@ -934,23 +942,22 @@ const NounsDetail = () => {
                                 disabled={answered}
                                 className={`w-full p-3 md:p-4 rounded-lg border-2 transition-all text-left font-medium group ${answered
                                   ? index === question.correct
-                                      ? 'bg-green-50 border-green-400 shadow-sm'
-                                      : answered.selected === index
+                                    ? 'bg-green-50 border-green-400 shadow-sm'
+                                    : answered.selected === index
                                       ? 'bg-red-50 border-red-400 shadow-sm'
                                       : 'bg-slate-50 border-slate-200 text-slate-500'
-                                    : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
-                                }`}
+                                  : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                                  }`}
                               >
                                 <div className="flex items-center gap-3">
-                                  <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-xs flex-shrink-0 transition-colors ${
-                                    answered
+                                  <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-xs flex-shrink-0 transition-colors ${answered
                                       ? index === question.correct
                                         ? 'bg-green-200 text-green-700'
                                         : answered.selected === index
-                                        ? 'bg-red-200 text-red-700'
-                                        : 'bg-slate-200 text-slate-600'
+                                          ? 'bg-red-200 text-red-700'
+                                          : 'bg-slate-200 text-slate-600'
                                       : 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
-                                  }`}>
+                                    }`}>
                                     {String.fromCharCode(65 + index)}
                                   </span>
                                   <span className="flex-1 text-sm md:text-base text-slate-700 group-hover:text-slate-800">{option}</span>
@@ -963,11 +970,10 @@ const NounsDetail = () => {
 
                           {/* Feedback */}
                           {answered && (
-                            <div className={`p-4 rounded-lg border-l-4 space-y-1.5 ${
-                              answered.correct
+                            <div className={`p-4 rounded-lg border-l-4 space-y-1.5 ${answered.correct
                                 ? 'bg-green-50 border-green-500'
                                 : 'bg-orange-50 border-orange-500'
-                            }`}>
+                              }`}>
                               <p className="font-bold text-base">
                                 {answered.correct ? '🎓° Correct!' : ' Not quite right!'}
                               </p>
@@ -1027,8 +1033,8 @@ const NounsDetail = () => {
                   /* Results Screen */
                   <div className="p-6 md:p-8 text-center space-y-5">
                     <h3 className="text-3xl md:text-4xl font-bold text-slate-800">
-                      {Object.keys(modalQuizAnswers).length === interactiveQuiz.length 
-                        ? ' Quiz Complete!' 
+                      {Object.keys(modalQuizAnswers).length === interactiveQuiz.length
+                        ? ' Quiz Complete!'
                         : '⏸️ Quiz Paused'}
                     </h3>
 
@@ -1049,10 +1055,10 @@ const NounsDetail = () => {
                             {Object.values(modalQuizAnswers).filter(a => a.correct).length === interactiveQuiz.length
                               ? ' Perfect! You\'re a noun master!'
                               : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 8
-                              ? ' Excellent work!'
-                              : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
-                              ? '💡 Good effort!'
-                              : '💡 Keep practicing!'}
+                                ? ' Excellent work!'
+                                : Object.values(modalQuizAnswers).filter(a => a.correct).length >= 6
+                                  ? '💡 Good effort!'
+                                  : '💡 Keep practicing!'}
                           </p>
                         </div>
 
@@ -1151,7 +1157,7 @@ const NounsDetail = () => {
         </section>
 
         {/* Call to Action - Compact */}
-          <div className="bg-white rounded-2xl shadow-lg p-4 mt-10 flex flex-col items-center card-hover">
+        <div className="bg-white rounded-2xl shadow-lg p-4 mt-10 flex flex-col items-center card-hover">
           <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-1 flex items-center gap-2 gradient-text">
             <span className="text-xl">🎓</span>
             <span className="bg-gradient-to-r from-teal-400 via-blue-400 to-rose-400 bg-clip-text text-transparent">Ready for More?</span>
@@ -1181,9 +1187,9 @@ const NounsDetail = () => {
       `}</style>
 
       {/* Learn More Modal */}
-      <LearnMoreModal 
-        isOpen={showLearnMoreModal} 
-        onClose={() => setShowLearnMoreModal(false)} 
+      <LearnMoreModal
+        isOpen={showLearnMoreModal}
+        onClose={() => setShowLearnMoreModal(false)}
         selectedItem={selectedNounType}
         title="Nouns"
       />

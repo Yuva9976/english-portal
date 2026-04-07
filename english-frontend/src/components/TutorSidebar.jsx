@@ -1,7 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import SidebarProfile from './shared/SidebarProfile'
 
 export default function TutorSidebar({collapsed, onToggle}){
+  const [profile, setProfile] = useState(null)
+  
+  useEffect(() => {
+    const userStr = localStorage.getItem('user')
+    if (userStr) {
+      setProfile(JSON.parse(userStr))
+    }
+  }, [])
+
   // support uncontrolled usage: if parent doesn't pass `collapsed`, use internal state
   const [internalCollapsed, setInternalCollapsed] = useState(false)
   const isControlled = collapsed !== undefined
@@ -17,14 +27,12 @@ export default function TutorSidebar({collapsed, onToggle}){
   return (
     <aside className={`bg-white border-r border-teal-100 ${current ? 'w-20' : 'w-72'} transition-all duration-300 h-screen sticky top-0 left-0 overflow-hidden flex-shrink-0 z-30`}>
       <div className="flex flex-col h-full">
-        <div className="p-4 flex items-center justify-between border-b border-teal-100">
-          <div className={`flex items-center gap-3 ${current ? 'justify-center w-full' : ''}`}>
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-rose-400 flex items-center justify-center text-white font-bold text-sm">TC</div>
-            {!current && <div>
-              <div className="font-bold text-slate-900 text-sm">Tutor</div>
-              <div className="text-xs text-teal-600 font-semibold">Workspace</div>
-            </div>}
-          </div>
+        <div className="pt-4 border-b border-teal-50">
+           <SidebarProfile profile={profile} collapsed={current} />
+        </div>
+        
+        <div className="p-4 flex items-center justify-between border-b border-teal-100 hidden">
+          {/* Old header hidden */}
           <button onClick={toggle} className="text-teal-600 hover:text-teal-700">{current ? '»' : '‹'}</button>
         </div>
 
@@ -46,6 +54,12 @@ export default function TutorSidebar({collapsed, onToggle}){
               <NavLink to="/tutor/lessons-quizzes" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-lg transition ${isActive ? 'bg-teal-50 text-teal-700 font-semibold border-l-2 border-teal-600' : 'text-slate-700 hover:bg-slate-50'}`}>
                 <span className="text-xl">📚</span>
                 {!current && <span className="text-sm">Lessons & Quizzes</span>}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/vocabulary-hub" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-lg transition ${isActive ? 'bg-teal-50 text-teal-700 font-semibold border-l-2 border-teal-600' : 'text-slate-700 hover:bg-slate-50'}`}>
+                <span className="text-xl">🔤</span>
+                {!current && <span className="text-sm">Vocabulary Hub</span>}
               </NavLink>
             </li>
             <li>

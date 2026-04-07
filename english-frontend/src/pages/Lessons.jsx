@@ -26,11 +26,11 @@ export default function Lessons(){
       {loading ? <div>Loading...</div> : (
         <div className='grid md:grid-cols-3 gap-6'>
           {lessons.map(lesson => (
-            <Link to={'/lessons/'+lesson._id} key={lesson._id} className='block bg-white rounded-lg shadow hover:shadow-md overflow-hidden'>
+            <Link to={'/lessons/'+lesson.id} key={lesson.id} className='block bg-white rounded-lg shadow hover:shadow-md overflow-hidden'>
               <img src={lesson.image || 'https://images.unsplash.com/photo-1520975911162-8b3ed0e7ac7f?q=80&w=800&auto=format&fit=crop'} alt='' className='w-full h-40 object-cover' />
               <div className='p-4'>
                 <h3 className='font-semibold'>{lesson.title}</h3>
-                <p className='text-sm mt-2'>{lesson.shortDescription || lesson.description?.slice(0,100)}</p>
+                <p className='text-sm mt-2'>{lesson.shortDescription || (lesson.description && lesson.description.slice(0,100))}</p>
               </div>
             </Link>
           ))}
