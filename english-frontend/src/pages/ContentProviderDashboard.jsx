@@ -18,6 +18,7 @@ export default function ContentProviderDashboard() {
   const loadDashboard = async () => {
     try {
       const res = await apiClient.get('/content-provider/dashboard')
+      console.log('Provider Dashboard Response:', res.data)
       setStats(res.data?.stats || { totalCourses: 0, totalLearners: 0, totalLessons: 0, totalQuizzes: 0, totalResources: 0 })
       setCourses(res.data?.courses || [])
     } catch (err) {

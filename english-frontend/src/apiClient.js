@@ -14,6 +14,25 @@ apiClient.interceptors.request.use((config) => {
   }
   return config
 })
+ 
+// handle expired token or unauthorized access
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Avoid redirect loop if already on login
+      const isAuthPage = window.location.pathname.includes('/login') || window.location.pathname.includes('/register');
+      
+      if (!isAuthPage) {
+        console.warn('Authentication expired or failed. Redirecting to login...');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Grammar API methods
 export const grammarAPI = {

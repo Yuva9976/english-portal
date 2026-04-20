@@ -11,7 +11,7 @@ export default function QuizMCQ({ lessonId }) {
 
   useEffect(() => {
     setLoading(true);
-    apiClient.get(`/module2/quizzes?lesson=${lessonId}`)
+    apiClient.get(`/quizzes/lesson/${lessonId}`)
       .then((response) => {
         setQuiz(response.data.quizzes?.[0] || null);
         setLoading(false);
@@ -51,8 +51,8 @@ export default function QuizMCQ({ lessonId }) {
     if (isMultiple) {
       setAnswers(prev => {
         const current = Array.isArray(prev[qId]) ? prev[qId] : [];
-        const next = current.includes(optId) 
-          ? current.filter(id => id !== optId) 
+        const next = current.includes(optId)
+          ? current.filter(id => id !== optId)
           : [...current, optId].sort();
         return { ...prev, [qId]: next };
       });
@@ -89,7 +89,7 @@ export default function QuizMCQ({ lessonId }) {
           const isRevealed = revealed[q.id];
           const userAns = answers[q.id];
           const correctAnsIds = (q.answers || []).filter(a => a.isCorrect).map(a => a.id).sort();
-          
+
           let isCorrect = false;
           if (isRevealed) {
             if (q.type === 'multiple') {
@@ -103,13 +103,12 @@ export default function QuizMCQ({ lessonId }) {
           return (
             <div
               key={q.id}
-              className={`relative bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border transition-all duration-500 ${
-                isRevealed 
-                  ? isCorrect 
-                    ? 'border-teal-200 shadow-xl shadow-teal-500/5' 
+              className={`relative bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border transition-all duration-500 ${isRevealed
+                  ? isCorrect
+                    ? 'border-teal-200 shadow-xl shadow-teal-500/5'
                     : 'border-rose-200 shadow-xl shadow-rose-500/5'
                   : 'border-slate-100 hover:border-teal-200 hover:shadow-2xl hover:shadow-slate-200/50'
-              }`}
+                }`}
             >
               {/* Question Number Badge */}
               <div className="absolute -top-4 -left-4 w-12 h-12 bg-white rounded-2xl border border-slate-100 flex items-center justify-center font-black text-slate-400 shadow-lg text-lg group-hover:scale-110 transition-transform font-['Outfit']">
@@ -117,31 +116,58 @@ export default function QuizMCQ({ lessonId }) {
               </div>
 
               {/* Question Text */}
-              <div className="mb-8 pl-4 border-l-4 border-teal-500/20">
-                <p className="text-lg md:text-xl font-black text-slate-800 leading-tight font-['Outfit'] tracking-tight">
-                  {q.question}
-                </p>
-                {q.type === 'multiple' && (
-                  <span className="inline-block mt-3 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-blue-100">
-                    Multiple Choice Required
-                  </span>
+              <div className="mb-8 pl-4 border-l-4 border-teal-500/20 flex justify-between items-start">
+                <div>
+                  <p className="text-lg md:text-xl font-black text-slate-800 leading-tight font-['Outfit'] tracking-tight">
+                    {q.question}
+                  </p>
+                  {q.type === 'multiple' && (
+                    <span className="inline-block mt-3 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-blue-100">
+                      Multiple Choice Required
+                    </span>
+                  )}
+                </div>
+                {q.hint && !isRevealed && (
+                  <button
+                    onClick={() => {
+                      const hintEl = document.getElementById(`hint-${q.id}`);
+                      if (hintEl) hintEl.classList.toggle('hidden');
+                    }}
+                    className="flex-shrink-0 w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 hover:bg-amber-100 transition-colors shadow-sm cursor-help"
+                    title="Need a hint?"
+                  >
+                    💡
+                  </button>
                 )}
               </div>
 
+              {/* Hint Display (Hidden by default) */}
+              {q.hint && !isRevealed && (
+                <div id={`hint-${q.id}`} className="hidden mb-6 p-4 bg-amber-50/50 border border-amber-100 rounded-2xl animate-fadeIn">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Cognitive Prompt</span>
+                  </div>
+                  <p className="text-xs font-bold text-slate-600 italic">"{q.hint}"</p>
+                </div>
+              )}
+
               {/* Options Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(q.answers || []).map((opt, i) => {
-                  const isSelected = q.type === 'multiple' 
-                    ? (Array.isArray(userAns) && userAns.includes(opt.id))
-                    : userAns === opt.id;
-                  
+                {(q.answers || q.options || []).map((opt, i) => {
+                  const optText = typeof opt === 'string' ? opt : (opt.text || '');
+                  const optId = (typeof opt === 'object' && opt.id) ? opt.id : optText;
+
+                  const isSelected = q.type === 'multiple'
+                    ? (Array.isArray(userAns) && userAns.includes(optId))
+                    : userAns === optId;
+
                   const isCorrectOpt = opt.isCorrect;
                   const label = OPTION_LABELS[i] || '?';
 
                   // Styling logic
                   let stateStyle = "border-slate-100 bg-white hover:border-teal-300 hover:bg-teal-50/30";
                   let labelStyle = "bg-slate-100 text-slate-400 group-hover:bg-teal-500 group-hover:text-white";
-                  
+
                   if (isSelected && !isRevealed) {
                     stateStyle = "border-[#0D9488] bg-teal-50/50 ring-4 ring-teal-500/5";
                     labelStyle = "bg-[#0D9488] text-white shadow-lg shadow-teal-500/30";
@@ -160,8 +186,8 @@ export default function QuizMCQ({ lessonId }) {
 
                   return (
                     <button
-                      key={opt.id}
-                      onClick={() => handleSelect(q.id, opt.id)}
+                      key={optId}
+                      onClick={() => handleSelect(q.id, optId)}
                       disabled={isRevealed}
                       className={`group flex items-center p-5 rounded-3xl border-2 transition-all duration-300 text-left relative overflow-hidden ${stateStyle}`}
                     >
@@ -169,9 +195,9 @@ export default function QuizMCQ({ lessonId }) {
                         {label}
                       </span>
                       <span className={`ml-4 font-bold text-sm tracking-tight leading-tight ${isSelected ? 'text-slate-900' : 'text-slate-600'}`}>
-                        {opt.text}
+                        {optText}
                       </span>
-                      
+
                       {isRevealed && isCorrectOpt && (
                         <span className="ml-auto w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center text-xs animate-bounce shadow-lg shadow-teal-500/40">✓</span>
                       )}
@@ -195,9 +221,8 @@ export default function QuizMCQ({ lessonId }) {
 
               {/* Hint & Explanation reveal (Refactored for Screenshot 1031) */}
               {isRevealed && (
-                <div className={`mt-10 p-6 rounded-2xl border-t-2 shadow-sm animate-fadeIn ${
-                  isCorrect ? 'bg-teal-50/30 border-[#0D9488]' : 'bg-rose-50/30 border-[#F43F5E]'
-                }`}>
+                <div className={`mt-10 p-6 rounded-2xl border-t-2 shadow-sm animate-fadeIn ${isCorrect ? 'bg-teal-50/30 border-[#0D9488]' : 'bg-rose-50/30 border-[#F43F5E]'
+                  }`}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl">{isCorrect ? '🎯' : '💡'}</span>
                     <h4 className={`font-black text-[10px] uppercase tracking-[0.2em] ${isCorrect ? 'text-teal-700' : 'text-rose-700'}`}>
@@ -220,7 +245,7 @@ export default function QuizMCQ({ lessonId }) {
         <div className="relative z-10">
           <h3 className="text-white font-black text-2xl font-['Outfit'] tracking-tight mb-4 lowercase">--- end of practice matrix ---</h3>
           <p className="text-slate-400 text-sm font-semibold max-w-sm mx-auto mb-10 leading-relaxed uppercase tracking-widest opacity-60">Complete all nodes to achieve total system proficiency.</p>
-          <button 
+          <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="px-10 py-5 bg-white text-slate-900 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-teal-500 hover:text-white transition-all shadow-xl active:scale-95"
           >

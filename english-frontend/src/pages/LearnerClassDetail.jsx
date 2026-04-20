@@ -210,18 +210,16 @@ export default function LearnerClassDetail() {
               {cls.lessons && cls.lessons.length > 0 ? (
                 <div className="space-y-4">
                   {cls.lessons.map((lesson, idx) => (
-                    <div 
-                      key={lesson.id} 
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all group ${
-                        lesson.is_locked 
-                          ? 'bg-slate-50 border-slate-100 opacity-75' 
+                    <div
+                      key={lesson.id}
+                      className={`flex items-center justify-between p-4 rounded-xl border transition-all group ${lesson.is_locked
+                          ? 'bg-slate-50 border-slate-100 opacity-75'
                           : 'bg-white border-slate-50 hover:border-teal-100 hover:bg-teal-50/30'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center shadow-sm border ${
-                          lesson.is_locked ? 'bg-slate-200 border-slate-300 text-slate-400' : 'bg-white border-slate-100'
-                        }`}>
+                        <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center shadow-sm border ${lesson.is_locked ? 'bg-slate-200 border-slate-300 text-slate-400' : 'bg-white border-slate-100'
+                          }`}>
                           <span className="text-[10px] font-black uppercase">Day</span>
                           <span className="text-base font-black">{lesson.day_number}</span>
                         </div>
@@ -236,7 +234,7 @@ export default function LearnerClassDetail() {
                         </div>
                       </div>
                       {!lesson.is_locked && (
-                        <button 
+                        <button
                           onClick={() => navigate(`/lessons/${lesson.id}`)}
                           className="w-10 h-10 rounded-lg bg-teal-600 text-white flex items-center justify-center hover:bg-teal-700 transition-all shadow-md shadow-teal-900/10"
                         >

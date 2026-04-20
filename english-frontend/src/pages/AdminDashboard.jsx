@@ -1,9 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import apiClient from '../apiClient'
-import StatCard from '../components/dashboard/StatCard'
-import DashboardHeader from '../components/dashboard/DashboardHeader'
 import ProfileSettings from './ProfileSettings'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+} from 'chart.js';
+import { Bar, Line, Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function AdminDashboard() {
   const { tab } = useParams()
@@ -16,16 +39,18 @@ export default function AdminDashboard() {
     totalLearners: 0,
     totalTeachers: 0,
     totalLessons: 0,
-    totalApprovedCourses: 0,
     totalPendingCourses: 0,
-    totalRejectedCourses: 0,
+    totalLogs: 0,
     activeUsers: 0
   })
   const [learners, setLearners] = useState([])
   const [teachers, setTeachers] = useState([])
   const [pendingCourses, setPendingCourses] = useState([])
   const [logs, setLogs] = useState([])
-  const [analyticsData, setAnalyticsData] = useState(null)
+  const [pendingTutors, setPendingTutors] = useState([]);
+  const [pendingVocabulary, setPendingVocabulary] = useState([]);
+  const [pendingLessons, setPendingLessons] = useState([]);
+  const [analyticsData, setAnalyticsData] = useState(null);
   
   const tabMap = {
     'overview': 'overview',
@@ -35,28 +60,18 @@ export default function AdminDashboard() {
     'teachers': 'teachers',
     'analytics': 'analytics',
     'audit-logs': 'audit logs',
-    'profile': 'profile',
-    'settings': 'settings'
+    'profile': 'profile'
   };
   
   const activeTab = tabMap[tab] || 'overview';
-  const [pendingTutors, setPendingTutors] = useState([]);
-  const [loadingTutors, setLoadingTutors] = useState(false);
-  const [pendingVocabulary, setPendingVocabulary] = useState([]);
-  const [pendingLessons, setPendingLessons] = useState([]); // New state
-  const [approvedCourses, setApprovedCourses] = useState([]);
-  const [rejectedCoursesList, setRejectedCoursesList] = useState([]);
-  const [allResources, setAllResources] = useState([]);
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
-        // Load current user
         const userRes = await apiClient.get('/auth/me');
         setUser(userRes.data?.user);
 
-        // Load consolidated dashboard data
         const summaryRes = await apiClient.get('/admin/summary');
         const data = summaryRes.data;
 
@@ -66,26 +81,22 @@ export default function AdminDashboard() {
             totalLearners: data.stats.totalLearners,
             totalTeachers: data.stats.totalTeachers,
             totalLessons: data.stats.totalLessons,
-            totalApprovedCourses: data.stats.publishedCourses,
             totalPendingCourses: data.stats.pendingCoursesCount,
+            totalApprovedCourses: data.stats.publishedCourses,
             totalRejectedCourses: data.stats.rejectedCourses,
+            totalLogs: data.stats.totalLogs || data.recentLogs?.length || 0,
             activeUsers: data.stats.activeUsers
           });
           setLogs(data.recentLogs || []);
           setPendingTutors(data.pendingTutors || []);
-          setPendingCourses(data.pendingCourses || []); // Added this
-          setApprovedCourses(data.approvedCourses || []);
-          setRejectedCoursesList(data.rejectedCourses || []);
-          setAllResources(data.allResources || []);
+          setPendingCourses(data.pendingCourses || []);
         }
 
-        // Secondary data loads if needed for specific tabs
         loadAllUsers();
-        // Pending courses/vocabulary are already loaded via summaryRes
 
       } catch (err) {
         console.error(err);
-        setError('Failed to load dashboard data');
+        setError('Failed to load dashboard data. Please check your connection.');
       } finally {
         setLoading(false);
       }
@@ -98,57 +109,81 @@ export default function AdminDashboard() {
       const usersRes = await apiClient.get('/users');
       const allUsers = usersRes.data?.users || [];
       setLearners(allUsers.filter(u => u.role === 'learner'));
-      setTeachers(allUsers.filter(u => u.role === 'teacher' || u.role === 'tutor' || u.role === 'teacher'));
+      setTeachers(allUsers.filter(u => u.role === 'teacher' || u.role === 'tutor'));
     } catch (e) { console.log('Could not fetch full user list:', e); }
   };
 
   useEffect(() => {
     if (activeTab === 'content queue') {
       fetchPendingTutors();
+      fetchPendingCourses();
       fetchPendingLessons();
       fetchPendingVocabulary();
     }
+    if (activeTab === 'analytics') {
+      fetchAnalytics();
+    }
   }, [activeTab]);
+
+  const fetchPendingCourses = async () => {
+    try {
+      const res = await apiClient.get('/admin/courses/pending');
+      setPendingCourses(res.data.courses || []);
+    } catch (err) { console.error('Failed to fetch pending courses', err); }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const res = await apiClient.get('/admin/analytics');
+      setAnalyticsData(res.data);
+    } catch (err) { console.error('Failed to fetch analytics', err); }
+  };
 
   const fetchPendingLessons = async () => {
     try {
       const res = await apiClient.get('/admin/lessons/pending');
       setPendingLessons(res.data.lessons || []);
-    } catch (err) {
-      console.error('Failed to fetch pending lessons', err);
-    }
+    } catch (err) { console.error('Failed to fetch pending lessons', err); }
   };
 
   const fetchPendingVocabulary = async () => {
     try {
       const res = await apiClient.get('/admin/vocabulary/pending');
       setPendingVocabulary(res.data.words || []);
-    } catch (err) {
-      console.error('Failed to fetch pending vocabulary', err);
-    }
+    } catch (err) { console.error('Failed to fetch pending vocabulary', err); }
   };
 
   const fetchPendingTutors = async () => {
     try {
-      setLoadingTutors(true);
       const res = await apiClient.get('/admin/tutors/pending');
       setPendingTutors(res.data.tutors || []);
+    } catch (err) { console.error('Failed to fetch pending tutors', err); }
+  };
+
+  const handleTutorApproval = async (tutorId, status) => {
+    try {
+      await apiClient.post(`/admin/tutors/${tutorId}/approve`, { status });
+      alert(`Tutor ${status === 'active' ? 'approved' : 'rejected'} successfully.`);
+      fetchPendingTutors();
+      loadAllUsers();
     } catch (err) {
-      console.error('Failed to fetch pending tutors', err);
-    } finally {
-      setLoadingTutors(false);
+      alert('Failed to update tutor status.');
     }
   };
+
+  const handleUpdateStatus = async (courseId, status) => {
+    try {
+      await apiClient.post(`/admin/courses/${courseId}/status`, { status })
+      fetchPendingCourses();
+    } catch (err) { alert('Failed to update status'); }
+  }
 
   const handleUpdateLessonStatus = async (lessonId, status) => {
     try {
       await apiClient.post(`/admin/lessons/${lessonId}/status`, { status });
       alert(`Lesson ${status} successfully.`);
       fetchPendingLessons();
-    } catch (err) {
-      console.error('Failed to update lesson status', err);
-      alert('Failed to update lesson status.');
-    }
+    } catch (err) { alert('Failed to update lesson status.'); }
   };
 
   const handleUpdateVocabularyStatus = async (wordId, status) => {
@@ -156,105 +191,31 @@ export default function AdminDashboard() {
       await apiClient.post(`/admin/vocabulary/${wordId}/status`, { status });
       alert(`Vocabulary entry ${status} successfully.`);
       fetchPendingVocabulary();
-    } catch (err) {
-      console.error('Failed to update vocabulary status', err);
-      alert('Failed to update vocabulary status.');
-    }
+    } catch (err) { alert('Failed to update vocabulary status.'); }
   };
-
-  const handleTutorApproval = async (tutorId, status) => {
-    try {
-      await apiClient.post(`/admin/tutors/${tutorId}/approve`, { status });
-      alert(`Tutor ${status === 'approved' ? 'approved' : 'rejected'} successfully.`);
-      fetchPendingTutors();
-    } catch (err) {
-      console.error('Approval/rejection failed', err);
-      alert('Failed to update tutor status.');
-    }
-  };
-
-  const loadUsers = async () => {
-    // This is now replaced by loadAllUsers and the main summary call
-  }
-
-  const loadPendingCourses = async () => {
-    try {
-      const res = await apiClient.get('/admin/courses/pending')
-      setPendingCourses(res.data?.courses || [])
-    } catch (e) { console.log('Could not fetch pending courses:', e) }
-  }
-
-  const loadPendingVocabulary = async () => {
-    try {
-      const res = await apiClient.get('/admin/pending-vocabulary')
-      setPendingVocabulary(res.data?.topics || [])
-    } catch (e) { console.log('Could not fetch pending vocabulary:', e) }
-  }
-
-  const loadLogs = async () => {
-    // Replaces with summary call but keeping as a fallback for manual refresh
-    try {
-      const res = await apiClient.get('/admin/summary')
-      setLogs(res.data?.recentLogs || [])
-    } catch (e) { console.log('Could not refresh logs:', e) }
-  }
-
-  const loadAnalytics = async () => {
-    try {
-      const res = await apiClient.get('/admin/analytics')
-      setAnalyticsData(res.data)
-      // Map lifecycle counts if available in analytics
-      if (res.data?.stats) {
-        setStats(prev => ({
-          ...prev,
-          totalApprovedCourses: res.data.stats.totalApprovedCourses || 0,
-          totalPendingCourses: res.data.stats.totalPendingCourses || 0,
-          totalRejectedCourses: res.data.stats.totalRejectedCourses || 0
-        }))
-      }
-    } catch (e) { console.log('Could not fetch analytics:', e) }
-  }
-
-  const handleUpdateStatus = async (courseId, status) => {
-    try {
-      await apiClient.post(`/admin/courses/${courseId}/status`, { status })
-      loadPendingCourses()
-      loadLogs()
-    } catch (err) {
-      alert('Failed to update status')
-    }
-  }
-
-  const handleUpdateVocabularyTopicStatus = async (topicId, status) => {
-    try {
-      await apiClient.put(`/admin/${status}-vocabulary/${topicId}`)
-      loadPendingVocabulary()
-      loadLogs()
-    } catch (err) {
-      alert(`Failed to ${status} vocabulary`)
-    }
-  }
 
   const handleImpersonate = async (userId) => {
     try {
-      if (!window.confirm('Are you sure you want to login as this user? You will be signed out as admin.')) return
+      if (!window.confirm('Are you sure you want to login as this user?')) return
       const res = await apiClient.post(`/admin/impersonate/${userId}`)
       if (res.data?.token) {
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('user', JSON.stringify(res.data.user))
         window.location.href = res.data.user.role === 'learner' ? '/learner' : '/tutor/dashboard'
       }
-    } catch (err) {
-      alert('Impersonation failed')
-    }
+    } catch (err) { alert('Impersonation failed'); }
   }
+
+  const setActiveTab = (newTab) => {
+    navigate(`/admin-dashboard/${newTab}`);
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-slate-500 font-medium tracking-tight">Accessing admin systems...</p>
+          <div className="w-12 h-12 border-4 border-[#0D9488] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-slate-500 font-bold tracking-tight text-sm font-['Outfit'] transition-all">ESTABLISHING SECURE ADMIN SESSION...</p>
         </div>
       </div>
     )
@@ -262,34 +223,41 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="bg-red-50 text-red-700 p-6 rounded-2xl text-center max-w-2xl mx-auto mt-10">
-        <p className="font-bold mb-4">{error}</p>
-        <button onClick={() => window.location.reload()} className="inline-block px-6 py-2 bg-red-100 text-red-700 rounded-xl hover:bg-red-200 transition-colors">
-          Retry Load
+      <div className="bg-rose-50 text-rose-700 p-8 rounded-[2rem] border border-rose-100 text-center max-w-2xl mx-auto mt-20 shadow-2xl">
+        <div className="text-4xl mb-4">⚠️</div>
+        <p className="font-black uppercase tracking-widest text-xs mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-8 py-3 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg active:scale-95">
+          RETRY LOGIC SYNC
         </button>
       </div>
     );
   }
 
   return (
-    <div className="p-6 lg:p-10 selection:bg-teal-100">
+    <div className="p-6 lg:p-10 selection:bg-teal-100 min-h-screen bg-slate-50/50">
       
-      {/* Main Content Area */}
       <div className="max-w-7xl mx-auto">
-        <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-             <h1 className="text-2xl font-black text-teal-900 tracking-tighter mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                WELCOME TO ADMIN DASHBOARD
-             </h1>
-             <p className="text-slate-500 font-medium text-sm">System Operations & Unified Logic Control</p>
+        <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-1">
+             <div className="flex items-center gap-3">
+                <span className="w-2 h-6 bg-[#0D9488] rounded-full"></span>
+                <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase font-['Outfit']">
+                   System Control Center
+                </h1>
+             </div>
+             <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] ml-5">Operational Integrity & Global Oversight</p>
           </div>
           <div className="flex items-center gap-4">
-             <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 text-[10px] font-semibold uppercase tracking-widest">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                Admin Matrix Active
+             <div className="px-5 py-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm flex items-center gap-3 group transition-all hover:border-[#0D9488]/30">
+                <div className="w-8 h-8 rounded-lg bg-teal-50 text-[#0D9488] flex items-center justify-center font-black">A</div>
+                <div className="text-left">
+                   <p className="text-[10px] font-black text-slate-900 uppercase tracking-tight">{user?.name || 'MASTER ADMIN'}</p>
+                   <p className="text-[8px] font-bold text-[#0D9488] uppercase tracking-widest">Root Authority</p>
+                </div>
              </div>
           </div>
         </header>
+
 
         {/* Overview Tab Content */}
         {activeTab === 'overview' && (
@@ -385,9 +353,9 @@ export default function AdminDashboard() {
                     <span className="text-3xl group-hover:scale-110 transition-transform">📊</span>
                     <span className="text-xs font-semibold text-violet-900 uppercase tracking-widest">Analytics</span>
                   </button>
-                  <button onClick={() => setActiveTab('settings')} className="flex flex-col items-center gap-3 p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-rose-200 hover:bg-white hover:shadow-xl transition-all group active:scale-95">
-                    <span className="text-3xl group-hover:scale-110 transition-transform">⚙️</span>
-                    <span className="text-xs font-semibold text-rose-900 uppercase tracking-widest">Settings</span>
+                  <button onClick={() => setActiveTab('audit-logs')} className="flex flex-col items-center gap-3 p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-rose-200 hover:bg-white hover:shadow-xl transition-all group active:scale-95">
+                    <span className="text-3xl group-hover:scale-110 transition-transform">📜</span>
+                    <span className="text-xs font-semibold text-rose-900 uppercase tracking-widest">System Audit</span>
                   </button>
                 </div>
               </div>
@@ -413,7 +381,7 @@ export default function AdminDashboard() {
                         <button onClick={() => handleTutorApproval(tutor.id, 'approved')} className="px-4 py-2 bg-teal-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-xl hover:bg-teal-600 transition-all shadow-md active:scale-95">Approve</button>
                       </div>
                     ))}
-                    <button onClick={() => setActiveTab('content queue')} className="w-full py-4 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-500 hover:text-teal-600 transition-all bg-teal-50 rounded-2xl mt-2">
+                    <button onClick={() => setActiveTab('content-queue')} className="w-full py-4 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-500 hover:text-teal-600 transition-all bg-teal-50 rounded-2xl mt-2">
                        View Complete Queue ({pendingCourses.length + pendingTutors.length + pendingVocabulary.length})
                     </button>
                   </div>
@@ -603,8 +571,11 @@ export default function AdminDashboard() {
         {activeTab === 'learners' && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
              <div className="flex items-center justify-between px-4">
-                <h2 className='text-2xl font-black text-slate-800 tracking-tighter uppercase font-["Outfit"]'>Learner Management</h2>
-                <div className="px-4 py-2 bg-white border border-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest shadow-sm">Community Size: {learners.length}</div>
+                <div className="space-y-1">
+                   <h2 className='text-2xl font-black text-slate-800 tracking-tighter uppercase font-["Outfit"]'>Learner Management</h2>
+                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Global Community Repository</p>
+                </div>
+                <div className="px-4 py-2 bg-white border border-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest shadow-sm">Population: {learners.length}</div>
              </div>
              
              <div className="bg-white rounded-[3rem] border border-slate-100 shadow-xl p-8 overflow-hidden">
@@ -632,6 +603,53 @@ export default function AdminDashboard() {
                        </td>
                        <td className="py-5 px-4 text-right">
                          <button onClick={() => handleImpersonate(learner.id)} className="px-4 py-2 bg-slate-50 text-teal-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-500 hover:text-white transition-all shadow-sm border border-slate-100">Impersonate</button>
+                       </td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+          </div>
+        )}
+
+        {/* Teachers Tab Content */}
+        {activeTab === 'teachers' && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+             <div className="flex items-center justify-between px-4">
+                <div className="space-y-1">
+                   <h2 className='text-2xl font-black text-slate-800 tracking-tighter uppercase font-["Outfit"]'>Instructor Faculty</h2>
+                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Authorized Pedagogical Authorities</p>
+                </div>
+                <div className="px-4 py-2 bg-white border border-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest shadow-sm">Faculty Size: {teachers.length}</div>
+             </div>
+             
+             <div className="bg-white rounded-[3rem] border border-slate-100 shadow-xl p-8 overflow-hidden">
+               <table className="w-full text-left border-collapse">
+                 <thead>
+                    <tr className="border-b border-slate-100">
+                      <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Instructor</th>
+                      <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Connectivity</th>
+                      <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Clearance</th>
+                      <th className="pb-4 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 text-right">Operations</th>
+                    </tr>
+                 </thead>
+                 <tbody className="divide-y divide-slate-50">
+                   {teachers.map(teacher => (
+                     <tr key={teacher.id} className="group hover:bg-slate-50/50 transition-colors">
+                       <td className="py-5 px-4 font-bold text-slate-900 tracking-tight">
+                         <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center font-black">👨‍🏫</div>
+                           {teacher.name}
+                         </div>
+                       </td>
+                       <td className="py-5 px-4 text-sm text-slate-500 font-medium">{teacher.email}</td>
+                       <td className="py-5 px-4">
+                          <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-lg border ${teacher.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                            {teacher.status || 'Active'}
+                          </span>
+                       </td>
+                       <td className="py-5 px-4 text-right">
+                         <button onClick={() => handleImpersonate(teacher.id)} className="px-4 py-2 bg-slate-50 text-pink-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-pink-500 hover:text-white transition-all shadow-sm border border-slate-100">Impersonate</button>
                        </td>
                      </tr>
                    ))}
@@ -722,10 +740,81 @@ export default function AdminDashboard() {
                  </div>
               </div>
 
-              <div className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-2xl text-center py-32">
-                 <div className="w-24 h-24 bg-teal-50 text-teal-500 rounded-full flex items-center justify-center text-5xl mx-auto mb-8 animate-bounce transition-all">📈</div>
-                 <h4 className="text-2xl font-semibold text-teal-900 tracking-tighter mb-4">Detailed Analytics Visualization</h4>
-                 <p className="text-slate-500 max-w-md mx-auto font-medium">System performance metrics and user engagement charts are being compiled for your review.</p>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                 {/* Chart 1: User Distribution */}
+                 <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl">
+                    <h4 className="text-lg font-bold text-slate-800 mb-6 uppercase tracking-widest text-[10px]">User Composition</h4>
+                    <div className="h-[300px] flex items-center justify-center">
+                       <Doughnut 
+                          data={{
+                             labels: ['Learners', 'Teachers'],
+                             datasets: [{
+                                data: [stats.totalLearners, stats.totalTeachers],
+                                backgroundColor: ['#0D9488', '#F43F5E'],
+                                borderWidth: 0,
+                                hoverOffset: 10
+                             }]
+                          }}
+                          options={{
+                             cutout: '70%',
+                             plugins: { legend: { position: 'bottom' } }
+                          }}
+                       />
+                    </div>
+                 </div>
+
+                 {/* Chart 2: System Growth Placeholder */}
+                 <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl">
+                    <h4 className="text-lg font-bold text-slate-800 mb-6 uppercase tracking-widest text-[10px]">Weekly Engagement</h4>
+                    <div className="h-[300px]">
+                       <Bar 
+                          data={{
+                             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                             datasets: [{
+                                label: 'Activity',
+                                data: [12, 19, 3, 5, 2, 3, 7],
+                                backgroundColor: '#0D9488',
+                                borderRadius: 10
+                             }]
+                          }}
+                          options={{
+                             responsive: true,
+                             maintainAspectRatio: false,
+                             plugins: { legend: { display: false } },
+                             scales: { y: { display: false }, x: { grid: { display: false } } }
+                          }}
+                       />
+                    </div>
+                 </div>
+              </div>
+
+              <div className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-2xl">
+                 <div className="flex items-center justify-between mb-10 px-4">
+                    <h4 className="text-2xl font-black text-teal-900 tracking-tighter uppercase font-['Outfit']">Rich Content Catalog</h4>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Top Performing Sequences</span>
+                 </div>
+                 
+                 <div className="space-y-4">
+                    {analyticsData?.topCourses?.map((course, idx) => (
+                       <div key={course.id} className="p-6 bg-slate-50/50 rounded-3xl border border-slate-100 flex items-center justify-between group hover:bg-white hover:shadow-xl transition-all">
+                          <div className="flex items-center gap-6">
+                             <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center font-black text-teal-600 group-hover:bg-[#0D9488] group-hover:text-white transition-all">
+                                {idx + 1}
+                             </div>
+                             <div className="text-left">
+                                <p className="text-lg font-bold text-slate-800 tracking-tight">{course.title}</p>
+                                <p className="text-[10px] font-black text-[#0D9488] uppercase tracking-widest">{course.lessonCount} Modules Provisioned</p>
+                             </div>
+                          </div>
+                          <button onClick={() => navigate(`/content-provider/courses/${course.id}/preview`)} className="px-6 py-2.5 bg-white border border-slate-200 text-teal-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-50 transition-all">Inspect</button>
+                       </div>
+                    ))}
+                    {(!analyticsData?.topCourses || analyticsData.topCourses.length === 0) && (
+                       <div className="py-20 text-center opacity-30 italic font-bold uppercase tracking-widest text-slate-400">
+                          Collecting Pedagogical Data...
+                       </div>
+                    )}
+                 </div>
               </div>
            </div>
         )}
@@ -746,7 +835,7 @@ export default function AdminDashboard() {
                           <span className="text-[10px] font-semibold text-slate-400">{new Date(log.createdAt).toLocaleString()}</span>
                        </div>
                        <p className="text-sm font-bold text-slate-600 leading-relaxed">
-                          <span className="text-rose-500">User: {log.user?.name || 'Admin'}</span> — {log.details}
+                          <span className="text-rose-500">User: {log.user?.name || 'Admin'}</span> — {typeof log.details === 'object' ? JSON.stringify(log.details) : log.details}
                        </p>
                     </div>
                  </div>

@@ -342,28 +342,6 @@ export default function QuizBuilder() {
                       </div>
 
                       {/* Hint & Explanation */}
-                      <div className="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
-                            {sec.content && (sec.content.trim().startsWith('{') || sec.content.trim().startsWith('[')) ? (() => {
-                              try {
-                                const testParse = JSON.parse(sec.content);
-                                // If it's a simple string or doesn't have the specific fields we use above, 
-                                // we might want to just show the text if it's "normally visible"
-                                if (typeof testParse === 'string') return <div dangerouslySetInnerHTML={{ __html: testParse }} />;
-                                
-                                // If it's a known exercise type but reached here (fallback), show a nice indicator
-                                return (
-                                  <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4 text-slate-400">
-                                    <span className="text-2xl">📋</span>
-                                    <span className="text-sm font-bold uppercase tracking-widest italic">Consolidated behavioral module active</span>
-                                  </div>
-                                );
-                              } catch(e) {
-                                return <div dangerouslySetInnerHTML={{ __html: sec.content }} />;
-                              }
-                            })() : (
-                              <div dangerouslySetInnerHTML={{ __html: sec.content }} />
-                            )}
-                          </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">

@@ -13,7 +13,10 @@ export default function LessonEditor() {
     sections: [],
     quizzes: [],
     resources: [],
-    learningGuides: []
+    learningGuides: [],
+    conceptual_overview: '',
+    structural_taxonomy: [],
+    logic_rules: []
   })
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(!!lessonId)
@@ -52,7 +55,10 @@ export default function LessonEditor() {
           sections: l.LessonSections || [],
           quizzes: l.quizzes || [],
           resources: l.resources || [],
-          learningGuides: l.learningGuides || []
+          learningGuides: l.learningGuides || [],
+          conceptual_overview: l.conceptual_overview || '',
+          structural_taxonomy: typeof l.structural_taxonomy === 'string' ? JSON.parse(l.structural_taxonomy) : (l.structural_taxonomy || []),
+          logic_rules: typeof l.logic_rules === 'string' ? JSON.parse(l.logic_rules) : (l.logic_rules || [])
         })
         if (l.classroom_id) {
           setActiveCourseId(l.classroom_id)
@@ -139,8 +145,8 @@ export default function LessonEditor() {
       setFormData(prev => ({
         ...prev,
         quizzes: prev.quizzes.map(qz => (
-          qz.id === quizId 
-            ? { ...qz, questions: qz.questions.filter(q => q.id !== qId) } 
+          qz.id === quizId
+            ? { ...qz, questions: qz.questions.filter(q => q.id !== qId) }
             : qz
         ))
       }));
@@ -181,7 +187,7 @@ export default function LessonEditor() {
       // Ensure content_json is an object
       let content = guide.content_json;
       if (typeof content === 'string') {
-        try { content = JSON.parse(content); } catch(e) { content = {}; }
+        try { content = JSON.parse(content); } catch (e) { content = {}; }
       }
       content = { ...content, [key]: value };
       guide.content_json = content;
@@ -217,7 +223,7 @@ export default function LessonEditor() {
         } catch (e) {
           currentWords = [];
         }
-        
+
         const newWords = [...currentWords, ...res.data.words];
         updateSection(idx, 'content', JSON.stringify(newWords));
         alert(`Successfully uploaded and integrated ${res.data.count} words! ✨`);
@@ -233,7 +239,7 @@ export default function LessonEditor() {
   const userRole = JSON.parse(localStorage.getItem('user'))?.role || 'provider';
   const isTutor = userRole === 'tutor' || userRole === 'teacher';
 
-  const backUrl = isTutor 
+  const backUrl = isTutor
     ? `/tutor/classes/${activeCourseId}/resources`
     : `/content-provider/courses/${activeCourseId}/lessons`;
 
@@ -242,7 +248,7 @@ export default function LessonEditor() {
       navigate(`/content-provider/quizzes/${lessonId}/create`);
       return;
     }
-    
+
     if (!formData.title) {
       setError('⚠️ Please enter a Lesson Title and save before adding a Quiz!');
       // Scroll to top
@@ -282,14 +288,14 @@ export default function LessonEditor() {
         setSuccess('Lesson created successfully! ✨')
       }
       setTimeout(() => {
-          if (lessonId && lessonId !== 'new') {
-            // If editing existing, return to curriculum list
-            const finalUrl = isTutor ? `/tutor/classes/${finalCourseId}/resources` : `/content-provider/courses/${finalCourseId}/lessons`;
-            navigate(finalUrl);
-          } else {
-            // If new lesson, proceed to Assessment (Quiz) logic
-            navigate(`/content-provider/quizzes/${res.data.lessonId}/create`);
-          }
+        if (lessonId && lessonId !== 'new') {
+          // If editing existing, return to curriculum list
+          const finalUrl = isTutor ? `/tutor/classes/${finalCourseId}/resources` : `/content-provider/courses/${finalCourseId}/lessons`;
+          navigate(finalUrl);
+        } else {
+          // If new lesson, proceed to Assessment (Quiz) logic
+          navigate(`/content-provider/quizzes/${res.data.lessonId}/create`);
+        }
       }, 1500)
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to save lesson')
@@ -308,14 +314,14 @@ export default function LessonEditor() {
           {success && (
             <div className="fixed top-10 left-1/2 -translate-x-1/2 z-50 px-8 py-4 bg-[#0D9488] text-white rounded-2xl shadow-2xl shadow-teal-500/40 font-black text-sm uppercase tracking-widest animate-bounce flex items-center gap-4 border-4 border-white">
               <span className="text-xl">✨</span>
-              {success} { !lessonId && "Redirecting to Assessment Matrix..." }
+              {success} {!lessonId && "Redirecting to Assessment Matrix..."}
             </div>
           )}
           <button
             onClick={() => navigate(backUrl)}
             className="group flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-100 rounded-2xl shadow-sm text-slate-500 hover:text-teal-600 hover:border-teal-200 transition-all font-bold text-sm"
           >
-            <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span> 
+            <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
             <span>{isTutor ? 'Back to Resources' : 'Back to Curriculum'}</span>
           </button>
 
@@ -356,7 +362,7 @@ export default function LessonEditor() {
         {/* Main Info Card */}
         <div className='bg-white rounded-[3rem] shadow-sm border border-slate-100 p-12 relative overflow-hidden'>
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full translate-x-32 -translate-y-32 -z-0" />
-          
+
           <div className='grid md:grid-cols-2 gap-10 relative z-10'>
             <div className='md:col-span-2 space-y-3'>
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Lesson Identifier (Title)</label>
@@ -384,28 +390,28 @@ export default function LessonEditor() {
               <div className="space-y-3">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Engagement Duration (min)</label>
                 <div className="relative">
-                   <input
-                     type='number'
-                     name='duration'
-                     value={formData.duration}
-                     onChange={handleChange}
-                     className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-teal-500 focus:bg-white rounded-[1.5rem] text-slate-800 font-black transition-all outline-none shadow-inner"
-                   />
-                   <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Minutes</span>
+                  <input
+                    type='number'
+                    name='duration'
+                    value={formData.duration}
+                    onChange={handleChange}
+                    className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-teal-500 focus:bg-white rounded-[1.5rem] text-slate-800 font-black transition-all outline-none shadow-inner"
+                  />
+                  <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">Minutes</span>
                 </div>
               </div>
               <div className="space-y-3">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Master Video Asset (URL)</label>
                 <div className="relative">
-                    <input
-                      type='text'
-                      name='videoUrl'
-                      value={formData.videoUrl}
-                      onChange={handleChange}
-                      placeholder='https://vimeo.com/...'
-                      className="w-full pl-14 pr-8 py-5 bg-slate-50 border-2 border-transparent focus:border-teal-500 focus:bg-white rounded-[1.5rem] text-slate-800 font-bold transition-all outline-none shadow-inner"
-                    />
-                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl">🎬</span>
+                  <input
+                    type='text'
+                    name='videoUrl'
+                    value={formData.videoUrl}
+                    onChange={handleChange}
+                    placeholder='https://vimeo.com/...'
+                    className="w-full pl-14 pr-8 py-5 bg-slate-50 border-2 border-transparent focus:border-teal-500 focus:bg-white rounded-[1.5rem] text-slate-800 font-bold transition-all outline-none shadow-inner"
+                  />
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl">🎬</span>
                 </div>
               </div>
             </div>
@@ -446,14 +452,14 @@ export default function LessonEditor() {
                           {gIdx + 1}
                         </div>
                         <div className="space-y-1">
-                           <input
-                             type='text'
-                             value={guide.title}
-                             onChange={(e) => updateLearningGuide(gIdx, 'title', e.target.value)}
-                             placeholder='Module Title (e.g., The Grammar of Synthesis)'
-                             className="bg-transparent border-none p-0 text-xl font-black text-slate-800 focus:ring-0 w-full md:w-[30rem] font-['Outfit'] placeholder:text-slate-300"
-                           />
-                           <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Theoretical Framework</div>
+                          <input
+                            type='text'
+                            value={guide.title}
+                            onChange={(e) => updateLearningGuide(gIdx, 'title', e.target.value)}
+                            placeholder='Module Title (e.g., The Grammar of Synthesis)'
+                            className="bg-transparent border-none p-0 text-xl font-black text-slate-800 focus:ring-0 w-full md:w-[30rem] font-['Outfit'] placeholder:text-slate-300"
+                          />
+                          <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Theoretical Framework</div>
                         </div>
                       </div>
                       <button
@@ -472,8 +478,12 @@ export default function LessonEditor() {
                       <div className="space-y-3">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Conceptual Overview</label>
                         <textarea
-                          value={content.overview || ''}
-                          onChange={(e) => updateGuideContent(gIdx, 'overview', e.target.value)}
+                          value={content.overview || formData.conceptual_overview || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            updateGuideContent(gIdx, 'overview', val);
+                            setFormData(prev => ({ ...prev, conceptual_overview: val }));
+                          }}
                           placeholder='Formalize the definition and core logic...'
                           rows='4'
                           className="w-full px-8 py-5 bg-slate-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white rounded-[1.5rem] text-slate-600 font-medium transition-all outline-none resize-none shadow-inner"
@@ -484,16 +494,17 @@ export default function LessonEditor() {
                       <div className='space-y-6'>
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Structural Taxonomy (Types & Examples)</label>
                         <div className='space-y-4'>
-                          {(content.types || []).map((t, tIdx) => (
+                          {(content.types || formData.structural_taxonomy || []).map((t, tIdx) => (
                             <div key={tIdx} className='flex gap-4 group/row animate-fadeIn'>
                               <input
                                 type='text'
                                 value={t.type}
                                 placeholder='Classification'
                                 onChange={(e) => {
-                                  const newTypes = [...(content.types || [])];
+                                  const newTypes = [...(content.types || formData.structural_taxonomy || [])];
                                   newTypes[tIdx].type = e.target.value;
                                   updateGuideContent(gIdx, 'types', newTypes);
+                                  setFormData(prev => ({ ...prev, structural_taxonomy: newTypes }));
                                 }}
                                 className="flex-1 px-6 py-4 bg-slate-50 border border-slate-100 rounded-[1.25rem] text-sm font-bold focus:border-indigo-500 focus:bg-white outline-none transition-all shadow-sm"
                               />
@@ -502,17 +513,19 @@ export default function LessonEditor() {
                                 value={t.example}
                                 placeholder='Paradigm Example'
                                 onChange={(e) => {
-                                  const newTypes = [...(content.types || [])];
+                                  const newTypes = [...(content.types || formData.structural_taxonomy || [])];
                                   newTypes[tIdx].example = e.target.value;
                                   updateGuideContent(gIdx, 'types', newTypes);
+                                  setFormData(prev => ({ ...prev, structural_taxonomy: newTypes }));
                                 }}
                                 className="flex-[2] px-6 py-4 bg-slate-50 border border-slate-100 rounded-[1.25rem] text-sm font-medium focus:border-indigo-500 focus:bg-white outline-none transition-all shadow-sm"
                               />
                               <button
                                 type='button'
                                 onClick={() => {
-                                  const newTypes = (content.types || []).filter((_, i) => i !== tIdx);
+                                  const newTypes = (content.types || formData.structural_taxonomy || []).filter((_, i) => i !== tIdx);
                                   updateGuideContent(gIdx, 'types', newTypes);
+                                  setFormData(prev => ({ ...prev, structural_taxonomy: newTypes }));
                                 }}
                                 className='w-12 h-12 flex items-center justify-center text-slate-300 hover:text-rose-500 transition-all opacity-40 group-hover/row:opacity-100'
                               >
@@ -523,8 +536,9 @@ export default function LessonEditor() {
                           <button
                             type='button'
                             onClick={() => {
-                              const newTypes = [...(content.types || []), { type: '', example: '' }];
+                              const newTypes = [...(content.types || formData.structural_taxonomy || []), { type: '', example: '' }];
                               updateGuideContent(gIdx, 'types', newTypes);
+                              setFormData(prev => ({ ...prev, structural_taxonomy: newTypes }));
                             }}
                             className='w-full py-5 border-2 border-dashed border-slate-100 rounded-[1.5rem] text-[10px] font-black text-slate-400 uppercase tracking-widest hover:border-indigo-200 hover:text-indigo-500 hover:bg-indigo-50/10 transition-all mt-2'
                           >
@@ -537,7 +551,7 @@ export default function LessonEditor() {
                       <div className='space-y-6'>
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Logic Rules & Strategic Tips</label>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                          {(content.rules || []).map((r, rIdx) => (
+                          {(content.rules || formData.logic_rules || []).map((r, rIdx) => (
                             <div key={rIdx} className='flex gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100 items-start group/rule animate-slideRight'>
                               <div className='w-8 h-8 flex-shrink-0 bg-indigo-500 text-white rounded-lg flex items-center justify-center text-[10px] font-black shadow-lg shadow-indigo-500/20'>
                                 {rIdx + 1}
@@ -547,17 +561,19 @@ export default function LessonEditor() {
                                 placeholder='Define a logic gate or rule...'
                                 rows='2'
                                 onChange={(e) => {
-                                  const newRules = [...(content.rules || [])];
+                                  const newRules = [...(content.rules || formData.logic_rules || [])];
                                   newRules[rIdx] = e.target.value;
                                   updateGuideContent(gIdx, 'rules', newRules);
+                                  setFormData(prev => ({ ...prev, logic_rules: newRules }));
                                 }}
                                 className='flex-1 bg-transparent border-none p-0 text-sm font-medium text-slate-600 focus:ring-0 resize-none'
                               />
                               <button
                                 type='button'
                                 onClick={() => {
-                                  const newRules = (content.rules || []).filter((_, i) => i !== rIdx);
+                                  const newRules = (content.rules || formData.logic_rules || []).filter((_, i) => i !== rIdx);
                                   updateGuideContent(gIdx, 'rules', newRules);
+                                  setFormData(prev => ({ ...prev, logic_rules: newRules }));
                                 }}
                                 className='w-6 h-6 flex items-center justify-center text-slate-300 hover:text-rose-500 transition-all opacity-0 group-hover/rule:opacity-100'
                               >
@@ -568,8 +584,9 @@ export default function LessonEditor() {
                           <button
                             type='button'
                             onClick={() => {
-                              const newRules = [...(content.rules || []), ''];
+                              const newRules = [...(content.rules || formData.logic_rules || []), ''];
                               updateGuideContent(gIdx, 'rules', newRules);
+                              setFormData(prev => ({ ...prev, logic_rules: newRules }));
                             }}
                             className='py-8 border-2 border-dashed border-slate-100 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest hover:border-indigo-200 hover:text-indigo-500 hover:bg-indigo-50/10 transition-all'
                           >
@@ -631,11 +648,11 @@ export default function LessonEditor() {
                     if (s.id === 'vocabulary') {
                       setFormData(prev => ({
                         ...prev,
-                        sections: [...prev.sections, { 
-                          title: 'Vocabulary: Learn new words', 
+                        sections: [...prev.sections, {
+                          title: 'Vocabulary: Learn new words',
                           content: '[]', // JSON string for words 
-                          section_type: 'vocabulary', 
-                          order_index: prev.sections.length 
+                          section_type: 'vocabulary',
+                          order_index: prev.sections.length
                         }]
                       }))
                     } else {
@@ -693,46 +710,46 @@ export default function LessonEditor() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-3">
                               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Exercise Taxonomy (Title)</label>
-                              <input 
+                              <input
                                 type="text"
                                 className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold shadow-inner focus:border-teal-500 transition-all outline-none"
                                 placeholder="e.g., Narrative Synthesis II"
                                 value={(() => {
-                                  try { 
+                                  try {
                                     let c = JSON.parse(section.content);
                                     if (typeof c === 'string') c = JSON.parse(c);
                                     return c.title || '';
-                                  } catch(e) { return '' }
+                                  } catch (e) { return '' }
                                 })()}
                                 onChange={(e) => {
-                                  let current = {}; 
-                                  try { 
+                                  let current = {};
+                                  try {
                                     current = JSON.parse(section.content);
                                     if (typeof current === 'string') current = JSON.parse(current);
-                                  } catch(e) {}
+                                  } catch (e) { }
                                   updateSection(idx, 'content', JSON.stringify({ ...current, title: e.target.value }))
                                 }}
                               />
                             </div>
                             <div className="space-y-3">
                               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Conceptual Prompt</label>
-                              <input 
+                              <input
                                 type="text"
                                 className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-medium shadow-inner focus:border-teal-500 transition-all outline-none"
                                 placeholder="Analyze the following corpus..."
                                 value={(() => {
-                                  try { 
+                                  try {
                                     let c = JSON.parse(section.content);
                                     if (typeof c === 'string') c = JSON.parse(c);
                                     return c.prompt || '';
-                                  } catch(e) { return '' }
+                                  } catch (e) { return '' }
                                 })()}
                                 onChange={(e) => {
-                                  let current = {}; 
-                                  try { 
+                                  let current = {};
+                                  try {
                                     current = JSON.parse(section.content);
                                     if (typeof current === 'string') current = JSON.parse(current);
-                                  } catch(e) {}
+                                  } catch (e) { }
                                   updateSection(idx, 'content', JSON.stringify({ ...current, prompt: e.target.value }))
                                 }}
                               />
@@ -742,22 +759,22 @@ export default function LessonEditor() {
                           {(section.section_type === 'reading' || section.section_type === 'reading_exercise') && (
                             <div className="space-y-3">
                               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Textual Corpus (Passage)</label>
-                              <textarea 
+                              <textarea
                                 className="w-full px-8 py-6 bg-slate-50 border border-slate-100 rounded-[2rem] text-sm font-medium shadow-inner focus:border-teal-500 transition-all outline-none min-h-[200px] resize-none leading-relaxed"
                                 placeholder="Embed the passage here..."
                                 value={(() => {
-                                  try { 
+                                  try {
                                     let c = JSON.parse(section.content);
                                     if (typeof c === 'string') c = JSON.parse(c);
                                     return c.passage || '';
-                                  } catch(e) { return '' }
+                                  } catch (e) { return '' }
                                 })()}
                                 onChange={(e) => {
-                                  let current = {}; 
-                                  try { 
+                                  let current = {};
+                                  try {
                                     current = JSON.parse(section.content);
                                     if (typeof current === 'string') current = JSON.parse(current);
-                                  } catch(e) {}
+                                  } catch (e) { }
                                   updateSection(idx, 'content', JSON.stringify({ ...current, passage: e.target.value }))
                                 }}
                               />
@@ -766,22 +783,22 @@ export default function LessonEditor() {
 
                           <div className="space-y-3">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Model Resolution (Sample Answer)</label>
-                            <textarea 
+                            <textarea
                               className="w-full px-8 py-6 bg-slate-50 border border-slate-100 rounded-[2rem] text-sm font-medium shadow-inner focus:border-teal-500 transition-all outline-none min-h-[140px] resize-none leading-relaxed italic"
                               placeholder="Define the benchmark response..."
                               value={(() => {
-                                try { 
+                                try {
                                   let c = JSON.parse(section.content);
                                   if (typeof c === 'string') c = JSON.parse(c);
                                   return c.sample_answer || '';
-                                } catch(e) { return '' }
+                                } catch (e) { return '' }
                               })()}
                               onChange={(e) => {
-                                let current = {}; 
-                                try { 
+                                let current = {};
+                                try {
                                   current = JSON.parse(section.content);
                                   if (typeof current === 'string') current = JSON.parse(current);
-                                } catch(e) {}
+                                } catch (e) { }
                                 updateSection(idx, 'content', JSON.stringify({ ...current, sample_answer: e.target.value }))
                               }}
                             />
@@ -799,7 +816,7 @@ export default function LessonEditor() {
                               </div>
                             </div>
                             <div className='flex items-center gap-3'>
-                              <a 
+                              <a
                                 href={`${apiClient.defaults.baseURL}/content-provider/template?type=vocabulary`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -809,10 +826,10 @@ export default function LessonEditor() {
                               </a>
                               <label className='px-6 py-3 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 cursor-pointer'>
                                 📤 Upload Excel
-                                <input 
-                                  type="file" 
-                                  className="hidden" 
-                                  accept=".xlsx, .xls, .csv" 
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  accept=".xlsx, .xls, .csv"
                                   onChange={(e) => handleVocabExcelUpload(idx, e.target.files[0])}
                                 />
                               </label>
@@ -842,7 +859,7 @@ export default function LessonEditor() {
                                           </div>
                                           <div className='text-[10px] text-slate-500 line-clamp-2 italic'>"{w.definition}"</div>
                                         </div>
-                                        <button 
+                                        <button
                                           onClick={() => {
                                             const newWords = words.filter((_, i) => i !== wIdx);
                                             updateSection(idx, 'content', JSON.stringify(newWords));
@@ -853,7 +870,7 @@ export default function LessonEditor() {
                                     ))}
                                   </div>
                                 );
-                              } catch(e) { return null; }
+                              } catch (e) { return null; }
                             })()}
                           </div>
 
@@ -861,13 +878,13 @@ export default function LessonEditor() {
                           <div className='p-8 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-6'>
                             <div className='text-[10px] font-black text-slate-400 uppercase tracking-widest'>Provision Single Entity</div>
                             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                              <input 
-                                type="text" 
-                                placeholder="Word (e.g., Ephemeral)" 
+                              <input
+                                type="text"
+                                placeholder="Word (e.g., Ephemeral)"
                                 id={`v-word-${idx}`}
                                 className='px-6 py-4 bg-white border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:border-emerald-500 outline-none transition-all'
                               />
-                              <select 
+                              <select
                                 id={`v-pos-${idx}`}
                                 className='px-6 py-4 bg-white border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:border-emerald-500 outline-none transition-all'
                               >
@@ -875,26 +892,34 @@ export default function LessonEditor() {
                                 <option value="verb">Verb</option>
                                 <option value="adjective">Adjective</option>
                                 <option value="adverb">Adverb</option>
+                                <option value="pronoun">Pronoun</option>
+                                <option value="preposition">Preposition</option>
+                                <option value="conjunction">Conjunction</option>
+                                <option value="interjection">Interjection</option>
                               </select>
-                              <input 
-                                type="text" 
-                                placeholder="Difficulty (A1-C2)" 
+                              <select
                                 id={`v-diff-${idx}`}
                                 className='px-6 py-4 bg-white border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:border-emerald-500 outline-none transition-all'
-                                defaultValue="B1"
-                              />
+                              >
+                                <option value="A1">CEFR A1 (Beginner)</option>
+                                <option value="A2">CEFR A2 (Elementary)</option>
+                                <option value="B1">CEFR B1 (Intermediate)</option>
+                                <option value="B2">CEFR B2 (Upper Intermediate)</option>
+                                <option value="C1">CEFR C1 (Advanced)</option>
+                                <option value="C2">CEFR C2 (Proficiency)</option>
+                              </select>
                             </div>
-                            <textarea 
-                              placeholder="Precise semantic definition..." 
+                            <textarea
+                              placeholder="Precise semantic definition..."
                               id={`v-def-${idx}`}
                               className='w-full px-6 py-4 bg-white border border-slate-200 rounded-xl text-sm font-medium shadow-sm focus:border-emerald-500 outline-none transition-all h-24 resize-none'
                             />
-                            <textarea 
-                              placeholder="Illustrative contextual sentence..." 
+                            <textarea
+                              placeholder="Illustrative contextual sentence..."
                               id={`v-ex-${idx}`}
                               className='w-full px-6 py-4 bg-white border border-slate-200 rounded-xl text-sm font-medium shadow-sm focus:border-emerald-500 outline-none transition-all h-24 resize-none italic'
                             />
-                            <button 
+                            <button
                               type='button'
                               onClick={() => {
                                 const word = document.getElementById(`v-word-${idx}`).value;
@@ -907,7 +932,7 @@ export default function LessonEditor() {
                                 const currentWords = JSON.parse(formData.sections[idx].content || '[]');
                                 const newWords = [...currentWords, { word, part_of_speech: pos, difficulty_level: diff, definition: def, example_sentence: ex }];
                                 updateSection(idx, 'content', JSON.stringify(newWords));
-                                
+
                                 // Reset inputs
                                 document.getElementById(`v-word-${idx}`).value = '';
                                 document.getElementById(`v-def-${idx}`).value = '';
@@ -947,7 +972,7 @@ export default function LessonEditor() {
               <span className='w-14 h-14 bg-teal-100 text-teal-600 rounded-[1.25rem] flex items-center justify-center text-2xl shadow-sm'>📦</span>
               Associated Asset Pipeline
             </h3>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
               {/* Quizzes Column */}
               <div className='space-y-6'>
@@ -965,21 +990,21 @@ export default function LessonEditor() {
                         </div>
                       </div>
                       <div className='flex gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-6 group-hover:translate-x-0 duration-300'>
-                        <button 
+                        <button
                           onClick={() => navigate(`/content-provider/quizzes/edit/${q.id}`)}
                           className='w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl hover:bg-indigo-100 transition flex items-center justify-center shadow-sm' title="Refine Quiz"
                         >
-                           ✏️
+                          ✏️
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDeleteQuiz(q.id)}
                           className='w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl hover:bg-rose-100 transition flex items-center justify-center shadow-sm' title="Expunge Quiz"
                         >
-                           🗑️
+                          🗑️
                         </button>
                       </div>
                     </div>
-                    
+
                     {/* Nested Questions Preview */}
                     {q.questions && q.questions.length > 0 && (
                       <div className='ml-12 space-y-3 border-l-2 border-slate-100 pl-8 py-3'>
@@ -988,7 +1013,7 @@ export default function LessonEditor() {
                             <span className='text-xs text-slate-500 font-semibold truncate max-w-[240px]'>
                               <span className='text-indigo-500 font-black mr-3'>LOGIC:</span> {quest.text || quest.question}
                             </span>
-                            <button 
+                            <button
                               onClick={() => handleDeleteQuestion(quest.id, q.id)}
                               className='opacity-0 group-hover/q:opacity-100 text-[10px] text-rose-400 hover:text-rose-600 font-black uppercase tracking-widest transition-all px-3'
                             >
@@ -1016,13 +1041,13 @@ export default function LessonEditor() {
                         <a href={r.url} target="_blank" rel="noopener noreferrer" className='text-[10px] text-teal-500 hover:text-teal-700 font-black tracking-tight transition truncate block max-w-[200px]'>{r.url}</a>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleDeleteResource(r.id)}
                       className='w-12 h-12 bg-slate-50 text-slate-300 rounded-2xl hover:bg-rose-50 hover:text-rose-500 transition flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-6 group-hover:translate-x-0 duration-300'
                     >
                       🗑️
                     </button>
-                   </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1059,19 +1084,19 @@ export default function LessonEditor() {
         {/* Final Execution Bar */}
         <div className='pt-16 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-10 pb-16'>
           <div className="flex items-center gap-6">
-             <button
-               type='button'
-               onClick={handleQuizRedirect}
-               disabled={loading}
-               className="flex items-center gap-4 px-10 py-6 bg-slate-800 text-white font-black rounded-[1.5rem] hover:bg-black transition-all shadow-2xl shadow-slate-900/40 text-xs uppercase tracking-[0.2em] disabled:opacity-50 group"
-             >
-               <span className="text-xl group-hover:rotate-12 transition-transform">📝</span> 
-               Ingest Assessment
-             </button>
-             <div className="space-y-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Automation Guard</p>
-                <p className="text-[10px] font-medium text-slate-300 leading-tight max-w-[12rem]">State persistence guaranteed before architectural branching.</p>
-             </div>
+            <button
+              type='button'
+              onClick={handleQuizRedirect}
+              disabled={loading}
+              className="flex items-center gap-4 px-10 py-6 bg-slate-800 text-white font-black rounded-[1.5rem] hover:bg-black transition-all shadow-2xl shadow-slate-900/40 text-xs uppercase tracking-[0.2em] disabled:opacity-50 group"
+            >
+              <span className="text-xl group-hover:rotate-12 transition-transform">📝</span>
+              Ingest Assessment
+            </button>
+            <div className="space-y-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Automation Guard</p>
+              <p className="text-[10px] font-medium text-slate-300 leading-tight max-w-[12rem]">State persistence guaranteed before architectural branching.</p>
+            </div>
           </div>
 
           <div className='flex items-center gap-10'>
@@ -1096,20 +1121,20 @@ export default function LessonEditor() {
         <div className="fixed bottom-12 right-12 z-[100] flex flex-col gap-4">
           {error && (
             <div className='px-10 py-6 bg-rose-500 text-white font-black rounded-[1.25rem] shadow-2xl shadow-rose-500/50 animate-slideUp flex items-center gap-5 border border-rose-400/20'>
-               <span className="text-2xl">⚠️</span>
-               <div className="space-y-0.5">
-                  <div className="text-[10px] uppercase tracking-widest opacity-80">Logic Exception</div>
-                  <div className="text-xs font-bold leading-tight">{error}</div>
-               </div>
+              <span className="text-2xl">⚠️</span>
+              <div className="space-y-0.5">
+                <div className="text-[10px] uppercase tracking-widest opacity-80">Logic Exception</div>
+                <div className="text-xs font-bold leading-tight">{error}</div>
+              </div>
             </div>
           )}
           {success && (
             <div className='px-10 py-6 bg-teal-500 text-white font-black rounded-[1.25rem] shadow-2xl shadow-teal-500/50 animate-slideUp flex items-center gap-5 border border-teal-400/20'>
-               <span className="text-2xl">✨</span>
-               <div className="space-y-0.5">
-                  <div className="text-[10px] uppercase tracking-widest opacity-80">System Success</div>
-                  <div className="text-xs font-bold leading-tight">{success}</div>
-               </div>
+              <span className="text-2xl">✨</span>
+              <div className="space-y-0.5">
+                <div className="text-[10px] uppercase tracking-widest opacity-80">System Success</div>
+                <div className="text-xs font-bold leading-tight">{success}</div>
+              </div>
             </div>
           )}
         </div>

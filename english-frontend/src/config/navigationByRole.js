@@ -38,8 +38,7 @@ export const NAVIGATION_BY_ROLE = {
     { label: 'Users', icon: '👥', path: '/admin-dashboard/learners' },
     { label: 'Analytics', icon: '📈', path: '/admin-dashboard/analytics' },
     { label: 'System Logs', icon: '📜', path: '/admin-dashboard/audit-logs' },
-    { label: 'Profile', icon: '👤', path: '/admin-dashboard/profile' },
-    { label: 'Settings', icon: '⚙️', path: '/admin-dashboard/settings' },
+    { label: 'Profile', icon: '👤', path: '/admin-dashboard/profile' }
   ],
   content_provider: [
     { label: 'Dashboard', icon: '📊', path: '/content-provider/dashboard' },

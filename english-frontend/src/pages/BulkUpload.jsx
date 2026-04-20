@@ -52,8 +52,8 @@ export default function BulkUpload() {
   const fetchCourses = async () => {
     setLoadingContext(true);
     try {
-      const res = await apiClient.get('/tutor/dashboard/classes');
-      setCourses(res.data?.classes || []);
+      const res = await apiClient.get('/content-provider/dashboard');
+      setCourses(res.data?.courses || []);
     } catch (err) {
       console.error('Failed to fetch courses:', err);
     } finally {
@@ -99,8 +99,8 @@ export default function BulkUpload() {
       return;
     }
 
-    if (uploadType !== 'course' && !classroomId) {
-      setError('Target Course is mandatory for Quizzes/Resources.');
+    if (uploadType !== 'course' && (!classroomId || !lessonId)) {
+      setError('Target Course and Specific Lesson are mandatory for Vocabulary and Quizzes.');
       return;
     }
 
@@ -207,7 +207,7 @@ export default function BulkUpload() {
                   <td className="px-6 py-4 align-top max-w-[300px]">
                     <div className={`font-bold text-sm mb-1 ${!l.title ? 'text-rose-500' : 'text-slate-800'}`}>{l.title || '[Untitled]'}</div>
                     <div className="text-[11px] text-slate-500 line-clamp-2">{l.content}</div>
-                    
+
                     {l.sections?.length > 0 && (
                       <div className="mt-3 flex gap-2">
                         {l.sections.map((s, idx) => (
@@ -319,7 +319,7 @@ export default function BulkUpload() {
       <div className='px-10 pb-12 max-w-7xl mx-auto'>
         <div className='bg-white rounded-[3.5rem] shadow-sm border border-slate-100 overflow-hidden relative'>
           <div className="absolute top-0 right-0 w-80 h-80 bg-pink-50/50 rounded-full translate-x-40 -translate-y-40 -z-0 opacity-40" />
-          
+
           <div className='p-10 md:p-20 relative z-10'>
             <div className='max-w-4xl mx-auto'>
 
@@ -327,22 +327,21 @@ export default function BulkUpload() {
               <div className="flex items-center gap-4 mb-20">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="flex-1 flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 shadow-lg ${
-                      step === i 
-                        ? 'bg-gradient-to-br from-teal-500 to-teal-400 text-white shadow-teal-500/30 scale-110 ring-4 ring-teal-50' 
-                        : step > i 
-                        ? 'bg-teal-50 text-teal-600' 
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 shadow-lg ${step === i
+                      ? 'bg-gradient-to-br from-teal-500 to-teal-400 text-white shadow-teal-500/30 scale-110 ring-4 ring-teal-50'
+                      : step > i
+                        ? 'bg-teal-50 text-teal-600'
                         : 'bg-slate-100 text-slate-400 opacity-60'
-                    }`}>
+                      }`}>
                       {step > i ? '✓' : i}
                     </div>
                     <div className={`flex flex-col hidden sm:flex`}>
-                       <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${step === i ? 'text-teal-600' : 'text-slate-400'}`}>
-                          {i === 1 ? 'Architecture' : i === 2 ? 'Upload' : 'Validation'}
-                       </div>
-                       <div className="text-[9px] font-bold text-slate-400 mt-0.5">
-                          {i === 1 ? 'Select Type' : i === 2 ? 'File Setup' : 'SQL Review'}
-                       </div>
+                      <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${step === i ? 'text-teal-600' : 'text-slate-400'}`}>
+                        {i === 1 ? 'Architecture' : i === 2 ? 'Upload' : 'Validation'}
+                      </div>
+                      <div className="text-[9px] font-bold text-slate-400 mt-0.5">
+                        {i === 1 ? 'Select Type' : i === 2 ? 'File Setup' : 'SQL Review'}
+                      </div>
                     </div>
                     {i < 3 && <div className="flex-1 h-[2px] bg-slate-100 mx-4 opacity-30" />}
                   </div>
@@ -355,21 +354,19 @@ export default function BulkUpload() {
                     <h2 className="text-2xl font-bold text-[#0D9488] tracking-tight font-['Outfit'] uppercase">What are we importing?</h2>
                     <p className="text-slate-500 mt-3 font-medium font-['Inter']">Select the specialized import engine for your curriculum scope.</p>
                   </div>
-                  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+                  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
                     {[
                       { id: 'course', label: 'Full Course', sub: 'SQL Hierarchy', icon: '📚', color: 'teal' },
-                      { id: 'learning-guide', label: 'Grammar Guide', sub: 'Deep Rules', icon: '📖', color: 'pink' },
-                      { id: 'lesson-flow', label: 'Lesson Flow', sub: 'Interactives', icon: '🌊', color: 'indigo' },
+                      { id: 'vocabulary', label: 'Vocabulary Deck', sub: 'Lexicon Injection', icon: '🔡', color: 'pink' },
                       { id: 'quiz', label: 'Quiz Set', sub: 'Evaluations', icon: '📝', color: 'rose' }
                     ].map((type) => (
                       <button
                         key={type.id}
                         onClick={() => setUploadType(type.id)}
-                        className={`flex flex-col items-center gap-4 p-8 rounded-[2rem] border-2 transition-all duration-300 text-center relative overflow-hidden group ${
-                          uploadType === type.id 
-                            ? `border-teal-500 bg-teal-50 shadow-xl shadow-teal-500/10` 
-                            : 'border-slate-100 bg-slate-50/50 hover:border-teal-200'
-                        }`}
+                        className={`flex flex-col items-center gap-4 p-8 rounded-[2rem] border-2 transition-all duration-300 text-center relative overflow-hidden group ${uploadType === type.id
+                          ? `border-teal-500 bg-teal-50 shadow-xl shadow-teal-500/10`
+                          : 'border-slate-100 bg-slate-50/50 hover:border-teal-200'
+                          }`}
                       >
                         <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-1 shadow-sm transition-transform group-hover:scale-110 duration-500 ${uploadType === type.id ? 'bg-white' : 'bg-white/80'}`}>
                           {type.icon}
@@ -391,77 +388,40 @@ export default function BulkUpload() {
               {step === 2 && (
                 <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-500">
                   <div className="flex items-center justify-between border-b border-slate-50 pb-8">
-                     <div>
-                        <h2 className="text-2xl font-bold text-[#0D9488] tracking-tight font-['Outfit'] uppercase">Targeting Parameters</h2>
-                        <p className="text-slate-400 font-medium text-sm mt-1">Configure where your content will be persisted.</p>
+                    <div>
+                      <h2 className="text-2xl font-bold text-[#0D9488] tracking-tight font-['Outfit'] uppercase">Targeting Parameters</h2>
+                      <p className="text-slate-400 font-medium text-sm mt-1">Configure where your content will be persisted.</p>
                     </div>
                     <button onClick={() => setStep(1)} className="px-5 py-2 bg-slate-100 text-slate-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all">Back</button>
                   </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Primary Course</label>
-                        <select value={classroomId} onChange={(e) => setClassroomId(e.target.value)} className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-700 focus:bg-white focus:border-teal-500 outline-none transition-all shadow-sm font-['Inter']">
-                          <option value="">-- Choose Target --</option>
-                          {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
-                        </select>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between px-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Primary Course</label>
+                        <span className="text-[8px] font-black bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full uppercase">Required</span>
                       </div>
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Specific Lesson</label>
-                        <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={!classroomId} className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-700 focus:bg-white focus:border-teal-500 outline-none transition-all shadow-sm disabled:opacity-50 font-['Inter']">
-                          <option value="">-- Select Child Node --</option>
-                          {lessons.map(l => <option key={l.id} value={l.id}>{l.title}</option>)}
-                        </select>
-                      </div>
+                      <select value={classroomId} onChange={(e) => setClassroomId(e.target.value)} className="w-full bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-700 focus:bg-white focus:border-teal-500 outline-none transition-all shadow-sm font-['Inter']">
+                        <option value="">-- Choose Target Course --</option>
+                        {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                      </select>
                     </div>
-
-                  <div className="space-y-8 bg-slate-50/50 p-8 rounded-[2.5rem] border border-slate-100">
-                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                       <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-                       Auxiliary Lesson Metadata
-                    </div>
-                    
-                    <div className="space-y-6">
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-2">YouTube Video URL</label>
-                        <input 
-                          type="text" 
-                          placeholder="https://youtube.com/watch?v=..." 
-                          value={youtubeUrl}
-                          onChange={(e) => setYoutubeUrl(e.target.value)}
-                          className="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:border-teal-500 outline-none transition-all shadow-sm"
-                        />
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between px-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Specific Lesson</label>
+                        <span className="text-[8px] font-black bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full uppercase">Required</span>
                       </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-2">Vocabulary Terms (One per line)</label>
-                          <textarea 
-                            placeholder="Word: Definition" 
-                            rows={4}
-                            value={vocabText}
-                            onChange={(e) => setVocabText(e.target.value)}
-                            className="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:border-teal-500 outline-none transition-all shadow-sm resize-none"
-                          />
-                        </div>
-                        <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-2">Resources (Name: URL)</label>
-                          <textarea 
-                            placeholder="Worksheet: https://link.com" 
-                            rows={4}
-                            value={resourcesText}
-                            onChange={(e) => setResourcesText(e.target.value)}
-                            className="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:border-teal-500 outline-none transition-all shadow-sm resize-none"
-                          />
-                        </div>
-                      </div>
+                      <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={!classroomId} className="w-full bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] px-6 py-4 text-sm font-bold text-slate-700 focus:bg-white focus:border-teal-500 outline-none transition-all shadow-sm disabled:opacity-50 font-['Inter']">
+                        <option value="">-- Select Child Node --</option>
+                        {lessons.map(l => <option key={l.id} value={l.id}>{l.title}</option>)}
+                      </select>
                     </div>
                   </div>
 
                   <div className="space-y-6">
                     <div className="flex items-center justify-between px-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Excel Source (Strict V3 Schema)</label>
-                      <button 
+                      <button
                         onClick={handleDownloadTemplate}
                         className="flex items-center gap-2 group"
                       >
@@ -478,7 +438,12 @@ export default function BulkUpload() {
                             <div className="text-6xl mb-6 bounce-in">📄</div>
                             <p className="text-xl font-black text-slate-800 font-['Outfit']">{file.name}</p>
                             <p className="text-[10px] text-teal-500 mt-2 font-black uppercase tracking-widest">{(file.size / 1024).toFixed(1)} KB • Verified Local Check</p>
-                            <button className="mt-8 text-rose-400 text-[10px] font-black uppercase tracking-widest hover:text-rose-600">Remove File</button>
+                            <button
+                              onClick={() => { setFile(null); setPreviewData(null); setStep(2); }}
+                              className="mt-8 text-rose-400 text-[10px] font-black uppercase tracking-widest hover:text-rose-600"
+                            >
+                              Remove File
+                            </button>
                           </div>
                         ) : (
                           <div className="text-center">

@@ -12,7 +12,7 @@ const OPTION_COLORS = [
   { bg: 'bg-rose-50', border: 'border-rose-300', text: 'text-rose-700', badge: 'bg-rose-400', badgeText: 'text-white', hover: 'hover:bg-rose-50' },
 ];
 
-const CARD_ICONS = ['📚','🧠','✏️','🤔','💡','🎯','🌟','📝','🔍','🧩'];
+const CARD_ICONS = ['📚', '🧠', '✏️', '🤔', '💡', '🎯', '🌟', '📝', '🔍', '🧩'];
 
 function getScoreEmoji(pct) {
   if (pct >= 90) return { emoji: '🏆', title: 'Outstanding!', msg: 'You absolutely nailed it! Your dedication is showing.', color: 'from-yellow-400 to-amber-500' };
@@ -50,7 +50,7 @@ export default function Quiz() {
       try {
         setLoading(true);
         const lessonQuizzesRes = await apiClient.get(`/quizzes/lesson/${lessonId}`);
-        const quizzes = lessonQuizzesRes.data || [];
+        const quizzes = lessonQuizzesRes.data.quizzes || [];
 
         if (quizzes.length === 0) {
           setError('No quiz found for this lesson');
@@ -83,7 +83,7 @@ export default function Quiz() {
       const formattedAnswers = Object.entries(modalQuizAnswers).map(([qId, selections]) => {
         const question = questions.find(q => String(q.id) === String(qId) || String(q._id) === String(qId));
         if (!question) return { questionId: qId, answerIds: [] };
-        
+
         // Handle both single (string) and multiple (array) selections
         const selectedTexts = Array.isArray(selections) ? selections : [selections];
         const selectedAnswerIds = (question.answers || [])
@@ -91,7 +91,7 @@ export default function Quiz() {
           .map(a => a.id);
 
         return {
-          questionId: qId,
+          questionId: Number(qId),
           answerIds: selectedAnswerIds
         };
       });
@@ -294,22 +294,22 @@ export default function Quiz() {
                         <div className={`text-xs font-black p-3 rounded-xl uppercase tracking-widest text-center border shadow-sm ${det.correct ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
                           {det.correct ? 'Match Verified ✓' : 'Correction Needed ✗'}
                         </div>
-                        
+
                         <div className="bg-slate-50/50 rounded-xl p-3 border border-slate-100 space-y-2">
-                           <div className="flex items-center gap-2">
-                             <div className="w-1 h-1 rounded-full bg-blue-400" />
-                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-                               Selected: <span className="text-slate-700">{(question.answers || []).filter(a => det.selected?.includes(Number(a.id))).map(a => a.text).join(', ') || 'None'}</span>
-                             </p>
-                           </div>
-                           {!det.correct && (
-                             <div className="flex items-center gap-2">
-                               <div className="w-1 h-1 rounded-full bg-teal-400" />
-                               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-                                 Correct: <span className="text-slate-700">{(question.answers || []).filter(a => det.correctAnswerIds?.includes(Number(a.id))).map(a => a.text).join(', ')}</span>
-                               </p>
-                             </div>
-                           )}
+                          <div className="flex items-center gap-2">
+                            <div className="w-1 h-1 rounded-full bg-blue-400" />
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                              Selected: <span className="text-slate-700">{(question.answers || []).filter(a => det.selected?.includes(Number(a.id))).map(a => a.text).join(', ') || 'None'}</span>
+                            </p>
+                          </div>
+                          {!det.correct && (
+                            <div className="flex items-center gap-2">
+                              <div className="w-1 h-1 rounded-full bg-teal-400" />
+                              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                                Correct: <span className="text-slate-700">{(question.answers || []).filter(a => det.correctAnswerIds?.includes(Number(a.id))).map(a => a.text).join(', ')}</span>
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ) : (
@@ -364,7 +364,7 @@ export default function Quiz() {
                 const question = questions[currentQuestionIndex];
                 const qId = question.id || question._id;
                 const selectedText = modalQuizAnswers[qId];
-                
+
                 let det = null;
                 if (result && result.details) {
                   det = result.details.find(d => String(d.questionId) === String(qId));
@@ -374,17 +374,17 @@ export default function Quiz() {
 
                 // Practice Mode: Show answer immediately if not in a full quiz submission
                 const showExplanation = isSubmitted || (singleQuestionMode && selectedText);
-                
+
                 // Logic for check correct/wrong in practice mode (immediate feedback)
                 let isCorrect = false;
                 const correctAnswers = (question.answers || []).filter(a => a.isCorrect);
                 const correctTexts = correctAnswers.map(a => a.text).sort();
-                
+
                 if (selectedText) {
                   if (question.type === 'multiple') {
                     const sortedSelected = [...selectedText].sort();
-                    isCorrect = sortedSelected.length === correctTexts.length && 
-                                sortedSelected.every((val, index) => val === correctTexts[index]);
+                    isCorrect = sortedSelected.length === correctTexts.length &&
+                      sortedSelected.every((val, index) => val === correctTexts[index]);
                   } else {
                     isCorrect = correctTexts.includes(selectedText);
                   }
@@ -432,8 +432,8 @@ export default function Quiz() {
                       <div className="space-y-4">
                         {(question.answers || question.options || []).map((opt, index) => {
                           const optText = typeof opt === 'string' ? opt : opt.text;
-                          const isSelected = Array.isArray(selectedText) 
-                            ? selectedText.includes(optText) 
+                          const isSelected = Array.isArray(selectedText)
+                            ? selectedText.includes(optText)
                             : selectedText === optText;
                           const color = OPTION_COLORS[index % OPTION_COLORS.length];
                           const label = OPTION_LABELS[index];
@@ -450,7 +450,7 @@ export default function Quiz() {
                           } else {
                             // Revealed State (Practice or Submitted)
                             const isThisCorrect = typeof opt === 'object' ? opt.isCorrect : (det?.correctAnswerIds?.includes(opt.id));
-                            
+
                             if (isThisCorrect) {
                               btnClass += ' bg-teal-50 border-teal-400 shadow-xl shadow-teal-500/20';
                               labelClass = 'w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg flex-shrink-0 bg-teal-500 text-white shadow-teal-500/30';
@@ -484,7 +484,7 @@ export default function Quiz() {
                               <span className={labelClass}>
                                 {showExplanation ? (
                                   (typeof opt === 'object' ? opt.isCorrect : det?.correctAnswerIds?.includes(opt.id)) ? '✓' :
-                                  (isSelected ? '✗' : label)
+                                    (isSelected ? '✗' : label)
                                 ) : label}
                               </span>
                               <div className="flex-1">
@@ -492,7 +492,7 @@ export default function Quiz() {
                                   {optText}
                                 </span>
                               </div>
-                              
+
                               {isSelected && !showExplanation && (
                                 <div className={`w-3 h-3 rounded-full ${color.badge} animate-pulse shadow-lg shadow-teal-500/50`} />
                               )}
@@ -507,11 +507,10 @@ export default function Quiz() {
 
                       {/* Explanation Feedback */}
                       {showExplanation && (
-                        <div className={`p-6 rounded-[2.5rem] border-l-[12px] animate-slideUp border shadow-2xl ${
-                          (isSubmitted ? det?.correct : isCorrect) 
-                            ? 'bg-teal-50 border-teal-500 shadow-teal-500/10' 
+                        <div className={`p-6 rounded-[2.5rem] border-l-[12px] animate-slideUp border shadow-2xl ${(isSubmitted ? det?.correct : isCorrect)
+                            ? 'bg-teal-50 border-teal-500 shadow-teal-500/10'
                             : 'bg-orange-50 border-orange-400 shadow-orange-500/10'
-                        }`}>
+                          }`}>
                           <div className="flex items-center gap-4 mb-3">
                             <span className="text-3xl">
                               {(isSubmitted ? det?.correct : isCorrect) ? '🎓' : '💡'}
@@ -569,7 +568,7 @@ export default function Quiz() {
                       {!singleQuestionMode && !isSubmitted && currentQuestionIndex === questions.length - 1 && Object.keys(modalQuizAnswers).length < questions.length && (
                         <div className="text-center p-4 bg-amber-50 rounded-2xl border border-amber-100 animate-pulse">
                           <p className="text-[10px] text-amber-700 font-black uppercase tracking-[0.2em]">
-                             Attention: {questions.length - Object.keys(modalQuizAnswers).length} logic nodes remain unresolved. Complete all to verify results.
+                            Attention: {questions.length - Object.keys(modalQuizAnswers).length} logic nodes remain unresolved. Complete all to verify results.
                           </p>
                         </div>
                       )}
