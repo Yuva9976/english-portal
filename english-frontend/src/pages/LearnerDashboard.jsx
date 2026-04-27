@@ -130,24 +130,25 @@ export default function LearnerDashboard() {
 
 
 
-  const upcomingReviews = [
-    { word: 'Serendipity', level: 'B2', daysUntilReview: 2, topic: 'Advanced Vocabulary' },
-    { word: 'Phenomenon', level: 'B1', daysUntilReview: 1, topic: 'Academic Words' },
-    { word: 'Ephemeral', level: 'C1', daysUntilReview: 0, topic: 'Literary Vocabulary' }
-  ]
+  const [srsStats, setSrsStats] = useState(null)
+  const [dueWords, setDueWords] = useState([])
 
   useEffect(() => {
     let mounted = true
     async function load() {
       try {
         setLoading(true);
-        const [dashboardRes, scheduleRes] = await Promise.all([
+        const [dashboardRes, scheduleRes, srsStatsRes, dueWordsRes] = await Promise.all([
           apiClient.get('/dashboard/learner'),
-          apiClient.get('/dashboard/learner/upcoming-schedule')
+          apiClient.get('/dashboard/learner-upcoming-schedule'),
+          apiClient.get('/grammar/srs/stats'),
+          apiClient.get('/grammar/srs/due')
         ]);
         if (mounted) {
           setData(dashboardRes.data);
           setSchedule(scheduleRes.data.slots || []);
+          setSrsStats(srsStatsRes.data);
+          setDueWords(dueWordsRes.data.due || []);
         }
       } catch (e) {
         console.error('Failed to load learner dashboard', e)
@@ -218,9 +219,9 @@ export default function LearnerDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard
                   icon="📚"
-                  label="Words Learned"
-                  value={data?.stats?.wordsLearned || 0}
-                  subtitle=""
+                  label="Words Mastered"
+                  value={srsStats?.masteryLevels?.mastered || 0}
+                  subtitle={`${srsStats?.totalWords || 0} total in SRS`}
                 />
                 <StatCard
                   icon="🔥"
@@ -446,34 +447,50 @@ export default function LearnerDashboard() {
                     <p className='text-xs text-slate-500 mb-5 font-medium'>Words due for review today</p>
 
                     <div className='space-y-3'>
-                      {upcomingReviews.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className='bg-gradient-to-r from-slate-50 to-teal-50 rounded-xl p-4 border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer group'
-                        >
-                          <div className='flex items-center justify-between'>
-                            <div className='flex-1 pr-2'>
-                              <div className='font-bold text-[15px] text-slate-900 leading-tight'>{item.word}</div>
-                              <div className='text-[11px] text-slate-500 mt-1 font-medium truncate max-w-[120px]'>{item.topic}</div>
-                            </div>
-                            <div className='flex items-center gap-2'>
-                              <div className='text-center'>
-                                {item.daysUntilReview === 0 ? (
-                                  <div className='px-3 py-1.5 bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg font-bold text-white text-[10px] shadow-sm tracking-wide lowercase'>🔴 due now</div>
-                                ) : (
-                                  <>
-                                    <div className='text-[9px] text-slate-400 font-bold uppercase tracking-wider'>Due in</div>
-                                    <div className='text-sm font-semibold text-teal-600 leading-none mt-0.5'>{item.daysUntilReview}d</div>
-                                  </>
-                                )}
+                      {dueWords.length > 0 ? (
+                        dueWords.slice(0, 3).map((item, idx) => {
+                          const now = new Date();
+                          const nextReview = item.next_review_date ? new Date(item.next_review_date) : now;
+                          const isDue = nextReview <= now;
+                          const daysUntil = Math.ceil((nextReview - now) / (1000 * 60 * 60 * 24));
+
+                          return (
+                            <div
+                              key={idx}
+                              className='bg-gradient-to-r from-slate-50 to-teal-50 rounded-xl p-4 border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer group'
+                            >
+                              <div className='flex items-center justify-between'>
+                                <div className='flex-1 pr-2'>
+                                  <div className='font-bold text-[15px] text-slate-900 leading-tight'>{item.word?.word}</div>
+                                  <div className='text-[11px] text-slate-500 mt-1 font-medium truncate max-w-[120px]'>{item.word?.lesson?.title || 'Vocabulary'}</div>
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                  <div className='text-center'>
+                                    {isDue ? (
+                                      <div className='px-3 py-1.5 bg-gradient-to-r from-rose-500 to-rose-600 rounded-lg font-bold text-white text-[10px] shadow-sm tracking-wide lowercase'>🔴 due now</div>
+                                    ) : (
+                                      <>
+                                        <div className='text-[9px] text-slate-400 font-bold uppercase tracking-wider'>Due in</div>
+                                        <div className='text-sm font-semibold text-teal-600 leading-none mt-0.5'>{daysUntil}d</div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          );
+                        })
+                      ) : (
+                        <div className="text-center py-6 bg-slate-50 rounded-xl border border-slate-100">
+                          <p className="text-xs font-semibold text-slate-400">All caught up! 🎉</p>
                         </div>
-                      ))}
-                      <button className='w-full mt-2 py-3 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl font-bold text-sm transition-colors border border-teal-200'>
-                        Start Review Session
-                      </button>
+                      )}
+                      <Link 
+                        to="/learner/srs-review" 
+                        className={`w-full mt-2 py-3 flex items-center justify-center bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl font-bold text-sm transition-colors border border-teal-200 ${dueWords.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        {dueWords.length > 0 ? `Start Review Session (${dueWords.length})` : 'Start Review Session'}
+                      </Link>
                     </div>
                   </div>
 
@@ -516,9 +533,9 @@ export default function LearnerDashboard() {
               {/* Academic Stats Grid - 4 Columns */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {[
-                  { label: 'Accuracy Rate', value: `${data?.academic?.accuracy || 87}%`, sub: '+3% this month', icon: '🎯', color: 'emerald' },
+                  { label: 'Accuracy Rate', value: `${Math.round(data?.quizzes?.averageScore || 0)}%`, sub: `${data?.quizzes?.totalAttempts || 0} quizzes taken`, icon: '🎯', color: 'emerald' },
                   { label: 'Attendance Rate', value: `${data?.attendance?.percent || 0}%`, sub: `${data?.attendance?.present || 0} days present`, icon: '📊', color: 'blue' },
-                  { label: 'Tasks Completed', value: `${data?.tasks?.completed || 0}/${data?.tasks?.total || 0}`, sub: `${data?.tasks?.completionRate || 0}% rate`, icon: '✅', color: 'violet' },
+                  { label: 'Tasks Completed', value: `${data?.tasks?.submitted || 0}/${data?.tasks?.assigned || 0}`, sub: `${data?.tasks?.completion || 0}% rate`, icon: '✅', color: 'violet' },
                   { label: 'Courses Active', value: data?.courses?.length || 0, sub: 'Keep learning', icon: '📖', color: 'rose' }
                 ].map((stat, i) => (
                   <div key={i} className="group relative bg-white rounded-xl p-5 border-2 border-slate-50 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden">
@@ -624,9 +641,9 @@ export default function LearnerDashboard() {
                         ))}
                       </div>
                       <p className="text-[11px] font-medium text-white/70 mt-6 px-2 italic">"Your potential is endless. Go do what you were created to do."</p>
-                      <button className="w-full mt-6 py-3 bg-white text-indigo-600 rounded-xl font-semibold text-[11px] uppercase tracking-widest hover:bg-white/90 transition-all shadow-lg active:scale-95">
+                      <Link to="/learner/certificates" className="w-full mt-6 py-3 flex items-center justify-center bg-white text-indigo-600 rounded-xl font-semibold text-[11px] uppercase tracking-widest hover:bg-white/90 transition-all shadow-lg active:scale-95">
                         Explore Badge Collection
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

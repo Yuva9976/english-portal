@@ -69,3 +69,4 @@ screenshots/
 # Keep local dev-only outputs out of git
 *.out.json
 *.log.txt
+.tmp.driveupload/

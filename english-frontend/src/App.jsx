@@ -30,6 +30,7 @@ import LearnerGrammar from './pages/LearnerGrammar'
 import LearnerVocabulary from './pages/LearnerVocabulary'
 import LearnerPronunciation from './pages/LearnerPronunciation'
 import LearnerCertificates from './pages/LearnerCertificates'
+import LearnerSRSReview from './pages/LearnerSRSReview'
 import ProfileSettings from './pages/ProfileSettings'
 import TaskDetail from './pages/TaskDetail'
 import ContentProviderDashboard from './pages/ContentProviderDashboard'
@@ -137,6 +138,9 @@ export default function App() {
         } />
         <Route path='/learner/progress' element={
           <ProtectedRoute allowedRoles={['learner']}><LearnerProgress /></ProtectedRoute>
+        } />
+        <Route path='/learner/srs-review' element={
+          <ProtectedRoute allowedRoles={['learner']}><LearnerSRSReview /></ProtectedRoute>
         } />
         <Route path='/learner/classes' element={
           <ProtectedRoute allowedRoles={['learner']}><LearnerClasses /></ProtectedRoute>

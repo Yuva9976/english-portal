@@ -39,6 +39,7 @@ export default function TutorDashboardHome() {
   const [gradingSubmission, setGradingSubmission] = useState(null)
   const [gradingScore, setGradingScore] = useState('')
   const [gradingFeedback, setGradingFeedback] = useState('')
+  const [syllabusReviewLesson, setSyllabusReviewLesson] = useState(null)
   const mountedRef = useRef(false)
 
   const fetchOverview = useCallback(async () => {
@@ -125,9 +126,9 @@ export default function TutorDashboardHome() {
   return (
     <div className='p-6 lg:p-12 space-y-16 animate-in fade-in duration-700 font-["Inter"]'>
       <DashboardHeader 
-        title="Tutor Command Centre"
-        badgeText="Instructional Layer"
-        subtitle={`System Active. Welcome back, ${firstName}. ${todayClasses.length} live sessions queued for today.`}
+        title="Tutor Dashboard"
+        badgeText="Faculty Overview"
+        subtitle={`Welcome back, ${firstName}. ${todayClasses.length} sessions scheduled for today.`}
       />
 
       <div className="px-10">
@@ -145,7 +146,7 @@ export default function TutorDashboardHome() {
                   <div className="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-2xl mb-6">🎓</div>
                   <div>
                     <div className="text-4xl font-black text-teal-900 tracking-tighter mb-1 font-['Outfit']">{stats.activeClasses}</div>
-                    <div className="text-[10px] font-black text-teal-600 uppercase tracking-[0.2em]">Operational Rooms</div>
+                    <div className="text-[10px] font-black text-teal-600 uppercase tracking-[0.2em]">Active Classes</div>
                   </div>
                 </div>
               </div>
@@ -155,7 +156,7 @@ export default function TutorDashboardHome() {
                   <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl mb-6">👥</div>
                   <div>
                     <div className="text-4xl font-black text-rose-900 tracking-tighter mb-1 font-['Outfit']">{stats.totalStudents}</div>
-                    <div className="text-[10px] font-black text-rose-500 uppercase tracking-[0.2em]">Assigned Nodes</div>
+                    <div className="text-[10px] font-black text-rose-500 uppercase tracking-[0.2em]">Total Students</div>
                   </div>
                 </div>
               </div>
@@ -165,7 +166,7 @@ export default function TutorDashboardHome() {
                   <div className="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center text-2xl mb-6">📊</div>
                   <div>
                     <div className="text-4xl font-black text-violet-900 tracking-tighter mb-1 font-['Outfit']">{stats.avgQuizScore}%</div>
-                    <div className="text-[10px] font-black text-violet-500 uppercase tracking-[0.2em]">Success Velocity</div>
+                    <div className="text-[10px] font-black text-violet-500 uppercase tracking-[0.2em]">Average Accuracy</div>
                   </div>
                 </div>
               </div>
@@ -175,7 +176,7 @@ export default function TutorDashboardHome() {
                   <div className="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-2xl mb-6">📁</div>
                   <div>
                     <div className="text-4xl font-black text-teal-900 tracking-tighter mb-1 font-['Outfit']">{stats.resourcesShared}</div>
-                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Resource Assets</div>
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Shared Resources</div>
                   </div>
                 </div>
               </div>
@@ -192,10 +193,10 @@ export default function TutorDashboardHome() {
                   <span className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 text-xl">📅</span> 
                   Session Timeline
                </h2>
-               <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">
+                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
-                  Transmission Live
-               </div>
+                  Live Updates
+                </div>
             </div>
 
             <div className="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden group">
@@ -223,11 +224,14 @@ export default function TutorDashboardHome() {
                           </div>
                           <div className="flex flex-row md:flex-col gap-2">
                              {cls.google_meet_link ? (
-                               <a href={cls.google_meet_link} target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-white bg-blue-500 rounded-xl hover:bg-blue-600 shadow-lg shadow-blue-500/20 active:scale-95 transition-all text-center">Establish Link</a>
+                               <a href={cls.google_meet_link} target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-white bg-blue-500 rounded-xl hover:bg-blue-600 shadow-lg shadow-blue-500/20 active:scale-95 transition-all text-center">Join Meeting</a>
                              ) : (
-                               <button onClick={() => handleUpdateMeetLink(cls.id)} className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-teal-600 bg-teal-50 border border-teal-100 rounded-xl hover:bg-teal-100 transition-all">Configure Link</button>
+                               <button onClick={() => handleUpdateMeetLink(cls.id)} className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-teal-600 bg-teal-50 border border-teal-100 rounded-xl hover:bg-teal-100 transition-all">Set Link</button>
                              )}
-                             <button className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all">
+                             <button 
+                               onClick={() => setSyllabusReviewLesson(cls.lesson)}
+                               className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"
+                             >
                                Review Syllabus
                              </button>
                           </div>
@@ -276,7 +280,7 @@ export default function TutorDashboardHome() {
             <div className="bg-white rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden group">
               <div className="px-8 py-6 border-b border-slate-50">
                 <h3 className="text-base font-black text-teal-900 flex items-center gap-4 tracking-tighter uppercase font-['Outfit']">
-                  <span className="text-xl group-hover:rotate-12 transition-transform">🔔</span> Intelligence
+                  <span className="text-xl group-hover:rotate-12 transition-transform">🔔</span> Activity Feed
                 </h3>
               </div>
               <div className="bg-white">
@@ -348,7 +352,7 @@ export default function TutorDashboardHome() {
           <div className="bg-white rounded-[4rem] border border-slate-100 shadow-2xl p-12 group">
               <h2 className="text-2xl font-black text-teal-900 tracking-tighter uppercase font-['Outfit'] mb-12 flex items-center gap-4">
                 <span className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 text-2xl">📋</span>
-                Action Required
+                Pending Tasks
               </h2>
               {pendingTasks.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -426,6 +430,88 @@ export default function TutorDashboardHome() {
            </div>
         </div>
       )}
+
+      <SyllabusReviewModal 
+        lesson={syllabusReviewLesson} 
+        onClose={() => setSyllabusReviewLesson(null)} 
+      />
     </div>
   )
 }
+
+function SyllabusReviewModal({ lesson, onClose }) {
+  if (!lesson) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/80 backdrop-blur-xl animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-4xl rounded-[4rem] p-12 shadow-2xl relative animate-in zoom-in-95 duration-500 border border-teal-500/10 overflow-hidden max-h-[90vh] flex flex-col">
+        <button onClick={onClose} className="absolute top-12 right-12 text-slate-300 hover:text-rose-500 transition-colors text-3xl font-black z-10">✕</button>
+        
+        <div className="mb-10 relative z-10">
+          <span className="text-[9px] font-black text-teal-600 uppercase tracking-[0.3em] block mb-2">Curriculum Intelligence</span>
+          <h3 className="text-4xl font-black text-teal-900 tracking-tighter uppercase font-['Outfit']">{lesson.title}</h3>
+          <p className="text-slate-500 font-medium mt-2 max-w-2xl">{lesson.description}</p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar space-y-12">
+          {/* Learning Guides */}
+          {lesson.learningGuides?.length > 0 && (
+            <div className="space-y-6">
+              <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest pl-2">Subject Guides</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {lesson.learningGuides.map(guide => (
+                  <div key={guide.id} className="p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-teal-400 transition-all group">
+                    <h5 className="font-black text-teal-900 text-lg mb-2">{guide.title}</h5>
+                    <div className="text-xs text-slate-500 line-clamp-3 leading-relaxed mb-4">{guide.content}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-teal-100 text-teal-600 text-[8px] font-black uppercase rounded-lg">Guide Active</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Vocabulary */}
+          {lesson.vocabularyWords?.length > 0 && (
+            <div className="space-y-6">
+              <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest pl-2">Lexical Assets</h4>
+              <div className="bg-slate-900 rounded-[2.5rem] p-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {lesson.vocabularyWords.map(word => (
+                    <div key={word.id} className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
+                      <div className="text-teal-400 font-black text-sm tracking-tight">{word.word}</div>
+                      <div className="text-[9px] text-teal-100/50 uppercase font-bold mt-1">{word.part_of_speech}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sections */}
+          {lesson.LessonSections?.length > 0 && (
+            <div className="space-y-6 pb-12">
+              <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest pl-2">Instructional Sections</h4>
+              <div className="space-y-4">
+                {lesson.LessonSections.map((section, idx) => (
+                  <div key={section.id} className="flex items-center gap-6 p-6 bg-slate-50 rounded-3xl border border-slate-100 group">
+                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-teal-900 font-black border border-slate-200 text-sm">0{idx + 1}</div>
+                    <div className="flex-1">
+                      <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">{section.section_type}</div>
+                      <h6 className="font-black text-teal-900 uppercase tracking-tight">{section.title}</h6>
+                    </div>
+                    {section.media_url && (
+                      <div className="px-4 py-2 bg-teal-100 text-teal-600 text-[8px] font-black uppercase rounded-lg">Media Attached</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
